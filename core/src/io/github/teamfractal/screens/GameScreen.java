@@ -272,6 +272,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		actors.resizeScreen(width, height);
 		oldW = width;
 		oldH = height;
+
+		if (mapLayer != null) {
+			camera.translate(-((Gdx.graphics.getWidth() - (mapLayer.getTileWidth() * mapLayer.getWidth())) / 2), -((Gdx.graphics.getHeight() - (mapLayer.getTileHeight() * mapLayer.getHeight())) / 2));
+		}
+		//NEED TO TRANSLATE BY (WINDOW WIDTH - MAP WIDTH) / 2, AND SAME FOR HEIGHT
 	}
 
 	@Override
