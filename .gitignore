@@ -14,6 +14,7 @@ hs_err_pid*
 !.idea/runConfigurations/Desktop.xml
 !.idea/runConfigurations/GradleRunDesktop.xml
 !.idea/runConfigurations/JARCompile.xml
+!.idea/runConfigurations/Run.xml
 
 ## Robovm
 robovm-build/
