@@ -115,7 +115,7 @@ public class RoboticonQuest extends Game {
 	public void nextPhase () {
 		int newPhaseState = phase + 1;
 		phase = newPhaseState;
-
+		
 
 		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + newPhaseState);
 		switch (newPhaseState) {
@@ -153,6 +153,9 @@ public class RoboticonQuest extends Game {
 
 			// End phase - CLean up and move to next player.
 			case 6:
+				if(checkGameEnded() == true){
+					// TODO: 01/02/2017 A function here that creates the end game screen 
+				}
 				phase = newPhaseState = 1;
 				this.nextPlayer();
 				// No "break;" here!
