@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
+import io.github.teamfractal.entity.PlotEffect;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.entity.Market;
 import io.github.teamfractal.entity.Player;
@@ -39,6 +40,9 @@ public class RoboticonQuest extends Game {
 	public Market market;
 	private int landBoughtThisTurn;
 
+	private PlotEffect[] plotEffects;
+	private float effectChance;
+
 	public int getPlayerIndex (Player player) {
 		return playerList.indexOf(player);
 	}
@@ -60,7 +64,9 @@ public class RoboticonQuest extends Game {
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
-		
+
+		//Setup tile and player effects for later application
+		setupEffects();
 
 		setScreen(mainMenuScreen);
 	}
@@ -108,23 +114,19 @@ public class RoboticonQuest extends Game {
 		plotManager = new PlotManager();
 	}
 
-	public void nextPhase () {
-		int newPhaseState = phase + 1;
-		phase = newPhaseState;
-		// phase = newPhaseState = 4;
-
-		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + newPhaseState);
-		switch (newPhaseState) {
+	public void implementPhase () {
+		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
 				RoboticonMarketScreen roboticonMarket = new RoboticonMarketScreen(this);
-				roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
+				roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, phase, 30));
 				setScreen(roboticonMarket);
 				break;
 
 			// Phase 3: Roboticon Customisation
 			case 3:
-				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30);
+				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
 				timeoutAnimation.setAnimationFinish(new IAnimationFinish() {
 					@Override
@@ -149,7 +151,7 @@ public class RoboticonQuest extends Game {
 
 			// End phase - CLean up and move to next player.
 			case 6:
-				phase = newPhaseState = 1;
+				phase = 1;
 				this.nextPlayer();
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
@@ -164,6 +166,16 @@ public class RoboticonQuest extends Game {
 
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();
+	}
+
+	public void setPhase() {
+		phase += 1;
+		implementPhase();
+	}
+
+	public void nextPhase(int phase) {
+		this.phase = phase;
+		implementPhase();
 	}
 
 	/**
@@ -232,5 +244,11 @@ public class RoboticonQuest extends Game {
 
 	public PlotManager getPlotManager() {
 		return plotManager;
+	}
+
+	public void setupEffects() {
+		plotEffects = new PlotEffect[1];
+
+		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most food-producing tile, ruining many of the crops on it. Food production on that tile is reduced by 80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2});
 	}
 }
