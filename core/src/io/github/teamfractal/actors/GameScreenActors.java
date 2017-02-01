@@ -143,7 +143,7 @@ public class GameScreenActors {
 				if (nextButton.isDisabled()) {
 					return ;
 				}
-				if(game.canPurchaseLandThisTurn() == false){
+				if(game.canPurchaseLandThisTurn() == false || game.getPhase() == 1){
 					buyLandPlotBtn.setVisible(false);
 					plotStats.setVisible(false);
 					hideInstallRoboticon();
