@@ -154,6 +154,7 @@ public class RoboticonQuest extends Game {
 			// End phase - CLean up and move to next player.
 			case 6:
 				if(checkGameEnded() == true){
+					Player winner = getWinner();
 					// TODO: 01/02/2017 A function here that creates the end game screen 
 				}
 				phase = newPhaseState = 1;
@@ -256,5 +257,21 @@ public class RoboticonQuest extends Game {
 			}
 		}
 		return ended;
+	}
+
+	/**
+	 * Returns the winner of the game, based on which player has the highest score
+	 * @return
+	 */
+	public Player getWinner(){
+		Player winner = null;
+		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
+			winner = playerList.get(0);
+		}
+		else{
+				winner = playerList.get(1);
+			}
+		return winner;
+
 	}
 }
