@@ -134,4 +134,10 @@ public class PlotManager {
 	public TiledMapTileLayer getRoboticonOverlay() {
 		return roboticonOverlay;
 	}
+
+    public LandPlot[][] getplots() {
+        return this.plots;
+    }
+
+
 }
