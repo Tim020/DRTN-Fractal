@@ -328,8 +328,9 @@ public class Player {
 		int uncustomised = 0;
 		Array<String> roboticonAmountList = new Array<String>();
 
-		for (Roboticon r : roboticonList) {
-			if (!r.isInstalled()) {
+		/* TODO: add food */
+        for (Roboticon r : roboticonList) {
+            if (!r.isInstalled()) {
 				switch (r.getCustomisation()) {
 					case ORE:
 						ore += 1;
@@ -387,7 +388,6 @@ public class Player {
      * @return The score of the player.
      */
 	public int calculateScore(){
-        int score = ore + energy + food;
-        return score;
+        return ore + energy + food;
     }
 }
