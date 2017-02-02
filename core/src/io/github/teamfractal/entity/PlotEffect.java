@@ -2,6 +2,8 @@ package io.github.teamfractal.entity;
 
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
+
 /**
  * Created by Joseph on 31/01/2017.
  */
@@ -23,9 +25,9 @@ public class PlotEffect extends Array<Float[]> {
     private Runnable runnable;
 
     /**
-     * Object storing the last plot to have received this effect
+     * Array storing all of the plots to have been affected by this effect (in the order by which they were affected)
      */
-    private LandPlot lastPlot;
+    private Array<LandPlot> plotRegister;
 
     /**
      * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
@@ -45,6 +47,9 @@ public class PlotEffect extends Array<Float[]> {
 
         this.runnable = runnable;
         //Assign the effect to the proprietary method provided
+
+        this.plotRegister = new Array<LandPlot>();
+        //Establish the separate LandPlot stack to track affected tiles
     }
 
     /**
@@ -120,17 +125,20 @@ public class PlotEffect extends Array<Float[]> {
         super.add(newModifiers);
         //...and return the imposed modifiers to the top of the stack
 
-        this.lastPlot = plot;
-        //Store the plot that's about to be modified for referential purposes
+        plotRegister.add(plot);
+        //Push the plot that's about to be modified on to the appropriate registration stack
     }
 
 
     public void revert() {
-        if (super.size > 1) {
+        if (plotRegister.size > 0) {
             Float[] originalModifiers;
+            LandPlot lastPlot;
 
             swapTop();
             originalModifiers = super.pop();
+
+            lastPlot = plotRegister.pop();
 
             for (int i = 0; i < 3; i++) {
                 lastPlot.productionModifiers[i] = originalModifiers[i];
@@ -149,11 +157,11 @@ public class PlotEffect extends Array<Float[]> {
     }
 
     /**
-     * If the size of the internal stack is greater than 1 at any given time, then the effect is still being applied
-     * to at least 1 tile and can therefore be concluded to be in effect
+     * If the size of the effect's plot-register is greater than 0 at any given time, then at least 1 tile is still
+     * being affected by this object
      */
     public boolean active() {
-        return (super.size > 1);
+        return (plotRegister.size > 0);
     }
 
     /**
