@@ -1,5 +1,6 @@
 package io.github.teamfractal.entity;
 
+import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.animation.AnimationAddResources;
 import io.github.teamfractal.animation.IAnimation;
@@ -10,12 +11,7 @@ import io.github.teamfractal.exception.NotCommonResourceException;
 import io.github.teamfractal.exception.NotEnoughResourceException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
-
-import com.badlogic.gdx.utils.Array;
 
 public class Player {
 	//<editor-fold desc="Resource getter and setter">
@@ -381,4 +377,13 @@ public class Player {
 	public ArrayList<LandPlot> getLandList() {
 		return landList;
 	}
+
+    /**
+     * Returns the score of the player which is a combination of ore, energy and food.
+     * @return The score of the player.
+     */
+	public int calculateScore(){
+        int score = ore + energy + food;
+        return score;
+    }
 }
