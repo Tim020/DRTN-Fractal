@@ -68,7 +68,7 @@ public class AIPlayer extends Player {
      */
     private void phase1() {
         boolean selected = false;
-        final LandPlot[][] plots = game.getPlotManager().getplots();
+        final LandPlot[][] plots = game.getPlotManager().getLandPlots();
         int x = plots.length;
         int y = plots[0].length;
         if (this.getMoney() >= 10) {
@@ -103,7 +103,7 @@ public class AIPlayer extends Player {
                 switch (max_index) {
                     case 0:
                         //ORE
-
+                        
                         break;
                     case 1:
                         //FOOD
