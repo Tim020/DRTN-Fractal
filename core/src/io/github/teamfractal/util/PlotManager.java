@@ -138,4 +138,5 @@ public class PlotManager {
 	public LandPlot[][] getLandPlots(){
 		return this.plots;
 	}
+
 }
