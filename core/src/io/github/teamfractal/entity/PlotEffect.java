@@ -23,13 +23,19 @@ public class PlotEffect extends Array<Float[]> {
     private Runnable runnable;
 
     /**
-     * Constructor that assigns a name, a description and variably-applicable modifiers to the effect
+     * Object storing the last plot to have received this effect
+     */
+    private LandPlot lastPlot;
+
+    /**
+     * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
      *
      * @param name The name of the effect
      * @param description A description of the effect
      * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
+     *
      */
-    public PlotEffect(String name, String description, Float[] modifiers) {
+    public PlotEffect(String name, String description, Float[] modifiers, Runnable runnable) {
         this.name = name;
         this.description = description;
         //Stores the effect's name and description for future reference
@@ -37,7 +43,19 @@ public class PlotEffect extends Array<Float[]> {
         super.add(modifiers);
         //Store the effect's modifiers at the base of the internal stack
 
-        runnable = new Runnable() {
+        this.runnable = runnable;
+        //Assign the effect to the proprietary method provided
+    }
+
+    /**
+     * Overloaded constructor that assigns a name, a description and variably-applicable modifiers to the effect
+     *
+     * @param name The name of the effect
+     * @param description A description of the effect
+     * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
+     */
+    public PlotEffect(String name, String description, Float[] modifiers) {
+        this(name, description, modifiers, new Runnable() {
             @Override
             public void run() {
                 //This is meant to be empty, so enjoy a serving of copypasta to make up for the lack of stuff here.
@@ -58,19 +76,17 @@ public class PlotEffect extends Array<Float[]> {
                 // GNU/Linux. All the so-called Linux distributions are really distributions of GNU/Linux!"
                 //      - [Refactoring of quotes credited to] Richard Stallman, software freedom activist
             }
-        };
+        });
     }
 
     /**
      * Imposes the effect's modifiers on the provided plot
-     * If you ever want to restore a tile's original modifiers after using this method to change them, call this
-     * again on the same tile and specify mode 2
+     * Assumes that the modifiers to be imposed at any given time will be at the head of the internal stack
      *
      * @param plot The plot to be affected
      * @param mode The mode of effect [0: ADD | 1: MULTIPLY | 2: OVERWRITE]
-     * @param save Keeps the current modifiers at the top of the stack if true
      */
-    public void impose(LandPlot plot, int mode, boolean save) {
+    public void impose(LandPlot plot, int mode) {
         Float[] originalModifiers = new Float[3];
         Float[] newModifiers;
         //Declare temporary arrays to handle modifier modifications
@@ -79,20 +95,20 @@ public class PlotEffect extends Array<Float[]> {
         //Assume that the modifiers on the top of the stack are the modifiers to be imposed
 
         for (int i = 0; i < 3; i++) {
-            originalModifiers[i] = (float) plot.productionModifiers[i];
+            originalModifiers[i] = plot.productionModifiers[i];
             //Save each of the specified tile's original modifiers
 
             switch (mode) {
                 case (0):
-                    plot.productionModifiers[i] = (int) ((float) plot.productionModifiers[i] + newModifiers[i]);
+                    plot.productionModifiers[i] = plot.productionModifiers[i] + newModifiers[i];
                     //MODE 0: Add/subtract to/from the original modifiers
                     break;
                 case (1):
-                    plot.productionModifiers[i] = (int) ((float) plot.productionModifiers[i] * newModifiers[i]);
+                    plot.productionModifiers[i] = plot.productionModifiers[i] * newModifiers[i];
                     //MODE 1: Multiply the original modifiers
                     break;
                 case (2):
-                    plot.productionModifiers[i] = Math.round(newModifiers[i]);
+                    plot.productionModifiers[i] = newModifiers[i];
                     //MODE 2: Replace the original modifiers
                     break;
             }
@@ -101,16 +117,28 @@ public class PlotEffect extends Array<Float[]> {
         super.add(originalModifiers);
         //Add the tile's original modifiers to the stack for later access...
 
-        if (save == true) {
-            super.add(newModifiers);
-        }
-        //...and return the imposed modifiers to the top of the stack if needs be
+        super.add(newModifiers);
+        //...and return the imposed modifiers to the top of the stack
 
-        runnable.run();
-        //Run the effect's associated method (if it has one at all)
+        this.lastPlot = plot;
+        //Store the plot that's about to be modified for referential purposes
     }
 
-    public void swapTop() {
+
+    public void revert() {
+        if (super.size > 1) {
+            Float[] originalModifiers;
+
+            swapTop();
+            originalModifiers = super.pop();
+
+            for (int i = 0; i < 3; i++) {
+                lastPlot.productionModifiers[i] = originalModifiers[i];
+            }
+        }
+    }
+
+    private void swapTop() {
         if (super.size > 1) {
             Float[] i = super.pop();
             Float[] j = super.pop();
@@ -118,6 +146,14 @@ public class PlotEffect extends Array<Float[]> {
             super.add(i);
             super.add(j);
         }
+    }
+
+    /**
+     * If the size of the internal stack is greater than 1 at any given time, then the effect is still being applied
+     * to at least 1 tile and can therefore be concluded to be in effect
+     */
+    public boolean active() {
+        return (super.size > 1);
     }
 
     /**

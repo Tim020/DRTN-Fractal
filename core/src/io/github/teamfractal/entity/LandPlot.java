@@ -71,7 +71,7 @@ public class LandPlot {
 	 * Saved modifiers for LandPlot.
 	 * [ Ore, Energy, Food ]
 	 */
-	int[] productionModifiers = {0, 0, 0};
+	float[] productionModifiers = {0, 0, 0};
 
 	/**
 	 * The base production amounts.
@@ -152,8 +152,8 @@ public class LandPlot {
 	 *
 	 * @return The amount of resources to be produced in an 2D array.
 	 */
-	public int[] produceResources() {
-		int[] produced = new int[3];
+	public float[] produceResources() {
+		float[] produced = new float[3];
 		for (int i = 0; i < 2; i++) {
 			produced[i] = productionAmounts[i] * productionModifiers[i];
 		}
@@ -165,7 +165,7 @@ public class LandPlot {
 	 * @param resource  The resource type to be calculated.
 	 * @return          Calculated amount of resource to be generated.
 	 */
-	public int produceResource(ResourceType resource) {
+	public float produceResource(ResourceType resource) {
 		if (this.hasRoboticon){
 			int resIndex = resourceTypeToIndex(resource);
 			return productionAmounts[resIndex] * productionModifiers[resIndex];

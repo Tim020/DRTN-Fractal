@@ -373,4 +373,12 @@ public class Player {
 		});
 		game.gameScreen.addAnimation(animation);
 	}
+
+	/**
+	 * Returns the array of plots owned by this player
+	 * @return ArrayList<LandPlot> The array of plots owned by this player
+	 */
+	public ArrayList<LandPlot> getLandList() {
+		return landList;
+	}
 }

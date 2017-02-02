@@ -12,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
+import io.github.teamfractal.entity.LandPlot;
 import io.github.teamfractal.entity.PlotEffect;
+import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.entity.Market;
 import io.github.teamfractal.entity.Player;
@@ -168,12 +170,12 @@ public class RoboticonQuest extends Game {
 			gameScreen.getActors().textUpdate();
 	}
 
-	public void setPhase() {
+	public void nextPhase() {
 		phase += 1;
 		implementPhase();
 	}
 
-	public void nextPhase(int phase) {
+	public void setPhase(int phase) {
 		this.phase = phase;
 		implementPhase();
 	}
@@ -249,6 +251,20 @@ public class RoboticonQuest extends Game {
 	public void setupEffects() {
 		plotEffects = new PlotEffect[1];
 
-		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most food-producing tile, ruining many of the crops on it. Food production on that tile is reduced by 80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2});
+		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most " +
+				"food-producing tile, ruining many of the crops on it. Food production on that tile is reduced by " +
+				"80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
+			@Override
+			public void run() {
+				LandPlot foodProducer = getPlayer().getLandList().get(0);
+
+				for (LandPlot plot : getPlayer().getLandList()) {
+					if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+						foodProducer = plot;
+					}
+				}
+				plotEffects[0].impose(foodProducer, 1);
+			}
+		});
 	}
 }
