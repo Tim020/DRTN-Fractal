@@ -135,9 +135,8 @@ public class PlotManager {
 		return roboticonOverlay;
 	}
 
-    public LandPlot[][] getplots() {
-        return this.plots;
-    }
-
+	public LandPlot[][] getLandPlots(){
+		return this.plots;
+	}
 
 }

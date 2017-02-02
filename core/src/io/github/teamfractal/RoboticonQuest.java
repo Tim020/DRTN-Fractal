@@ -1,7 +1,5 @@
 package io.github.teamfractal;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -12,10 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
-import io.github.teamfractal.screens.*;
+import io.github.teamfractal.entity.LandPlot;
 import io.github.teamfractal.entity.Market;
 import io.github.teamfractal.entity.Player;
+import io.github.teamfractal.screens.GameScreen;
+import io.github.teamfractal.screens.MainMenuScreen;
+import io.github.teamfractal.screens.ResourceMarketScreen;
+import io.github.teamfractal.screens.RoboticonMarketScreen;
 import io.github.teamfractal.util.PlotManager;
+
+import java.util.ArrayList;
 
 /**
  * This is the main game boot up class.
@@ -111,7 +115,7 @@ public class RoboticonQuest extends Game {
 	public void nextPhase () {
 		int newPhaseState = phase + 1;
 		phase = newPhaseState;
-		// phase = newPhaseState = 4;
+		
 
 		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + newPhaseState);
 		switch (newPhaseState) {
@@ -149,6 +153,10 @@ public class RoboticonQuest extends Game {
 
 			// End phase - CLean up and move to next player.
 			case 6:
+				if(checkGameEnded() == true){
+					Player winner = getWinner();
+					// TODO: 01/02/2017 A function here that creates the end game screen 
+				}
 				phase = newPhaseState = 1;
 				this.nextPlayer();
 				// No "break;" here!
@@ -232,5 +240,38 @@ public class RoboticonQuest extends Game {
 
 	public PlotManager getPlotManager() {
 		return plotManager;
+	}
+
+	/**
+	 * Checks whether the game has ended based on whether all of the tiles have been claimed
+	 * @return Returns true if ended, false if not
+	 */
+	public boolean checkGameEnded(){
+		boolean ended = true;
+		LandPlot[][] plots = plotManager.getLandPlots();
+		for(int x = 0; x < plots[0].length ; x++){
+			for(int y = 0; y < plots [1].length ; y++){
+				if(plots[x][y].hasOwner() == false){
+					ended = false;
+				}
+			}
+		}
+		return ended;
+	}
+
+	/**
+	 * Returns the winner of the game, based on which player has the highest score
+	 * @return
+	 */
+	public Player getWinner(){
+		Player winner = null;
+		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
+			winner = playerList.get(0);
+		}
+		else{
+				winner = playerList.get(1);
+			}
+		return winner;
+
 	}
 }

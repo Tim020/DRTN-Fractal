@@ -383,6 +383,7 @@ public class Player {
 		game.gameScreen.addAnimation(animation);
 	}
 
+
     /**
      * Returns the score of the player which is a combination of ore, energy and food.
      * @return The score of the player.
@@ -390,4 +391,5 @@ public class Player {
 	public int calculateScore(){
         return ore + energy + food;
     }
+
 }
