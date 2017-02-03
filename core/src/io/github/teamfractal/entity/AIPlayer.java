@@ -103,13 +103,21 @@ public class AIPlayer extends Player {
                 switch (max_index) {
                     case 0:
                         //ORE
-                        
+                        game.roboticonMarket.getActors().roboticonAmount += 1;
+                        purchaseCustomisationFromMarket(ResourceType.ORE, game.roboticonMarket.getActors().roboticons.get(0), game.market);
+                        game.roboticonMarket.getActors().widgetUpdate();
                         break;
                     case 1:
                         //FOOD
+                        /*game.roboticonMarket.getActors().roboticonAmount += 1;
+                        purchaseCustomisationFromMarket(ResourceType.FOOD,game.roboticonMarket.getActors().roboticons.get(0),game.market);
+                        game.roboticonMarket.getActors().widgetUpdate();*/
                         break;
                     case 2:
                         //ENERGY
+                        game.roboticonMarket.getActors().roboticonAmount += 1;
+                        purchaseCustomisationFromMarket(ResourceType.ENERGY, game.roboticonMarket.getActors().roboticons.get(0), game.market);
+                        game.roboticonMarket.getActors().widgetUpdate();
                         break;
                     default:
                         //uh oh

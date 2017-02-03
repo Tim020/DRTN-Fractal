@@ -27,31 +27,30 @@ import java.util.ArrayList;
  */
 public class RoboticonQuest extends Game {
 	static RoboticonQuest _instance;
+	public Skin skin;
+	public MainMenuScreen mainMenuScreen;
+	public GameScreen gameScreen;
+	public ArrayList<Player> playerList;
+	public Market market;
+	public RoboticonMarketScreen roboticonMarket;
+	public TiledMap tmx;
+	SpriteBatch batch;
+	private PlotManager plotManager;
+	private int phase;
+	private int currentPlayer;
+	private int landBoughtThisTurn;
+
+	public RoboticonQuest(){
+		_instance = this;
+		reset();
+	}
+
 	public static RoboticonQuest getInstance() {
 		return _instance;
 	}
 
-
-	private PlotManager plotManager;
-	SpriteBatch batch;
-	public Skin skin;
-	public MainMenuScreen mainMenuScreen;
-	public GameScreen gameScreen;
-	private int phase;
-	private int currentPlayer;
-	public ArrayList<Player> playerList;
-	public Market market;
-	private int landBoughtThisTurn;
-
-	public int getPlayerIndex (Player player) {
+	public int getPlayerIndex(Player player) {
 		return playerList.indexOf(player);
-	}
-
-	public TiledMap tmx;
-	
-	public RoboticonQuest(){
-		_instance = this;
-		reset();
 	}
 	
 	@Override
@@ -121,9 +120,9 @@ public class RoboticonQuest extends Game {
 		switch (newPhaseState) {
 			// Phase 2: Purchase Roboticon
 			case 2:
-				RoboticonMarketScreen roboticonMarket = new RoboticonMarketScreen(this);
-				roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
-				setScreen(roboticonMarket);
+				this.roboticonMarket = new RoboticonMarketScreen(this);
+				this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
+				setScreen(this.roboticonMarket);
 				break;
 
 			// Phase 3: Roboticon Customisation

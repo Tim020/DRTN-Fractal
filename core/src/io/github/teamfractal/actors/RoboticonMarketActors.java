@@ -16,23 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RoboticonMarketActors extends Table {
-	private RoboticonQuest game;
-	private RoboticonMarketScreen screen;
-	private Integer roboticonAmount = 0;
-	private int currentlySelectedRoboticonPos;
-	private Texture roboticonTexture;
-	private Label topText;
-	private Label playerStats;
-	private Label marketStats;
-	private Label roboticonID;
-	private Image roboticonImage = new Image();
-
 	private static final Texture no_cust_texture;
 	private static final Texture energy_texture;
 	private static final Texture ore_texture;
 	private static final Texture no_robotic_texture;
-
-	private ArrayList<Roboticon> roboticons = new ArrayList<Roboticon>();
 
 	static {
 		no_cust_texture = new Texture(Gdx.files.internal("roboticon_images/robot.png"));
@@ -40,6 +27,18 @@ public class RoboticonMarketActors extends Table {
 		ore_texture = new Texture(Gdx.files.internal("roboticon_images/robot_ore.png"));
 		no_robotic_texture = new Texture(Gdx.files.internal("roboticon_images/no_roboticons.png"));
 	}
+
+    public Integer roboticonAmount = 0;
+    public ArrayList<Roboticon> roboticons = new ArrayList<Roboticon>();
+    private RoboticonQuest game;
+    private RoboticonMarketScreen screen;
+    private int currentlySelectedRoboticonPos;
+    private Texture roboticonTexture;
+    private Label topText;
+    private Label playerStats;
+    private Label marketStats;
+    private Label roboticonID;
+    private Image roboticonImage = new Image();
 
 	public RoboticonMarketActors(final RoboticonQuest game, RoboticonMarketScreen screen) {
 		this.game = game;
@@ -68,6 +67,7 @@ public class RoboticonMarketActors extends Table {
 			}
 		});
 
+
 		// Button to decrease number of roboticons bought
 		final TextButton subRoboticonButton = new TextButton("-", game.skin);
 		subRoboticonButton.addListener(new ChangeListener() {
@@ -80,8 +80,9 @@ public class RoboticonMarketActors extends Table {
 			}
 		});
 
-		// Button to buy the selected amount of roboticons from the market
-		final TextButton buyRoboticonsButton = new TextButton("Buy Roboticons", game.skin);
+
+        // Button to buy the selected amount of roboticons from the market
+        final TextButton buyRoboticonsButton = new TextButton("Buy Roboticons", game.skin);
 		buyRoboticonsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -91,9 +92,9 @@ public class RoboticonMarketActors extends Table {
 				widgetUpdate();
 			}
 		});
-		
+
 		final Label marketStatistics = new Label("Market Statistics:", game.skin);
-		
+
 
 		// Current Roboticon Text: Top Right
 		String playerRoboticonText = "Player " + (game.getPlayerInt() + 1) + "'s Roboticons:";
@@ -133,6 +134,9 @@ public class RoboticonMarketActors extends Table {
 		String[] customisations = {"Energy", "Ore"};
 		customisationDropDown.setItems(customisations);
 
+        //TODO: Food
+
+
 		// Button to buy the selected customisation and customise the selected roboticon
 		final TextButton buyCustomisationButton = new TextButton("Buy Roboticon Customisation", game.skin);
 		buyCustomisationButton.addListener(new ChangeListener() {
@@ -145,7 +149,8 @@ public class RoboticonMarketActors extends Table {
 				HashMap<String, ResourceType> converter = new HashMap<String, ResourceType>();
 				converter.put("Energy", ResourceType.ENERGY);
 				converter.put("Ore", ResourceType.ORE);
-				Roboticon roboticonToCustomise = roboticons.get(currentlySelectedRoboticonPos);
+                //TODO: Food
+                Roboticon roboticonToCustomise = roboticons.get(currentlySelectedRoboticonPos);
 
 				game.getPlayer().purchaseCustomisationFromMarket(converter.get(customisationDropDown.getSelected()), roboticonToCustomise, game.market);
 				widgetUpdate();
@@ -199,9 +204,9 @@ public class RoboticonMarketActors extends Table {
 
 		add();
 		add(roboticonID).padLeft(-235).padTop(-170);
-		
-		row();
-		// Purchase customisation label
+
+        row();
+        // Purchase customisation label
 		add();
 		add(marketStats).padLeft(-100).padTop(-100);
 		add();
@@ -314,9 +319,10 @@ public class RoboticonMarketActors extends Table {
 		}
 
 		setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
-		
-		marketStats.setText("Market - Roboticons: " + game.market.getResource(ResourceType.ROBOTICON));
+
+        marketStats.setText("Market - Roboticons: " + game.market.getResource(ResourceType.ROBOTICON));
 
 	}
+
 
 }
