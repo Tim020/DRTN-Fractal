@@ -39,6 +39,8 @@ public class RoboticonMarketActors extends Table {
     private Label marketStats;
     private Label roboticonID;
     private Image roboticonImage = new Image();
+    private Label lblRoboticonAmount;
+    private SelectBox<String> customisationDropDown;
 
 	public RoboticonMarketActors(final RoboticonQuest game, RoboticonMarketScreen screen) {
 		this.game = game;
@@ -55,29 +57,24 @@ public class RoboticonMarketActors extends Table {
 		//Roboticon text to go next to + and - buttons
 		final Label lblRoboticons = new Label("Roboticons:", game.skin);
 
-		final Label lblRoboticonAmount = new Label(roboticonAmount.toString(), game.skin);
+        this.lblRoboticonAmount = new Label(roboticonAmount.toString(), game.skin);
 
 		// Button to increase number of roboticons bought
 		final TextButton addRoboticonButton = new TextButton("+", game.skin);
 		addRoboticonButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				roboticonAmount += 1;
-				lblRoboticonAmount.setText(roboticonAmount.toString());
-			}
+                addRoboticonFunction();
+            }
 		});
-
 
 		// Button to decrease number of roboticons bought
 		final TextButton subRoboticonButton = new TextButton("-", game.skin);
 		subRoboticonButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (roboticonAmount > 0) {
-					roboticonAmount -= 1;
-					lblRoboticonAmount.setText(roboticonAmount.toString());
-				}
-			}
+                subRoboticonFunction();
+            }
 		});
 
 
@@ -86,11 +83,8 @@ public class RoboticonMarketActors extends Table {
 		buyRoboticonsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.getPlayer().purchaseRoboticonsFromMarket(roboticonAmount, game.market);
-				roboticonAmount = 0;
-				lblRoboticonAmount.setText(roboticonAmount.toString());
-				widgetUpdate();
-			}
+                buyRoboticonFunction();
+            }
 		});
 
 		final Label marketStatistics = new Label("Market Statistics:", game.skin);
@@ -107,22 +101,16 @@ public class RoboticonMarketActors extends Table {
 		moveLeftRoboticonInventoryBtn.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (currentlySelectedRoboticonPos > 0) {
-					currentlySelectedRoboticonPos--;
-					setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
-				}
-			}
+                moveLeftRoboticonInventoryFunction();
+            }
 		});
 
 		final TextButton moveRightRoboticonInventoryBtn = new TextButton(">", game.skin);
 		moveRightRoboticonInventoryBtn.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (currentlySelectedRoboticonPos < roboticons.size() - 1) {
-					currentlySelectedRoboticonPos++;
-					setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
-				}
-			}
+                moveRightRoboticonInventoryFunction();
+            }
 		});
 
 
@@ -132,7 +120,7 @@ public class RoboticonMarketActors extends Table {
 		// Drop down menu to select how to customise the selected roboticion
 		final SelectBox<String> customisationDropDown = new SelectBox<String>(game.skin);
 		String[] customisations = {"Energy", "Ore"};
-		customisationDropDown.setItems(customisations);
+        this.customisationDropDown.setItems(customisations);
 
         //TODO: Food
 
@@ -142,19 +130,8 @@ public class RoboticonMarketActors extends Table {
 		buyCustomisationButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (-1 == currentlySelectedRoboticonPos) {
-					// nothing selected.
-					return;
-				}
-				HashMap<String, ResourceType> converter = new HashMap<String, ResourceType>();
-				converter.put("Energy", ResourceType.ENERGY);
-				converter.put("Ore", ResourceType.ORE);
-                //TODO: Food
-                Roboticon roboticonToCustomise = roboticons.get(currentlySelectedRoboticonPos);
-
-				game.getPlayer().purchaseCustomisationFromMarket(converter.get(customisationDropDown.getSelected()), roboticonToCustomise, game.market);
-				widgetUpdate();
-			}
+                buyCustomisationFunction();
+            }
 		});
 
 		final TextButton nextButton = new TextButton("Next ->", game.skin);
@@ -323,6 +300,54 @@ public class RoboticonMarketActors extends Table {
         marketStats.setText("Market - Roboticons: " + game.market.getResource(ResourceType.ROBOTICON));
 
 	}
+
+    public void addRoboticonFunction() {
+        roboticonAmount += 1;
+        this.lblRoboticonAmount.setText(roboticonAmount.toString());
+    }
+
+    public void subRoboticonFunction() {
+        if (roboticonAmount > 0) {
+            roboticonAmount -= 1;
+            lblRoboticonAmount.setText(roboticonAmount.toString());
+        }
+    }
+
+    public void buyRoboticonFunction() {
+        game.getPlayer().purchaseRoboticonsFromMarket(roboticonAmount, game.market);
+        roboticonAmount = 0;
+        lblRoboticonAmount.setText(roboticonAmount.toString());
+        widgetUpdate();
+    }
+
+    public void moveLeftRoboticonInventoryFunction() {
+        if (currentlySelectedRoboticonPos > 0) {
+            currentlySelectedRoboticonPos--;
+            setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
+        }
+    }
+
+    public void moveRightRoboticonInventoryFunction() {
+        if (currentlySelectedRoboticonPos < roboticons.size() - 1) {
+            currentlySelectedRoboticonPos++;
+            setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
+        }
+    }
+
+    public void buyCustomisationFunction() {
+        if (-1 == currentlySelectedRoboticonPos) {
+            // nothing selected.
+            return;
+        }
+        HashMap<String, ResourceType> converter = new HashMap<String, ResourceType>();
+        converter.put("Energy", ResourceType.ENERGY);
+        converter.put("Ore", ResourceType.ORE);
+        //TODO: Food
+        Roboticon roboticonToCustomise = roboticons.get(currentlySelectedRoboticonPos);
+
+        game.getPlayer().purchaseCustomisationFromMarket(converter.get(customisationDropDown.getSelected()), roboticonToCustomise, game.market);
+        widgetUpdate();
+    }
 
 
 }

@@ -139,7 +139,6 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 4.
      */
     private void phase4() {
-
         //TODO: Implement
     }
 
