@@ -118,11 +118,10 @@ public class RoboticonMarketActors extends Table {
 		final Label lblPurchaseCustomisation = new Label("Customisation Type:", game.skin);
 
 		// Drop down menu to select how to customise the selected roboticion
-		final SelectBox<String> customisationDropDown = new SelectBox<String>(game.skin);
-		String[] customisations = {"Energy", "Ore"};
+        this.customisationDropDown = new SelectBox<String>(game.skin);
+        String[] customisations = {"Energy", "Ore", "Food"};
+        //TODO this food implementation needs finishing
         this.customisationDropDown.setItems(customisations);
-
-        //TODO: Food
 
 
 		// Button to buy the selected customisation and customise the selected roboticon
@@ -130,7 +129,17 @@ public class RoboticonMarketActors extends Table {
 		buyCustomisationButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-                buyCustomisationFunction();
+                if (-1 == currentlySelectedRoboticonPos) {
+                    // nothing selected.
+                    return;
+                }
+                HashMap<String, ResourceType> converter = new HashMap<String, ResourceType>();
+                converter.put("Energy", ResourceType.ENERGY);
+                converter.put("Ore", ResourceType.ORE);
+                converter.put("Food", ResourceType.FOOD);
+
+
+                buyCustomisationFunction(converter.get(customisationDropDown.getSelected()), currentlySelectedRoboticonPos);
             }
 		});
 
@@ -239,6 +248,8 @@ public class RoboticonMarketActors extends Table {
 
 			ResourceType roboticonType = roboticons.get(roboticonPos).getCustomisation();
 
+            //TODO Food
+
 			switch (roboticonType) {
 				case Unknown:
 					roboticonTexture = no_cust_texture;
@@ -334,18 +345,10 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
-    public void buyCustomisationFunction() {
-        if (-1 == currentlySelectedRoboticonPos) {
-            // nothing selected.
-            return;
-        }
-        HashMap<String, ResourceType> converter = new HashMap<String, ResourceType>();
-        converter.put("Energy", ResourceType.ENERGY);
-        converter.put("Ore", ResourceType.ORE);
-        //TODO: Food
-        Roboticon roboticonToCustomise = roboticons.get(currentlySelectedRoboticonPos);
+    public void buyCustomisationFunction(ResourceType customisation, int pos) {
 
-        game.getPlayer().purchaseCustomisationFromMarket(converter.get(customisationDropDown.getSelected()), roboticonToCustomise, game.market);
+
+        game.getPlayer().purchaseCustomisationFromMarket(customisation, roboticons.get(pos), game.market);
         widgetUpdate();
     }
 

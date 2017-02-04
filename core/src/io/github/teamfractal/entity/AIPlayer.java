@@ -103,21 +103,22 @@ public class AIPlayer extends Player {
                 switch (max_index) {
                     case 0:
                         //ORE
-                        game.roboticonMarket.getActors().roboticonAmount += 1;
-                        purchaseCustomisationFromMarket(ResourceType.ORE, game.roboticonMarket.getActors().roboticons.get(0), game.market);
-                        game.roboticonMarket.getActors().widgetUpdate();
+                        game.roboticonMarket.getActors().addRoboticonFunction();
+                        game.roboticonMarket.getActors().buyRoboticonFunction();
+                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ORE, 0);
+
                         break;
                     case 1:
                         //FOOD
-                        /*game.roboticonMarket.getActors().roboticonAmount += 1;
-                        purchaseCustomisationFromMarket(ResourceType.FOOD,game.roboticonMarket.getActors().roboticons.get(0),game.market);
-                        game.roboticonMarket.getActors().widgetUpdate();*/
+                        game.roboticonMarket.getActors().addRoboticonFunction();
+                        game.roboticonMarket.getActors().buyRoboticonFunction();
+                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.FOOD, 0);
                         break;
                     case 2:
                         //ENERGY
-                        game.roboticonMarket.getActors().roboticonAmount += 1;
-                        purchaseCustomisationFromMarket(ResourceType.ENERGY, game.roboticonMarket.getActors().roboticons.get(0), game.market);
-                        game.roboticonMarket.getActors().widgetUpdate();
+                        game.roboticonMarket.getActors().addRoboticonFunction();
+                        game.roboticonMarket.getActors().buyRoboticonFunction();
+                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ENERGY, 0);
                         break;
                     default:
                         //uh oh
