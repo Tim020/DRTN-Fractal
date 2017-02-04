@@ -13,10 +13,7 @@ import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.LandPlot;
 import io.github.teamfractal.entity.Market;
 import io.github.teamfractal.entity.Player;
-import io.github.teamfractal.screens.GameScreen;
-import io.github.teamfractal.screens.MainMenuScreen;
-import io.github.teamfractal.screens.ResourceMarketScreen;
-import io.github.teamfractal.screens.RoboticonMarketScreen;
+import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.PlotManager;
 
 import java.util.ArrayList;
@@ -154,8 +151,8 @@ public class RoboticonQuest extends Game {
 			// End phase - CLean up and move to next player.
 			case 6:
 				if(checkGameEnded() == true){
-					Player winner = getWinner();
-					// TODO: 01/02/2017 A function here that creates the end game screen 
+					
+					setScreen(new EndGameScreen(this));
 				}
 				phase = newPhaseState = 1;
 				this.nextPlayer();
@@ -263,15 +260,23 @@ public class RoboticonQuest extends Game {
 	 * Returns the winner of the game, based on which player has the highest score
 	 * @return
 	 */
-	public Player getWinner(){
-		Player winner = null;
+	public String getWinner(){
+		String winner = null;
 		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
-			winner = playerList.get(0);
+			winner = "Player 1";
 		}
 		else{
-				winner = playerList.get(1);
+				winner = "Player 2";
 			}
 		return winner;
 
+	}
+
+	/**
+	 * Getter for the players of the game.
+	 * @return The array containing the two players
+	 */
+	public ArrayList<Player> getPlayerList(){
+		return this.playerList;
 	}
 }
