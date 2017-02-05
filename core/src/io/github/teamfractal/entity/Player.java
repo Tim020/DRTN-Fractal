@@ -13,19 +13,22 @@ import io.github.teamfractal.exception.NotEnoughResourceException;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class Player {
 	public RoboticonQuest game;
 	Array<Roboticon> roboticonList;
-	private ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
-	//<editor-fold desc="Resource getter and setter">
-	private int money = 100;
-	private int ore = 0;
-	private int energy = 0;
-	private int food = 0;
+    ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
+    //<editor-fold desc="Resource getter and setter">
+    private int money = 100;
+    private int ore = 0;
+    private int energy = 0;
+    private int food = 0;
+
 
 	public Player(RoboticonQuest game){
 		this.game = game;
 		this.roboticonList = new Array<Roboticon>();
+        System.out.println("hello I'm a player");
 
 
 	}

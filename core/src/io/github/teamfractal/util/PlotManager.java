@@ -9,8 +9,8 @@ import io.github.teamfractal.entity.LandPlot;
 import java.util.Random;
 
 public class PlotManager {
-    public int width;
-    public int height;
+    public int x;
+    public int y;
     private LandPlot[][] plots;
 	private TiledMapTileSets tiles;
 	private TiledMapTileLayer mapLayer;
@@ -47,12 +47,14 @@ public class PlotManager {
 		this.hillTile3 = tiles.getTile(6);
 		this.hillTile4 = tiles.getTile(7);
 
-        System.out.println(this.width);
-        this.width = mapLayer.getWidth();
-        System.out.println(this.width);
-        this.height = mapLayer.getHeight();
+        System.out.println(this.x);
 
-		this.plots = new LandPlot[width][height];
+        this.x = mapLayer.getWidth();
+        System.out.println(this.x);
+
+        this.y = mapLayer.getHeight();
+
+        this.plots = new LandPlot[x][y];
 
     }
 
@@ -63,8 +65,8 @@ public class PlotManager {
 	 * @return    The corresponding {@link LandPlot} object.
 	 */
 	public LandPlot getPlot(int x, int y) {
-		if (x < 0 || x >= width || y < 0 || y >= height)
-			return null;
+        if (x < 0 || x >= this.x || y < 0 || y >= this.y)
+            return null;
 
 		// Lazy load
 		LandPlot p = this.plots[x][y];

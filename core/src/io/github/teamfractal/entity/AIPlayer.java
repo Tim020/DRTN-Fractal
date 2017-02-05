@@ -1,10 +1,8 @@
 package io.github.teamfractal.entity;
 
-import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -13,14 +11,7 @@ import java.util.Random;
  * @since Assessment 3
  */
 public class AIPlayer extends Player {
-    public RoboticonQuest game;
-    Array<Roboticon> roboticonList;
-    private ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
-    //<editor-fold desc="Resource getter and setter">
-    private int money = 100;
-    private int ore = 0;
-    private int energy = 0;
-    private int food = 0;
+
 
     public AIPlayer(RoboticonQuest game) {
         super(game);
@@ -35,7 +26,6 @@ public class AIPlayer extends Player {
         switch (phase) {
             case 1:
                 //"Buy Land Plot
-                System.out.println(game.getPlotManager().height);
                 phase1();
             case 2:
                 //"Purchase Roboticons
@@ -69,15 +59,17 @@ public class AIPlayer extends Player {
      */
     private void phase1() {
         boolean selected = false;
-        int x = game.getPlotManager().width;
-        int y = game.getPlotManager().height;
+        System.out.println(game);
+
+        int x = game.plotManager.x;
+        int y = game.plotManager.y;
         if (this.getMoney() >= 10) {
             while (!selected) {
                 int i = random(x);
                 int j = random(y);
-                if (!game.getPlotManager().getPlot(i, j).hasOwner()) {
+                if (!game.plotManager.getPlot(i, j).hasOwner()) {
                     selected = true;
-                    game.gameScreen.getActors().tileClicked(game.getPlotManager().getPlot(i, j), (float) i, (float) j);
+                    game.gameScreen.getActors().tileClicked(game.plotManager.getPlot(i, j), (float) i, (float) j);
 
                 }
             }

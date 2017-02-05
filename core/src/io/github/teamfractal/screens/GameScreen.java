@@ -176,9 +176,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 					tileIndexX --;
 				}
 
-				selectedPlot = game.getPlotManager().getPlot(tileIndexX, tileIndexY);
-				if (selectedPlot != null) {
-					actors.tileClicked(selectedPlot, x, y);
+                selectedPlot = game.plotManager.getPlot(tileIndexX, tileIndexY);
+                if (selectedPlot != null) {
+                    actors.tileClicked(selectedPlot, x, y);
 				}
 			}
 		});
@@ -236,10 +236,14 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		maxDragX = 0.75f * mapLayer.getTileWidth() * (mapLayer.getWidth() + 1);
 		maxDragY = 0.75f * mapLayer.getTileHeight() * (mapLayer.getHeight() + 1);
 
-		game.getPlotManager().setup(tiles, tmx.getLayers());
-		game.nextPhase();
+        game.plotManager.setup(tiles, tmx.getLayers());
+        game.nextPhase();
 
 	}
+
+    public void plotmanagerSetup() {
+        game.plotManager.setup(tiles, tmx.getLayers());
+    }
 
 	@Override
 	public void show() {
@@ -263,10 +267,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 	/**
 	 * Resize the viewport as the render window's size change.
-	 * @param width   The new width
-	 * @param height  The new height
-	 */
-	@Override
+     * @param width   The new x
+     * @param height  The new y
+     */
+    @Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
 		game.getBatch().setProjectionMatrix(stage.getCamera().combined);

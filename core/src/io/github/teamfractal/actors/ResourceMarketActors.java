@@ -32,72 +32,6 @@ public class ResourceMarketActors extends Table {
 	private Integer sellEnergyAmount;
 
 	/**
-	 * Get price in string format
-	 *
-	 * @param resource   The resource type.
-	 * @param bIsSell    <code>true</code> if is for sell,
-	 *                   or <code>false</code> if is for buy in.
-	 * @return           The formatted string for the resource.
-	 */
-	private String getPriceString(ResourceType resource, boolean bIsSell) {
-		// getBuyPrice: market buy-in price (user sell price)
-		// getSellPrice: market sell price (user buy price)
-		return resource.toString() + ": "
-				+ (bIsSell
-					? game.market.getBuyPrice(resource)
-					: game.market.getSellPrice(resource))
-				+ " Gold";
-	}
-
-	/**
-	 * Sync. information with the adjustable.
-	 * @param adjustableActor     The adjustable to manipulate with.
-	 * @param resource            The resource type.
-	 * @param bIsSell             <code>true</code> if the adjustable is for sell,
-	 *                            <code>false</code> if is for buy.
-	 */
-	private void updateAdjustable(AdjustableActor adjustableActor, ResourceType resource,
-	                              boolean bIsSell) {
-		if (bIsSell) {
-			adjustableActor.setMax(game.getPlayer().getResource(resource));
-		} else {
-			adjustableActor.setMax(game.market.getResource(resource));
-		}
-
-		adjustableActor.setTitle(getPriceString(resource, bIsSell));
-	}
-
-	/**
-	 * Generate an adjustable actor for sell/buy.
-	 *
-	 * @param resource   The resource type.
-	 * @param bIsSell    <code>true</code> if is for sell,
-	 *                   or <code>false</code> if is for buy in.
-	 * @return           The adjustable actor generated.
-	 */
-	private AdjustableActor createAdjustable(final ResourceType resource, final boolean bIsSell) {
-		final Player player = game.getPlayer();
-		final AdjustableActor adjustableActor = new AdjustableActor(game.skin, getPriceString(resource, bIsSell),
-				(bIsSell ? "Sell" : "Buy") + " " + resource.toString());
-		updateAdjustable(adjustableActor, resource, bIsSell);
-		adjustableActor.setActionEvent(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				if (bIsSell) {
-					// Sell from player to market.
-					player.sellResourceToMarket(adjustableActor.getValue(), game.market, resource);
-				} else {
-					// Player buy from market.
-					player.purchaseResourceFromMarket(adjustableActor.getValue(), game.market, resource);
-				}
-
-				ResourceMarketActors.this.widgetUpdate();
-			}
-		});
-		return adjustableActor;
-	}
-
-	/**
 	 * Initialise market actors.
 	 * @param game       The game object.
 	 * @param screen     The screen object.
@@ -167,6 +101,73 @@ public class ResourceMarketActors extends Table {
 		widgetUpdate();
 	}
 
+    /**
+     * Get price in string format
+     *
+     * @param resource The resource type.
+     * @param bIsSell  <code>true</code> if is for sell,
+     *                 or <code>false</code> if is for buy in.
+     * @return The formatted string for the resource.
+     */
+    private String getPriceString(ResourceType resource, boolean bIsSell) {
+        // getBuyPrice: market buy-in price (user sell price)
+        // getSellPrice: market sell price (user buy price)
+        return resource.toString() + ": "
+                + (bIsSell
+                ? game.market.getBuyPrice(resource)
+                : game.market.getSellPrice(resource))
+                + " Gold";
+    }
+
+    /**
+     * Sync. information with the adjustable.
+     *
+     * @param adjustableActor The adjustable to manipulate with.
+     * @param resource        The resource type.
+     * @param bIsSell         <code>true</code> if the adjustable is for sell,
+     *                        <code>false</code> if is for buy.
+     */
+    private void updateAdjustable(AdjustableActor adjustableActor, ResourceType resource,
+                                  boolean bIsSell) {
+        if (bIsSell) {
+            adjustableActor.setMax(game.getPlayer().getResource(resource));
+        } else {
+            adjustableActor.setMax(game.market.getResource(resource));
+        }
+
+        adjustableActor.setTitle(getPriceString(resource, bIsSell));
+    }
+
+    /**
+     * Generate an adjustable actor for sell/buy.
+     *
+     * @param resource The resource type.
+     * @param bIsSell  <code>true</code> if is for sell,
+     *                 or <code>false</code> if is for buy in.
+     * @return The adjustable actor generated.
+     */
+    private AdjustableActor createAdjustable(final ResourceType resource, final boolean bIsSell) {
+        final Player player = game.getPlayer();
+        final AdjustableActor adjustableActor = new AdjustableActor(game.skin, getPriceString(resource, bIsSell),
+                (bIsSell ? "Sell" : "Buy") + " " + resource.toString());
+        updateAdjustable(adjustableActor, resource, bIsSell);
+        adjustableActor.setActionEvent(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (bIsSell) {
+                    // Sell from player to market.
+                    player.sellResourceToMarket(adjustableActor.getValue(), game.market, resource);
+                } else {
+                    // Player buy from market.
+                    player.purchaseResourceFromMarket(adjustableActor.getValue(), game.market, resource);
+                }
+
+                ResourceMarketActors.this.widgetUpdate();
+            }
+        });
+        return adjustableActor;
+    }
+
 	/**
 	 * Bind button events.
 	 */
@@ -181,9 +182,9 @@ public class ResourceMarketActors extends Table {
 
 	/**
 	 * Add an empty row to current table.
-	 * @param height  The height for that empty row.
-	 */
-	private void rowWithHeight(int height) {
+     * @param height  The y for that empty row.
+     */
+    private void rowWithHeight(int height) {
 		row();
 		add().spaceTop(height);
 		row();
@@ -192,8 +193,8 @@ public class ResourceMarketActors extends Table {
 	/**
 	 * Updates all widgets on screen
 	 */
-	public void widgetUpdate() {
-		// update player stats, phase text, and the market stats.
+    private void widgetUpdate() {
+        // update player stats, phase text, and the market stats.
 		String phaseText =
 				"Player " + (game.getPlayerInt() + 1) + "; " +
 				"Phase " + game.getPhase() + " - " + game.getPhaseString();
@@ -222,10 +223,10 @@ public class ResourceMarketActors extends Table {
 
 	/**
 	 * Respond to the screen resize event, updates widgets position
-	 * accordingly.
-	 * @param width    The new width.
-	 * @param height   The new Height.
-	 */
+     * accordingly.
+     * @param width    The new x.
+     * @param height   The new Height.
+     */
 	public void screenResize(float width, float height) {
 		// Bottom Left
 		phaseInfo.setPosition(0, height - 20);

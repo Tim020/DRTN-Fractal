@@ -33,10 +33,10 @@ public class RoboticonQuest extends Game {
 	public Market market;
 	public RoboticonMarketScreen roboticonMarket;
 	public TiledMap tmx;
+    public PlotManager plotManager;
     private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
     private SpriteBatch batch;
-    private PlotManager plotManager;
     private int phase;
     private int currentPlayerIndex;
     private int landBoughtThisTurn;
@@ -101,7 +101,7 @@ public class RoboticonQuest extends Game {
 	public void reset() {
         this.currentPlayerIndex = 0;
         this.phase = 0;
-
+        plotManager = new PlotManager();
         Player player1 = new AIPlayer(this);
         Player player2 = new Player(this);
         this.playerList = new ArrayList<Player>();
@@ -109,7 +109,7 @@ public class RoboticonQuest extends Game {
 		this.playerList.add(player2);
         this.currentPlayerIndex = 0;
         this.market = new Market();
-        plotManager = new PlotManager();
+
     }
 
 	public void nextPhase () {
@@ -251,9 +251,6 @@ public class RoboticonQuest extends Game {
 
     }
 
-	public PlotManager getPlotManager() {
-        return this.plotManager;
-    }
 
 	/**
 	 * Checks whether the game has ended based on whether all of the tiles have been claimed
@@ -263,9 +260,9 @@ public class RoboticonQuest extends Game {
         boolean ended = true;
 		LandPlot[][] plots = plotManager.getLandPlots();
         for (LandPlot[] plot : plots) {
-            for (int y = 0; y < plot.length; y++) {
-                if (plot[y] != null) {
-                    if (!plot[y].hasOwner()) {
+            for (LandPlot aPlot : plot) {
+                if (aPlot != null) {
+                    if (!aPlot.hasOwner()) {
                         ended = false;
                     }
                 }
@@ -279,8 +276,8 @@ public class RoboticonQuest extends Game {
 	 * @return
 	 */
     private Player getWinner() {
-        Player winner = null;
-		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
+        Player winner;
+        if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
 			winner = playerList.get(0);
 		}
 		else{
