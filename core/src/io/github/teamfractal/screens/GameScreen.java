@@ -238,6 +238,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		game.getPlotManager().setup(tiles, tmx.getLayers());
 		game.nextPhase();
+
 	}
 
 	@Override

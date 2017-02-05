@@ -49,7 +49,7 @@ public class PlotManager {
 
 		width = mapLayer.getWidth();
 		height = mapLayer.getHeight();
-		plots = new LandPlot[width][height];
+		this.plots = new LandPlot[width][height];
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class PlotManager {
 			return null;
 
 		// Lazy load
-		LandPlot p = plots[x][y];
+		LandPlot p = this.plots[x][y];
 		if (p == null) {
 			p = createLandPlot(x, y);
 		}
@@ -119,7 +119,7 @@ public class PlotManager {
 
 		LandPlot p = new LandPlot(ore, energy, food);
 		p.setupTile(this, x, y);
-		plots[x][y] = p;
+		this.plots[x][y] = p;
 		return p;
 	}
 
