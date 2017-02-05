@@ -39,6 +39,7 @@ public class PlotManager {
 		this.playerOverlay = (TiledMapTileLayer)layers.get("PlayerOverlay");
 		this.roboticonOverlay = (TiledMapTileLayer)layers.get("RoboticonOverlay");
 
+		//TODO: IDs may be incorrect, check/edit needed
 		this.cityTile = tiles.getTile(60);
 		this.waterTile = tiles.getTile(9);
 		this.forestTile = tiles.getTile(61);
