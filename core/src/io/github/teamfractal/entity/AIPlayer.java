@@ -21,10 +21,9 @@ public class AIPlayer extends Player {
     /**
      * Function calling the AIPlayer to take action.
      *
-     * @param phase int 1-5 containing the current phase of the system.
      */
-    public void takeTurn(int phase) {
-        switch (phase) {
+    public void takeTurn() {
+        switch (game.getPhase()) {
             case 1:
                 //"Buy Land Plot
                 System.out.println("Phase 1 in progress");
@@ -64,6 +63,7 @@ public class AIPlayer extends Player {
      * </p>
      */
     private void phase1() {
+        /* First Try:
         boolean selected = false;
         int x = game.plotManager.x;
         int y = game.plotManager.y;
@@ -82,7 +82,9 @@ public class AIPlayer extends Player {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
+
+
         game.nextPhase();
     }
 
@@ -90,6 +92,8 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 2.
      */
     private void phase2() {
+
+        //TODO Make correct
 
         for (LandPlot aLandList : this.landList) {
             if (!aLandList.hasRoboticon()) {
@@ -102,9 +106,11 @@ public class AIPlayer extends Player {
                         max_index = j;
                     }
                 }
+                System.out.println(max_index);
                 switch (max_index) {
                     case 0:
                         //ORE
+
                         game.roboticonMarket.getActors().addRoboticonFunction();
                         game.roboticonMarket.getActors().buyRoboticonFunction();
                         game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ORE, 0);
@@ -138,6 +144,7 @@ public class AIPlayer extends Player {
     private void phase3() {
 
         //TODO: Implement
+        game.nextPhase();
     }
 
     /**
@@ -153,6 +160,7 @@ public class AIPlayer extends Player {
     private void phase5() {
 
         //TODO: Implement
+        game.nextPhase();
     }
 
 }

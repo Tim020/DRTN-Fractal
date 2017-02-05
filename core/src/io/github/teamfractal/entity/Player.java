@@ -405,10 +405,8 @@ public class Player {
 
     /**
      * Method to be overloaded by AI inheritance
-     *
-     * @param phase phase in play
      */
-    public void takeTurn(int phase) {
+    public void takeTurn() {
         //Overload in AIPlayer
     }
 }

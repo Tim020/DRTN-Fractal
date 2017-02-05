@@ -153,9 +153,6 @@ public class RoboticonQuest extends Game {
 			// Phase 4: Purchase Resource
 			case 4:
 				generateResources();
-                if (this.getPlayer() instanceof AIPlayer) {
-                    this.getPlayer().takeTurn(4);
-                }
                 break;
 
 			// Phase 5: Generate resource for player.
@@ -186,7 +183,7 @@ public class RoboticonQuest extends Game {
         }
 
         if (this.getPlayer() instanceof AIPlayer) {
-            this.getPlayer().takeTurn(newPhaseState);
+            this.getPlayer().takeTurn();
         }
 
 		if (gameScreen != null)

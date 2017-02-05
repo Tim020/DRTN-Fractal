@@ -350,4 +350,6 @@ public class GameScreenActors {
 	public boolean installRoboticonVisible() {
 		return installRoboticonTable.isVisible();
 	}
+
+	
 }
