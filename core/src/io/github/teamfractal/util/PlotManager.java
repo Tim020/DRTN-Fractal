@@ -9,13 +9,13 @@ import io.github.teamfractal.entity.LandPlot;
 import java.util.Random;
 
 public class PlotManager {
-	private LandPlot[][] plots;
+    public int width;
+    public int height;
+    private LandPlot[][] plots;
 	private TiledMapTileSets tiles;
 	private TiledMapTileLayer mapLayer;
 	private TiledMapTileLayer playerOverlay;
 	private TiledMapTileLayer roboticonOverlay;
-	private int width;
-	private int height;
 	private TiledMapTile cityTile;
 	private TiledMapTile waterTile;
 	private TiledMapTile forestTile;
@@ -47,10 +47,14 @@ public class PlotManager {
 		this.hillTile3 = tiles.getTile(6);
 		this.hillTile4 = tiles.getTile(7);
 
-		width = mapLayer.getWidth();
-		height = mapLayer.getHeight();
+        System.out.println(this.width);
+        this.width = mapLayer.getWidth();
+        System.out.println(this.width);
+        this.height = mapLayer.getHeight();
+
 		this.plots = new LandPlot[width][height];
-	}
+
+    }
 
 	/**
 	 * Get {@link LandPlot} at specific position.

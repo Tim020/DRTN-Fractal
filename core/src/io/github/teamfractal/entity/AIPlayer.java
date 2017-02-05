@@ -35,6 +35,7 @@ public class AIPlayer extends Player {
         switch (phase) {
             case 1:
                 //"Buy Land Plot
+                System.out.println(game.getPlotManager().height);
                 phase1();
             case 2:
                 //"Purchase Roboticons
@@ -68,16 +69,15 @@ public class AIPlayer extends Player {
      */
     private void phase1() {
         boolean selected = false;
-        LandPlot[][] plots = game.getPlotManager().getLandPlots();
-        int x = plots.length;
-        int y = plots[0].length;
+        int x = game.getPlotManager().width;
+        int y = game.getPlotManager().height;
         if (this.getMoney() >= 10) {
             while (!selected) {
                 int i = random(x);
                 int j = random(y);
-                if (!plots[i][j].hasOwner()) {
+                if (!game.getPlotManager().getPlot(i, j).hasOwner()) {
                     selected = true;
-                    game.gameScreen.getActors().tileClicked(plots[i][j], (float) i, (float) j);
+                    game.gameScreen.getActors().tileClicked(game.getPlotManager().getPlot(i, j), (float) i, (float) j);
 
                 }
             }
@@ -94,7 +94,7 @@ public class AIPlayer extends Player {
             if (!aLandList.hasRoboticon()) {
                 int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
                 int max = 0;
-                int max_index = 10; //Initialise to index not used to not return false positives
+                int max_index = -1; //Initialise to index not used to not return false positives
                 for (int j = 0; j < resources.length; j++) {
                     if (resources[j] > max) {
                         max = resources[j];
