@@ -28,8 +28,6 @@ public class Player {
 	public Player(RoboticonQuest game){
 		this.game = game;
 		this.roboticonList = new Array<Roboticon>();
-        System.out.println("hello I'm a player");
-
 
 	}
 
