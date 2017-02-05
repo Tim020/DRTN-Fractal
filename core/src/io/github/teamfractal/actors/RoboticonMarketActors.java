@@ -19,12 +19,14 @@ public class RoboticonMarketActors extends Table {
 	private static final Texture no_cust_texture;
 	private static final Texture energy_texture;
 	private static final Texture ore_texture;
+    private static final Texture food_texture;
 	private static final Texture no_robotic_texture;
 
 	static {
 		no_cust_texture = new Texture(Gdx.files.internal("roboticon_images/robot.png"));
 		energy_texture = new Texture(Gdx.files.internal("roboticon_images/robot_energy.png"));
 		ore_texture = new Texture(Gdx.files.internal("roboticon_images/robot_ore.png"));
+		food_texture = new Texture(Gdx.files.internal("roboticon_images/robot_question.png")); //TODO: Create food roboticon texture and insert path here
 		no_robotic_texture = new Texture(Gdx.files.internal("roboticon_images/no_roboticons.png"));
 	}
 
@@ -248,8 +250,6 @@ public class RoboticonMarketActors extends Table {
 
 			ResourceType roboticonType = roboticons.get(roboticonPos).getCustomisation();
 
-            //TODO Food
-
 			switch (roboticonType) {
 				case Unknown:
 					roboticonTexture = no_cust_texture;
@@ -260,6 +260,9 @@ public class RoboticonMarketActors extends Table {
 				case ORE:
 					roboticonTexture = ore_texture;
 					break;
+                case FOOD:
+                    roboticonTexture = food_texture;
+                    break;
 				default:
 					break;
 			}
