@@ -43,10 +43,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	private TiledMapTileSets tiles;
 
 
-	public LandPlot getSelectedPlot() {
-		return selectedPlot;
-	}
-
 	/**
 	 * Initialise the class
 	 * @param game  The game object
@@ -67,12 +63,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		this.actors = new GameScreenActors(game, this);
 		actors.initialiseButtons();
 		// actors.textUpdate();
-		
-		
 
-		// Drag the map within the screen.
-		stage.addListener(new DragListener() {
-			/**
+
+        // Drag the map within the screen.
+        stage.addListener(new DragListener() {
+            /**
 			 * On start of the drag event, record current position.
 			 * @param event    The event object
 			 * @param x        X position of mouse (on screen)
@@ -192,6 +187,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		// Finally, start a new game and initialise variables.
 		// newGame();
 	}
+
+    public LandPlot getSelectedPlot() {
+        return selectedPlot;
+    }
+
 	/**
 	 * gets the players tile to put over a tile they own
 	 * @param player player to buy plot
@@ -204,13 +204,14 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	 * gets the tile with the players colour and the roboticon specified to mine that resource
 	 * @param player player who's colour you want
 	 * @param type type of resource roboticon is specified for
-	 * @return
-	 */
-	public TiledMapTile getResourcePlayerTile(Player player, ResourceType type){
+     * @return the tile image
+     */
+    public TiledMapTile getResourcePlayerTile(Player player, ResourceType type){
 		switch(type){
-		case ORE:
-			return tiles.getTile(68 + game.getPlayerIndex(player) + 4);
-		case ENERGY:
+            //TODO: add food
+            case ORE:
+                return tiles.getTile(68 + game.getPlayerIndex(player) + 4);
+            case ENERGY:
 			return tiles.getTile(68 + game.getPlayerIndex(player) + 8);
 		default:
 			return tiles.getTile(68 + game.getPlayerIndex(player) + 12);
