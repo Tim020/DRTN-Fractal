@@ -248,10 +248,12 @@ public class RoboticonQuest extends Game {
 	public boolean checkGameEnded(){
 		boolean ended = true;
 		LandPlot[][] plots = plotManager.getLandPlots();
-		for(int x = 0; x < plots[0].length ; x++){
-			for(int y = 0; y < plots [1].length ; y++){
-				if(plots[x][y].hasOwner() == false){
-					ended = false;
+		for(int x = 0; x < plots.length ; x++){
+			for(int y = 0; y < plots[x].length ; y++){
+				if (plots[x][y] != null){
+					if (plots[x][y].hasOwner() == false) {
+						ended = false;
+					}
 				}
 			}
 		}
