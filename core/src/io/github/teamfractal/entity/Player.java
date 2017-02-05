@@ -392,4 +392,12 @@ public class Player {
         return ore + energy + food;
     }
 
+    /**
+     * Method to be overloaded by AI inheritance
+     *
+     * @param phase phase in play
+     */
+    public void takeTurn(int phase) {
+        //Overload in AIPlayer
+    }
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
+import io.github.teamfractal.entity.AIPlayer;
 import io.github.teamfractal.entity.LandPlot;
 import io.github.teamfractal.entity.Market;
 import io.github.teamfractal.entity.Player;
@@ -26,19 +27,19 @@ import java.util.ArrayList;
  * It will set up all the necessary classes.
  */
 public class RoboticonQuest extends Game {
-	static RoboticonQuest _instance;
-	public Skin skin;
-	public MainMenuScreen mainMenuScreen;
-	public GameScreen gameScreen;
-	public ArrayList<Player> playerList;
+    private static RoboticonQuest _instance;
+    public Skin skin;
+    public GameScreen gameScreen;
 	public Market market;
 	public RoboticonMarketScreen roboticonMarket;
 	public TiledMap tmx;
-	SpriteBatch batch;
-	private PlotManager plotManager;
-	private int phase;
-	private int currentPlayer;
-	private int landBoughtThisTurn;
+    private MainMenuScreen mainMenuScreen;
+    private ArrayList<Player> playerList;
+    private SpriteBatch batch;
+    private PlotManager plotManager;
+    private int phase;
+    private int currentPlayerIndex;
+    private int landBoughtThisTurn;
 
 	public RoboticonQuest(){
 		_instance = this;
@@ -98,18 +99,18 @@ public class RoboticonQuest extends Game {
 	}
 
 	public void reset() {
-		this.currentPlayer = 0;
-		this.phase = 0;
+        this.currentPlayerIndex = 0;
+        this.phase = 0;
 
-		Player player1 = new Player(this);
-		Player player2 = new Player(this);
-		this.playerList = new ArrayList<Player>();
-		this.playerList.add(player1);
+        Player player1 = new AIPlayer(this);
+        Player player2 = new Player(this);
+        this.playerList = new ArrayList<Player>();
+        this.playerList.add(player1);
 		this.playerList.add(player2);
-		this.currentPlayer = 0;
-		this.market = new Market();
-		plotManager = new PlotManager();
-	}
+        this.currentPlayerIndex = 0;
+        this.market = new Market();
+        plotManager = new PlotManager();
+    }
 
 	public void nextPhase () {
 		int newPhaseState = phase + 1;
@@ -123,7 +124,11 @@ public class RoboticonQuest extends Game {
 				this.roboticonMarket = new RoboticonMarketScreen(this);
 				this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
 				setScreen(this.roboticonMarket);
-				break;
+
+                if (this.getPlayer() instanceof AIPlayer) {
+                    this.getPlayer().takeTurn(2);
+                }
+                break;
 
 			// Phase 3: Roboticon Customisation
 			case 3:
@@ -137,24 +142,33 @@ public class RoboticonQuest extends Game {
 				});
 				gameScreen.getActors().updateRoboticonSelection();
 				setScreen(gameScreen);
-				break;
+                if (this.getPlayer() instanceof AIPlayer) {
+                    this.getPlayer().takeTurn(3);
+                }
+                break;
 
 			// Phase 4: Purchase Resource
 			case 4:
 				generateResources();
-				break;
+                if (this.getPlayer() instanceof AIPlayer) {
+                    this.getPlayer().takeTurn(4);
+                }
+                break;
 
 			// Phase 5: Generate resource for player.
 			case 5:
 				setScreen(new ResourceMarketScreen(this));
-				break;
-			
+                if (this.getPlayer() instanceof AIPlayer) {
+                    this.getPlayer().takeTurn(5);
+                }
+                break;
 
-			// End phase - CLean up and move to next player.
-			case 6:
-				if(checkGameEnded() == true){
-					Player winner = getWinner();
-					// TODO: 01/02/2017 A function here that creates the end game screen 
+
+            // End phase - CLean up and move to next player.
+            case 6:
+                if (checkGameEnded()) {
+                    Player winner = getWinner();
+                    // TODO: 01/02/2017 A function here that creates the end game screen
 				}
 				phase = newPhaseState = 1;
 				this.nextPlayer();
@@ -166,12 +180,16 @@ public class RoboticonQuest extends Game {
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
 				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
-				break;
-		}
+                if (this.getPlayer() instanceof AIPlayer) {
+                    this.getPlayer().takeTurn(1);
+                }
+                break;
+        }
 
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();
 	}
+
 
 	/**
 	 * Phase 4: generate resources.
@@ -222,20 +240,20 @@ public class RoboticonQuest extends Game {
 	}
 
 	public Player getPlayer(){
-		return this.playerList.get(this.currentPlayer);
-	}
-	
-	public int getPlayerInt(){
-		return this.currentPlayer;
-	}
-	public void nextPlayer(){
-		if (this.currentPlayer == playerList.size() - 1){
-			this.currentPlayer = 0; 
-		}
-		else{
-			this.currentPlayer ++;
-		}
-	}
+        return this.playerList.get(this.currentPlayerIndex);
+    }
+
+    public int getPlayerInt() {
+        return this.currentPlayerIndex;
+    }
+
+    void nextPlayer() {
+        if (this.currentPlayerIndex == playerList.size() - 1) {
+            this.currentPlayerIndex = 0;
+        } else {
+            this.currentPlayerIndex++;
+        }
+    }
 
 	public PlotManager getPlotManager() {
 		return plotManager;
@@ -245,27 +263,27 @@ public class RoboticonQuest extends Game {
 	 * Checks whether the game has ended based on whether all of the tiles have been claimed
 	 * @return Returns true if ended, false if not
 	 */
-	public boolean checkGameEnded(){
-		boolean ended = true;
+    private boolean checkGameEnded() {
+        boolean ended = true;
 		LandPlot[][] plots = plotManager.getLandPlots();
-		for(int x = 0; x < plots.length ; x++){
-			for(int y = 0; y < plots[x].length ; y++){
-				if (plots[x][y] != null){
-					if (plots[x][y].hasOwner() == false) {
-						ended = false;
-					}
-				}
-			}
-		}
-		return ended;
+        for (LandPlot[] plot : plots) {
+            for (int y = 0; y < plot.length; y++) {
+                if (plot[y] != null) {
+                    if (!plot[y].hasOwner()) {
+                        ended = false;
+                    }
+                }
+            }
+        }
+        return ended;
 	}
 
 	/**
 	 * Returns the winner of the game, based on which player has the highest score
 	 * @return
 	 */
-	public Player getWinner(){
-		Player winner = null;
+    private Player getWinner() {
+        Player winner = null;
 		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
 			winner = playerList.get(0);
 		}
