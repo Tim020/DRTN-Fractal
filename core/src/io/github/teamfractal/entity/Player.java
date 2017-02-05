@@ -282,7 +282,9 @@ public class Player {
 		for (LandPlot plot : landList) {
 			energy += plot.produceResource(ResourceType.ENERGY);
 			ore += plot.produceResource(ResourceType.ORE);
-            food += plot.produceResource(ResourceType.FOOD);
+
+			food += plot.produceResource(ResourceType.FOOD);
+
 		}
 	}
 	/**
@@ -333,7 +335,6 @@ public class Player {
 		int uncustomised = 0;
 		Array<String> roboticonAmountList = new Array<String>();
 
-		/* TODO: add food */
         for (Roboticon r : roboticonList) {
             if (!r.isInstalled()) {
 				switch (r.getCustomisation()) {
@@ -374,7 +375,9 @@ public class Player {
 		for (LandPlot land : landList) {
 			energy += land.produceResource(ResourceType.ENERGY);
 			ore += land.produceResource(ResourceType.ORE);
-            food += land.produceResource(ResourceType.ORE);
+
+			food += land.produceResource(ResourceType.FOOD);
+
 		}
 
 		setEnergy(getEnergy() + energy);
