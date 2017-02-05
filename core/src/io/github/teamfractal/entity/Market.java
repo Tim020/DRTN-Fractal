@@ -167,7 +167,7 @@ public class Market {
 				break;
 
 			case FOOD:
-				setFood(amount);;
+				setFood(amount);
 				break;
 				
 			case CUSTOMISATION:
@@ -198,7 +198,33 @@ public class Market {
 	 * @return           The buy in price.
 	 */
 	public int getBuyPrice(ResourceType resource) {
-		return (int)(getSellPrice(resource) * 0.9f);
+		int buyPrice = (int)(getSellPrice(resource) * 0.01f);
+		if (buyPrice < 1){
+			buyPrice = 1;
+			return buyPrice;
+		}
+		else {
+			return buyPrice;
+		}
+
+	}
+
+	/**
+	 * Calculates Sell price.
+	 * @param resource	The {@link ResourceType}.
+	 * @return			Returns new calculated Sell price value.
+	 */
+	private int calcSellPrice(ResourceType resource) {
+		int sellPrice;
+		if (getResource(resource) == 0) {
+			sellPrice = 50;
+			return sellPrice;
+		}
+		else {
+			sellPrice = (50 / (getResource(resource) + 1));
+
+			return sellPrice;
+		}
 	}
 
 	/**
@@ -206,23 +232,24 @@ public class Market {
 	 * @param resource   The {@link ResourceType}.
 	 * @return           The sell price.
 	 */
-	public int getSellPrice(ResourceType resource) {
+
+	public int getSellPrice(ResourceType resource) { // some changes was made
 		int price;
 		switch (resource) {
 			case ORE:
-				price = 10;
+				price = calcSellPrice(ResourceType.ORE);
 				return price;
 
 			case ENERGY:
-				price = 20;
+				price = calcSellPrice(ResourceType.ENERGY);
 				return price;
 
 			case FOOD:
-				price = 30;
+				price = calcSellPrice(ResourceType.FOOD);
 				return price;
 
 			case ROBOTICON:
-				price = 40;
+				price = calcSellPrice(ResourceType.ROBOTICON);
 				return price;
 
 			case CUSTOMISATION:

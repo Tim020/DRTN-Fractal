@@ -1,5 +1,6 @@
 package io.github.teamfractal.entity;
 
+import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.animation.AnimationAddResources;
 import io.github.teamfractal.animation.IAnimation;
@@ -10,34 +11,29 @@ import io.github.teamfractal.exception.NotCommonResourceException;
 import io.github.teamfractal.exception.NotEnoughResourceException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
-
-import com.badlogic.gdx.utils.Array;
 
 public class Player {
+	public RoboticonQuest game;
+	Array<Roboticon> roboticonList;
+	private ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
 	//<editor-fold desc="Resource getter and setter">
 	private int money = 100;
 	private int ore = 0;
 	private int energy = 0;
 	private int food = 0;
-	ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
-	Array<Roboticon> roboticonList;
-	private RoboticonQuest game;
 
-	public int getMoney() { return money; }
-	public int getOre() { return ore; }
-	public int getEnergy() { return energy; }
-	public int getFood() { return food; }
-	
 	public Player(RoboticonQuest game){
 		this.game = game;
 		this.roboticonList = new Array<Roboticon>();
 
-		
+
 	}
+
+	public int getMoney() {
+		return money;
+	}
+
 	/**
 	 * Set the amount of money player has
 	 * @param money                      The amount of new money.
@@ -51,6 +47,10 @@ public class Player {
 		this.money = money;
 	}
 
+	public int getOre() {
+		return ore;
+	}
+	
 	/**
 	 * Set the amount of ore player has
 	 * @param amount                     The new amount for ore.
@@ -62,6 +62,10 @@ public class Player {
 		}
 
 		this.ore = amount;
+	}
+
+	public int getEnergy() {
+		return energy;
 	}
 
 	/**
@@ -76,6 +80,10 @@ public class Player {
 		}
 
 		this.energy = amount;
+	}
+
+	public int getFood() {
+		return food;
 	}
 
 	/**
@@ -140,9 +148,9 @@ public class Player {
 
 	/**
 	 * Purchase roboticon from the market.
-	 * @param amount
-	 * @param market
-	 * @return
+	 * @param amount number of roboticons requested
+	 * @param market the market being purchased from
+	 * @return returns purchase status
 	 */
 	public PurchaseStatus purchaseRoboticonsFromMarket(int amount, Market market) {
 		Random random = new Random();
@@ -181,7 +189,7 @@ public class Player {
 			return PurchaseStatus.FailMarketNotEnoughResource;
 		}
 
-		int cost = 1 * market.getSellPrice(ResourceType.CUSTOMISATION);
+		int cost = market.getSellPrice(ResourceType.CUSTOMISATION);
 		int money = getMoney();
 		if (cost > money) {
 			return PurchaseStatus.FailPlayerNotEnoughMoney;
@@ -279,7 +287,7 @@ public class Player {
 	 * @param type       The roboticon customisation type.
 	 * @return           The roboticon
 	 */
-	public Roboticon customiseRoboticon(Roboticon roboticon, ResourceType type) {
+	Roboticon customiseRoboticon(Roboticon roboticon, ResourceType type) {
 		roboticon.setCustomisation(type);
 		return roboticon;
 	}
@@ -290,7 +298,7 @@ public class Player {
 	 * @param landPlot  LandPlot to be bind to the user.
 	 *                  <code>LandPlot.setOwner(this_user)</code> first.
 	 */
-	public void addLandPlot(LandPlot landPlot) {
+	void addLandPlot(LandPlot landPlot) {
 		if (landPlot != null && !landList.contains(landPlot) && landPlot.getOwner() == this) {
 			landList.add(landPlot);
 		}
@@ -302,7 +310,7 @@ public class Player {
 	 * @param landPlot  LandPlot to be removed from the user.
 	 *                  <code>this_user</code> must be the current owner first.
 	 */
-	public void removeLandPlot(LandPlot landPlot) {
+	void removeLandPlot(LandPlot landPlot) {
 		if (landPlot != null && landList.contains(landPlot) && landPlot.getOwner() == this) {
 			landList.add(landPlot);
 		}
@@ -320,8 +328,9 @@ public class Player {
 		int uncustomised = 0;
 		Array<String> roboticonAmountList = new Array<String>();
 
-		for (Roboticon r : roboticonList) {
-			if (!r.isInstalled()) {
+		/* TODO: add food */
+        for (Roboticon r : roboticonList) {
+            if (!r.isInstalled()) {
 				switch (r.getCustomisation()) {
 					case ORE:
 						ore += 1;
@@ -373,4 +382,14 @@ public class Player {
 		});
 		game.gameScreen.addAnimation(animation);
 	}
+
+
+    /**
+     * Returns the score of the player which is a combination of ore, energy and food.
+     * @return The score of the player.
+     */
+	public int calculateScore(){
+        return ore + energy + food;
+    }
+
 }
