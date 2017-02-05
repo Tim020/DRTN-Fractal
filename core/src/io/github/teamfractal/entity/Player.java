@@ -13,19 +13,22 @@ import io.github.teamfractal.exception.NotEnoughResourceException;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class Player {
 	public RoboticonQuest game;
 	Array<Roboticon> roboticonList;
-	private ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
-	//<editor-fold desc="Resource getter and setter">
-	private int money = 100;
-	private int ore = 0;
-	private int energy = 0;
-	private int food = 0;
+    ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
+    //<editor-fold desc="Resource getter and setter">
+    private int money = 100;
+    private int ore = 0;
+    private int energy = 0;
+    private int food = 0;
+
 
 	public Player(RoboticonQuest game){
 		this.game = game;
 		this.roboticonList = new Array<Roboticon>();
+        System.out.println("hello I'm a player");
 
 
 	}
@@ -279,7 +282,9 @@ public class Player {
 		for (LandPlot plot : landList) {
 			energy += plot.produceResource(ResourceType.ENERGY);
 			ore += plot.produceResource(ResourceType.ORE);
+
 			food += plot.produceResource(ResourceType.FOOD);
+
 		}
 	}
 	/**
@@ -370,7 +375,9 @@ public class Player {
 		for (LandPlot land : landList) {
 			energy += land.produceResource(ResourceType.ENERGY);
 			ore += land.produceResource(ResourceType.ORE);
+
 			food += land.produceResource(ResourceType.FOOD);
+
 		}
 
 		setEnergy(getEnergy() + energy);
@@ -398,4 +405,12 @@ public class Player {
         return ore + energy + food;
     }
 
+    /**
+     * Method to be overloaded by AI inheritance
+     *
+     * @param phase phase in play
+     */
+    public void takeTurn(int phase) {
+        //Overload in AIPlayer
+    }
 }

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.actors.RoboticonMarketActors;
 
@@ -89,5 +88,9 @@ public class RoboticonMarketScreen extends AbstractAnimationScreen implements Sc
 		s.Width = stage.getViewport().getScreenWidth();
 		s.Height = stage.getViewport().getScreenHeight();
 		return s;
+	}
+
+	public RoboticonMarketActors getActors() {
+		return this.actors;
 	}
 }
