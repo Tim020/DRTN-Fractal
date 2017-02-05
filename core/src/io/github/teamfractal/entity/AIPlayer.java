@@ -3,6 +3,7 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 
+
 import java.util.Random;
 
 /**
@@ -26,18 +27,23 @@ public class AIPlayer extends Player {
         switch (phase) {
             case 1:
                 //"Buy Land Plot
+                System.out.println("Phase 1 in progress");
                 phase1();
             case 2:
                 //"Purchase Roboticons
+                System.out.println("Phase 2 in progress");
                 phase2();
             case 3:
                 //Install Roboticons
+                System.out.println("Phase 3 in progress");
                 phase3();
             case 4:
                 //Resource Generation
+                System.out.println("Phase 4 in progress");
                 phase4();
             case 5:
                 //Resource Auction
+                System.out.println("Phase 5 in progress");
                 phase5();
             default:
                 // Unknown phase
@@ -59,8 +65,6 @@ public class AIPlayer extends Player {
      */
     private void phase1() {
         boolean selected = false;
-        System.out.println(game);
-
         int x = game.plotManager.x;
         int y = game.plotManager.y;
         if (this.getMoney() >= 10) {
@@ -69,10 +73,15 @@ public class AIPlayer extends Player {
                 int j = random(y);
                 if (!game.plotManager.getPlot(i, j).hasOwner()) {
                     selected = true;
+                    //TODO Fix this, and force game to render screen.
                     game.gameScreen.getActors().tileClicked(game.plotManager.getPlot(i, j), (float) i, (float) j);
-
                 }
             }
+        }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         game.nextPhase();
     }
@@ -135,7 +144,7 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 4.
      */
     private void phase4() {
-        //TODO: Implement
+        game.nextPhase();
     }
 
     /**

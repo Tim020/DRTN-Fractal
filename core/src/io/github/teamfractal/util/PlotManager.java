@@ -48,10 +48,7 @@ public class PlotManager {
 		this.hillTile3 = tiles.getTile(6);
 		this.hillTile4 = tiles.getTile(7);
 
-        System.out.println(this.x);
-
         this.x = mapLayer.getWidth();
-        System.out.println(this.x);
 
         this.y = mapLayer.getHeight();
 
