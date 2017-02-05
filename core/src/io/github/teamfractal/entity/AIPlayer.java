@@ -82,6 +82,7 @@ public class AIPlayer extends Player {
                 }
             }
         }
+        game.nextPhase();
     }
 
     /**
@@ -124,7 +125,9 @@ public class AIPlayer extends Player {
                         //uh oh
 
                 }
+
             }
+            game.nextPhase();
         }
     }
 
