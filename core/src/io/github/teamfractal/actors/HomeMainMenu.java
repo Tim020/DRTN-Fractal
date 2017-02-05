@@ -16,6 +16,7 @@ import io.github.teamfractal.RoboticonQuest;
 public class HomeMainMenu extends Table {
 	private RoboticonQuest game;
 	private TextButton btnNewGame;
+	private TextButton btnNewGameAI;
 	private TextButton btnExit;
 
 	private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Roboticon_Quest_Title"));
@@ -32,10 +33,12 @@ public class HomeMainMenu extends Table {
 		imgTitle.setDrawable(new TextureRegionDrawable(new TextureRegion(titleTexture)));
 		
 		btnNewGame = new TextButton("New game!", game.skin);
+		btnNewGameAI = new TextButton("New game vs. AI!", game.skin);
 		btnExit = new TextButton("Exit", game.skin);
 
 		// Adjust properties.
 		btnNewGame.pad(10);
+		btnNewGameAI.pad(10);
 		btnExit.pad(10);
 
 		// Bind events.
@@ -45,6 +48,8 @@ public class HomeMainMenu extends Table {
 		add(imgTitle);
 		row();
 		add(btnNewGame).pad(5);
+		row();
+		add(btnNewGameAI).pad(5);
 		row();
 		add(btnExit).pad(5);
 	}
@@ -57,7 +62,15 @@ public class HomeMainMenu extends Table {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				game.setScreen(game.gameScreen);
-				game.gameScreen.newGame();
+				game.gameScreen.newGame(false);
+			}
+		});
+
+		btnNewGameAI.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				game.setScreen(game.gameScreen);
+				game.gameScreen.newGame(true);
 			}
 		});
 

@@ -43,7 +43,7 @@ public class RoboticonQuest extends Game {
 
 	public RoboticonQuest(){
 		_instance = this;
-		reset();
+		reset(false);
 	}
 
 	public static RoboticonQuest getInstance() {
@@ -98,12 +98,20 @@ public class RoboticonQuest extends Game {
 		return this.phase;
 	}
 
-	public void reset() {
+	public void reset(boolean AI) {
         this.currentPlayerIndex = 0;
         this.phase = 0;
         plotManager = new PlotManager();
-        Player player1 = new AIPlayer(this);
-        Player player2 = new Player(this);
+        Player player1;
+        Player player2;
+        if (AI == true){
+            player1 = new AIPlayer(this);
+            player2 = new Player(this);
+        } else{
+            player1 = new Player(this);
+            player2 = new Player(this);
+        }
+
         this.playerList = new ArrayList<Player>();
         this.playerList.add(player1);
 		this.playerList.add(player2);
