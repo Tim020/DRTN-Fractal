@@ -15,6 +15,7 @@ public class EndGameActors extends Table {
     private Label player2Score;
     private Label winner;
     private Label title;
+    private Label space;
 
 
     public EndGameActors(final RoboticonQuest game, EndGameScreen screen){
@@ -22,16 +23,18 @@ public class EndGameActors extends Table {
         this.screen = screen;
         this.player1Score = new Label("Player 1 Score = " + String.valueOf(game.getPlayerList().get(0).calculateScore()),game.skin);
         this.player2Score = new Label("Player 2 Score = " + String.valueOf(game.getPlayerList().get(1).calculateScore()),game.skin);
-        this.winner = new Label("The winner is player " + game.getWinner(), game.skin);
+        this.winner = new Label("The winner is " + game.getWinner(), game.skin);
         this.title = new Label("End of Game", game.skin);
-        add(title);
+        this.space = new Label("      ", game.skin);
+        add(title).padRight(-90).padTop(-300);
         row();
         row();
-        add(player1Score);
+        add(player1Score).padLeft(-50);
+        add(space);
         add(player2Score);
         row();
         row();
-        add(winner);
+        add(winner).padRight(-90).padBottom(-300);
 
 
     }
