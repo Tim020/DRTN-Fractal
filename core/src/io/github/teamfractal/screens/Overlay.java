@@ -10,11 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 public class Overlay extends Stage {
 
     /**
-     * Stores current game-state, granting direct render access to the class
-     */
-    private Game game;
-
-    /**
      * Table providing spatial framework for the overlay
      */
     private Table table;
@@ -49,19 +44,15 @@ public class Overlay extends Stage {
      * The overlay's [draw()] method is unlike that of the standard Stage class as it also draws a bordered
      * rectangle behind the overlay region, hence rendering it a true overlay
      *
-     * @param game Variable storing the game's state for rendering purposes
      * @param fillColor The colour of the overlay's background
      * @param lineColour The colour of the overlay's border
      * @param regionWidth The width of the overlay
      * @param regionHeight The height of the overlay
      * @param lineThickness The thickness of the overlay's border
      */
-    public Overlay(Game game, Color fillColor, Color lineColour, float regionWidth, float regionHeight, int lineThickness) {
+    public Overlay(Color fillColor, Color lineColour, float regionWidth, float regionHeight, int lineThickness) {
         super();
         //Construct the core stage
-
-        this.game = game;
-        //Import current game-state to access the game's renderer
 
         this.fillColor = fillColor;
         this.lineColor = lineColour;

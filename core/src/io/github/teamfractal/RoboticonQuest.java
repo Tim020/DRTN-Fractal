@@ -22,6 +22,7 @@ import io.github.teamfractal.screens.RoboticonMarketScreen;
 import io.github.teamfractal.util.PlotManager;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This is the main game boot up class.
@@ -63,8 +64,7 @@ public class RoboticonQuest extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		setupSkin();
-		
-	
+
 		gameScreen = new GameScreen(this);
 
 		// Setup other screens.
@@ -171,6 +171,9 @@ public class RoboticonQuest extends Game {
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
 				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
+
+				clearEffects();
+				setEffects();
 				break;
 		}
 
@@ -243,6 +246,7 @@ public class RoboticonQuest extends Game {
 	public int getPlayerInt(){
 		return this.currentPlayer;
 	}
+
 	public void nextPlayer(){
 		if (this.currentPlayer == playerList.size() - 1){
 			this.currentPlayer = 0; 
@@ -256,7 +260,10 @@ public class RoboticonQuest extends Game {
 		return plotManager;
 	}
 
-	public void setupEffects() {
+	private void setupEffects() {
+		//Initialise the fractional chance of any given effect being applied at the start of a round
+		effectChance = (float) 0.05;
+
 		plotEffects = new PlotEffect[1];
 
 		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most " +
@@ -264,6 +271,10 @@ public class RoboticonQuest extends Game {
 				"80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
 			@Override
 			public void run() {
+				if (getPlayer().getLandList().size() == 0) {
+					return;
+				}
+
 				LandPlot foodProducer = getPlayer().getLandList().get(0);
 
 				for (LandPlot plot : getPlayer().getLandList()) {
@@ -274,6 +285,23 @@ public class RoboticonQuest extends Game {
 				plotEffects[0].impose(foodProducer, 1);
 			}
 		});
+	}
+
+	private void clearEffects() {
+		for (PlotEffect PE : plotEffects) {
+			PE.revertAll();
+		}
+	}
+
+	private void setEffects() {
+		Random RNGesus = new Random();
+
+		for (PlotEffect PE : plotEffects) {
+			if (RNGesus.nextFloat() < effectChance) {
+				PE.executeRunnable();
+				System.out.println("Effect triggered!");
+			}
+		}
 	}
 
 	/**
@@ -306,5 +334,13 @@ public class RoboticonQuest extends Game {
 				winner = playerList.get(1);
 			}
 		return winner;
+	}
+
+	public float getEffectChance() {
+		return effectChance;
+	}
+
+	public void setEffectChance(float effectChance) {
+		this.effectChance = effectChance;
 	}
 }

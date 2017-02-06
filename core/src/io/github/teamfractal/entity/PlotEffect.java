@@ -1,6 +1,9 @@
 package io.github.teamfractal.entity;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
+import io.github.teamfractal.screens.Overlay;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,11 @@ public class PlotEffect extends Array<Float[]> {
     private Array<LandPlot> plotRegister;
 
     /**
+     * Overlay to provide a visual indication of the effect's presence and influences
+     */
+    private Overlay overlay;
+
+    /**
      * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
      *
      * @param name The name of the effect
@@ -50,6 +58,18 @@ public class PlotEffect extends Array<Float[]> {
 
         this.plotRegister = new Array<LandPlot>();
         //Establish the separate LandPlot stack to track affected tiles
+
+        this.overlay = new Overlay(Color.GRAY, Color.WHITE, 200, 100, 3);
+        //Construct a visual interface through which the effect can be identified
+
+        constructOverlay();
+        //Populate the effect's associated overlay with information regarding it
+    }
+
+    /**
+     * Method that populates the effect's associated overlay
+     */
+    private void constructOverlay() {
     }
 
     /**
@@ -146,6 +166,12 @@ public class PlotEffect extends Array<Float[]> {
         }
     }
 
+    public void revertAll() {
+        while (plotRegister.size > 0) {
+            revert();
+        }
+    }
+
     private void swapTop() {
         if (super.size > 1) {
             Float[] i = super.pop();
@@ -188,4 +214,6 @@ public class PlotEffect extends Array<Float[]> {
     public String description() {
         return description;
     }
+
+    public Overlay overlay() { return overlay; }
 }
