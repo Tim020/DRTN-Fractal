@@ -178,6 +178,9 @@ public class GameScreenActors {
 							case 1:
 								type = ResourceType.ENERGY;
 								break;
+							case 2:
+								type = ResourceType.FOOD;
+								break;
 							default:
 								type = ResourceType.Unknown;
 								break;
@@ -312,8 +315,9 @@ public class GameScreenActors {
 	 * @param y              The <i>y</i> position to display the information.
 	 */
 	public void showPlotStats(LandPlot plot, float x, float y) {
-		String plotStatText = "Ore: " + plot.getResource(ResourceType.ORE)
-				+ "  Energy: " + plot.getResource(ResourceType.ENERGY);
+		String plotStatText = "Ore: " + plot.getResource(ResourceType.ORE) + "\n"
+				+ "Energy: " + plot.getResource(ResourceType.ENERGY) + "\n"
+				+ "Food: " + plot.getResource(ResourceType.FOOD);
 
 		plotStats.setText(plotStatText);
 		plotStats.setPosition(x, y);

@@ -1,10 +1,9 @@
 package io.github.teamfractal.entity;
 
-import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 
-import java.util.ArrayList;
+
 import java.util.Random;
 
 /**
@@ -13,14 +12,7 @@ import java.util.Random;
  * @since Assessment 3
  */
 public class AIPlayer extends Player {
-    public RoboticonQuest game;
-    Array<Roboticon> roboticonList;
-    private ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
-    //<editor-fold desc="Resource getter and setter">
-    private int money = 100;
-    private int ore = 0;
-    private int energy = 0;
-    private int food = 0;
+
 
     public AIPlayer(RoboticonQuest game) {
         super(game);
@@ -35,18 +27,23 @@ public class AIPlayer extends Player {
         switch (phase) {
             case 1:
                 //"Buy Land Plot
+                System.out.println("Phase 1 in progress");
                 phase1();
             case 2:
                 //"Purchase Roboticons
+                System.out.println("Phase 2 in progress");
                 phase2();
             case 3:
                 //Install Roboticons
+                System.out.println("Phase 3 in progress");
                 phase3();
             case 4:
                 //Resource Generation
+                System.out.println("Phase 4 in progress");
                 phase4();
             case 5:
                 //Resource Auction
+                System.out.println("Phase 5 in progress");
                 phase5();
             default:
                 // Unknown phase
@@ -68,20 +65,25 @@ public class AIPlayer extends Player {
      */
     private void phase1() {
         boolean selected = false;
-        final LandPlot[][] plots = game.getPlotManager().getLandPlots();
-        int x = plots.length;
-        int y = plots[0].length;
+        int x = game.plotManager.x;
+        int y = game.plotManager.y;
         if (this.getMoney() >= 10) {
             while (!selected) {
                 int i = random(x);
                 int j = random(y);
-                if (!plots[i][j].hasOwner()) {
+                if (!game.plotManager.getPlot(i, j).hasOwner()) {
                     selected = true;
-                    game.gameScreen.getActors().tileClicked(plots[i][j], (float) i, (float) j);
-
+                    //TODO Fix this, and force game to render screen.
+                    game.gameScreen.getActors().tileClicked(game.plotManager.getPlot(i, j), (float) i, (float) j);
                 }
             }
         }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        game.nextPhase();
     }
 
     /**
@@ -93,7 +95,7 @@ public class AIPlayer extends Player {
             if (!aLandList.hasRoboticon()) {
                 int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
                 int max = 0;
-                int max_index = 10; //Initialise to index not used to not return false positives
+                int max_index = -1; //Initialise to index not used to not return false positives
                 for (int j = 0; j < resources.length; j++) {
                     if (resources[j] > max) {
                         max = resources[j];
@@ -103,19 +105,30 @@ public class AIPlayer extends Player {
                 switch (max_index) {
                     case 0:
                         //ORE
-                        
+                        game.roboticonMarket.getActors().addRoboticonFunction();
+                        game.roboticonMarket.getActors().buyRoboticonFunction();
+                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ORE, 0);
+
                         break;
                     case 1:
                         //FOOD
+                        game.roboticonMarket.getActors().addRoboticonFunction();
+                        game.roboticonMarket.getActors().buyRoboticonFunction();
+                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.FOOD, 0);
                         break;
                     case 2:
                         //ENERGY
+                        game.roboticonMarket.getActors().addRoboticonFunction();
+                        game.roboticonMarket.getActors().buyRoboticonFunction();
+                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ENERGY, 0);
                         break;
                     default:
                         //uh oh
 
                 }
+
             }
+            game.nextPhase();
         }
     }
 
@@ -131,8 +144,7 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 4.
      */
     private void phase4() {
-
-        //TODO: Implement
+        game.nextPhase();
     }
 
     /**

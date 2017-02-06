@@ -35,6 +35,10 @@ public class TileConverter {
 				resourceIndex = 3;
 				break;
 
+			case FOOD:
+				resourceIndex = 4;
+				break;
+
 			case NO_CUST:
 				resourceIndex = 1;
 				break;
