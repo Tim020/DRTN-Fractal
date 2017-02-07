@@ -198,7 +198,7 @@ public class Market {
 	 * @return           The buy in price.
 	 */
 	public int getBuyPrice(ResourceType resource) {
-		int buyPrice = (int)(getSellPrice(resource) * 0.01f);
+		int buyPrice = (int)(getSellPrice(resource) * 0.2f);
 		if (buyPrice < 1){
 			buyPrice = 1;
 			return buyPrice;
@@ -222,6 +222,9 @@ public class Market {
 		}
 		else {
 			sellPrice = (50 / (getResource(resource) + 1));
+			if (sellPrice < 10) {
+				sellPrice = 10;
+			}
 
 			return sellPrice;
 		}
