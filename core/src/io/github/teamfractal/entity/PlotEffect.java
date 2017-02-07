@@ -175,21 +175,20 @@ public class PlotEffect extends Array<Float[]> {
         //Assume that the modifiers on the top of the stack are the modifiers to be imposed
 
         for (int i = 0; i < 3; i++) {
-            originalModifiers[i] = (float) plot.productionModifiers[i];
+            originalModifiers[i] = plot.productionModifiers[i];
             //Save each of the specified tile's original modifiers
 
             switch (mode) {
                 case (0):
-                    plot.productionModifiers[i] = (int) (plot.productionModifiers[i] + newModifiers[i]);
+                    plot.productionModifiers[i] = plot.productionModifiers[i] + newModifiers[i];
                     //MODE 0: Add/subtract to/from the original modifiers
                     break;
                 case (1):
-                    plot.productionModifiers[i] = (int) (plot.productionModifiers[i] * newModifiers[i]);
+                    plot.productionModifiers[i] = plot.productionModifiers[i] * newModifiers[i];
                     //MODE 1: Multiply the original modifiers
                     break;
                 case (2):
-                    //TODO: find more elegant solution than the 1*
-                    plot.productionModifiers[i] = (int) (1 * newModifiers[i]);
+                    plot.productionModifiers[i] = newModifiers[i];
                     //MODE 2: Replace the original modifiers
                     break;
             }
@@ -217,8 +216,7 @@ public class PlotEffect extends Array<Float[]> {
             lastPlot = plotRegister.pop();
 
             for (int i = 0; i < 3; i++) {
-                //TODO: find more elegant solution than the 1*
-                lastPlot.productionModifiers[i] = (int) (1 * originalModifiers[i]);
+                lastPlot.productionModifiers[i] = originalModifiers[i];
             }
         }
     }
