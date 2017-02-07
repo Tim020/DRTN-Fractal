@@ -15,7 +15,7 @@ public class LandPlot {
      * Saved modifiers for LandPlot.
      * [ Ore, Energy, Food ]
      */
-    int[] productionModifiers = {0, 0, 0};
+    float[] productionModifiers = {0, 0, 0};
     private TiledMapTileLayer.Cell mapTile;
 	private TiledMapTileLayer.Cell playerTile;
 	private TiledMapTileLayer.Cell roboticonTile;
@@ -150,7 +150,7 @@ public class LandPlot {
     public int[] produceResources() {
         int[] produced = new int[3];
         for (int i = 0; i < 2; i++) {
-            produced[i] = productionAmounts[i] * productionModifiers[i];
+            produced[i] = (int) ((float) productionAmounts[i] * productionModifiers[i]);
         }
 		return produced;
 	}
@@ -163,7 +163,7 @@ public class LandPlot {
 	public float produceResource(ResourceType resource) {
 		if (this.hasRoboticon){
 			int resIndex = resourceTypeToIndex(resource);
-			return productionAmounts[resIndex] * productionModifiers[resIndex];
+			return (int) ((float) productionAmounts[resIndex] * productionModifiers[resIndex]);
 		}
 		else return 0;
 		

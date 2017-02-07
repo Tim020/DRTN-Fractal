@@ -196,7 +196,8 @@ public class RoboticonQuest extends Game {
 
 				clearEffects();
 				setEffects();
-        this.getPlayer().takeTurn();
+
+        		this.getPlayer().takeTurn();
 				break;
 		}
 
