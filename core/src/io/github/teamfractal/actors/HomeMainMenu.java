@@ -9,19 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-
 import io.github.teamfractal.RoboticonQuest;
 
 
 public class HomeMainMenu extends Table {
-	private RoboticonQuest game;
+    private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Duck-Related Roboticon Quest (Small).png"));
+    private RoboticonQuest game;
 	private TextButton btnNewGame;
-
 	private TextButton btnNewAIGame;
-
 	private TextButton btnExit;
-
-	private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Duck-Related Roboticon Quest (Small).png"));
 
 	/**
 	 * Initialise the Home Menu.
@@ -71,13 +67,6 @@ public class HomeMainMenu extends Table {
 			}
 		});
 
-		btnNewGameAI.addListener(new ClickListener() {
-			@Override
-			public void clicked (InputEvent event, float x, float y) {
-				game.setScreen(game.gameScreen);
-				game.gameScreen.newGame(true);
-			}
-		});
 
 		btnNewAIGame.addListener(new ClickListener() {
 			@Override
