@@ -117,22 +117,7 @@ public class GameScreenActors {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				event.stop();
-				hideBuyLand();
-				if (buyLandPlotBtn.isDisabled()) {
-					return ;
-				}
-				LandPlot selectedPlot = screen.getSelectedPlot();
-
-				if (selectedPlot.hasOwner()) {
-					return;
-				}
-
-				Player player = game.getPlayer();
-				if (player.purchaseLandPlot(selectedPlot)) {
-					TiledMapTileLayer.Cell playerTile = selectedPlot.getPlayerTile();
-					playerTile.setTile(screen.getPlayerTile(player));
-					textUpdate();
-				}
+				buyLandPlotFunction();
 			}
 		});
 
@@ -140,18 +125,7 @@ public class GameScreenActors {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				event.stop();
-				if (nextButton.isDisabled()) {
-					return ;
-				}
-				if(game.canPurchaseLandThisTurn() == false){
-					buyLandPlotBtn.setVisible(false);
-					plotStats.setVisible(false);
-					hideInstallRoboticon();
-					game.nextPhase();
-					dropDownActive = true;
-					installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
-					textUpdate();
-				}
+				nextButtonFunction();
 			}
 		});
 
@@ -160,53 +134,7 @@ public class GameScreenActors {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				event.stop();
-				if (installRoboticonBtn.isDisabled()) {
-					return ;
-				}
-				if (!listUpdated) { //prevents updating selection list from updating change listener
-					LandPlot selectedPlot = screen.getSelectedPlot();
-					if (selectedPlot.getOwner() == game.getPlayer() && !selectedPlot.hasRoboticon()) {
-						Roboticon roboticon = null;
-						ResourceType type = ResourceType.Unknown;
-						int selection = installRoboticonSelect.getSelectedIndex();
-
-						Array<Roboticon> roboticons = game.getPlayer().getRoboticons();
-						switch (selection) {
-							case 0:
-								type = ResourceType.ORE;
-								break;
-							case 1:
-								type = ResourceType.ENERGY;
-								break;
-							case 2:
-								type = ResourceType.FOOD;
-								break;
-							default:
-								type = ResourceType.Unknown;
-								break;
-						}
-
-						for (Roboticon r : roboticons) {
-							if (!r.isInstalled() && r.getCustomisation() == type) {
-								roboticon = r;
-								break;
-							}
-						}
-
-						if (roboticon != null) {
-							selectedPlot.installRoboticon(roboticon);
-							TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
-							roboticonTile.setTile(TileConverter.getRoboticonTile(roboticon.getCustomisation()));
-							selectedPlot.setHasRoboticon(true);
-							textUpdate();
-						}
-
-						hideInstallRoboticon();
-						updateRoboticonList();
-						dropDownActive = true;
-
-					} else listUpdated = false;
-				}
+				installRoboticonFunction();
 			}
 		});
 
@@ -350,4 +278,92 @@ public class GameScreenActors {
 	public boolean installRoboticonVisible() {
 		return installRoboticonTable.isVisible();
 	}
+
+	public void buyLandPlotFunction(){
+		hideBuyLand();
+		if (buyLandPlotBtn.isDisabled()) {
+			return ;
+		}
+		LandPlot selectedPlot = screen.getSelectedPlot();
+
+		if (selectedPlot.hasOwner()) {
+			return;
+		}
+
+		Player player = game.getPlayer();
+		if (player.purchaseLandPlot(selectedPlot)) {
+			TiledMapTileLayer.Cell playerTile = selectedPlot.getPlayerTile();
+			playerTile.setTile(screen.getPlayerTile(player));
+			textUpdate();
+		}
+	}
+
+	public void nextButtonFunction(){
+		if (nextButton.isDisabled()) {
+			return ;
+		}
+		if(game.canPurchaseLandThisTurn() == false){
+			buyLandPlotBtn.setVisible(false);
+			plotStats.setVisible(false);
+			hideInstallRoboticon();
+			game.nextPhase();
+			dropDownActive = true;
+			installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
+			textUpdate();
+		}
+	}
+
+	public void installRoboticonFunction(){
+		if (installRoboticonBtn.isDisabled()) {
+			return ;
+		}
+		if (!listUpdated) { //prevents updating selection list from updating change listener
+			LandPlot selectedPlot = screen.getSelectedPlot();
+			if (selectedPlot.getOwner() == game.getPlayer() && !selectedPlot.hasRoboticon()) {
+				Roboticon roboticon = null;
+				ResourceType type = ResourceType.Unknown;
+				int selection = installRoboticonSelect.getSelectedIndex();
+
+				Array<Roboticon> roboticons = game.getPlayer().getRoboticons();
+				switch (selection) {
+					case 0:
+						type = ResourceType.ORE;
+						break;
+					case 1:
+						type = ResourceType.ENERGY;
+						break;
+					case 2:
+						type = ResourceType.FOOD;
+						break;
+					default:
+						type = ResourceType.Unknown;
+						break;
+				}
+
+				for (Roboticon r : roboticons) {
+					if (!r.isInstalled() && r.getCustomisation() == type) {
+						roboticon = r;
+						break;
+					}
+				}
+
+				if (roboticon != null) {
+					installRoboticonFunction(selectedPlot,roboticon);
+					textUpdate();
+				}
+
+				hideInstallRoboticon();
+				updateRoboticonList();
+				dropDownActive = true;
+
+			} else listUpdated = false;
+		}
+	}
+
+	public void installRoboticonFunction(LandPlot selectedplot, Roboticon roboticon){
+        selectedplot.installRoboticon(roboticon);
+        TiledMapTileLayer.Cell roboticonTile = selectedplot.getRoboticonTile();
+        roboticonTile.setTile(TileConverter.getRoboticonTile(roboticon.getCustomisation()));
+        selectedplot.setHasRoboticon(true);
+    }
 }

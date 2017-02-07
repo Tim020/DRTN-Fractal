@@ -34,7 +34,7 @@ public class RoboticonMarketActors extends Table {
     public ArrayList<Roboticon> roboticons = new ArrayList<Roboticon>();
     private RoboticonQuest game;
     private RoboticonMarketScreen screen;
-    private int currentlySelectedRoboticonPos;
+    public int currentlySelectedRoboticonPos;
     private Texture roboticonTexture;
     private Label topText;
     private Label playerStats;
