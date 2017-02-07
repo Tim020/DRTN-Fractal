@@ -295,7 +295,7 @@ public class RoboticonQuest extends Game {
 		Random RNGesus = new Random();
 
 		for (PlotEffect PE : plotEffects) {
-			if (RNGesus.nextFloat() < effectChance) {
+			if (RNGesus.nextFloat() <= effectChance) {
 				PE.executeRunnable();
 
 				gameScreen.addOverlay(PE.overlay());

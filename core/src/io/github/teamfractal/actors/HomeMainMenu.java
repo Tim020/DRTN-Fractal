@@ -16,9 +16,10 @@ import io.github.teamfractal.RoboticonQuest;
 public class HomeMainMenu extends Table {
 	private RoboticonQuest game;
 	private TextButton btnNewGame;
+	private TextButton btnNewAIGame;
 	private TextButton btnExit;
 
-	private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Roboticon_Quest_Title"));
+	private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Duck-Related Roboticon Quest (Small).png"));
 
 	/**
 	 * Initialise the Home Menu.
@@ -31,22 +32,24 @@ public class HomeMainMenu extends Table {
 		final Image imgTitle = new Image();
 		imgTitle.setDrawable(new TextureRegionDrawable(new TextureRegion(titleTexture)));
 		
-		btnNewGame = new TextButton("New game!", game.skin);
+		btnNewGame = new TextButton("Begin Two-Player Game", game.skin);
+		btnNewAIGame = new TextButton("Begin Game Against AI", game.skin);
 		btnExit = new TextButton("Exit", game.skin);
 
 		// Adjust properties.
 		btnNewGame.pad(10);
+		btnNewAIGame.pad(10);
 		btnExit.pad(10);
 
 		// Bind events.
 		bindEvents();
 
 		// Add UI Components to table.
-		add(imgTitle);
+		add(imgTitle).pad(5).colspan(3);
 		row();
-		add(btnNewGame).pad(5);
-		row();
-		add(btnExit).pad(5);
+		add(btnNewGame);
+		add(btnNewAIGame);
+		add(btnExit);
 	}
 
 	/**
@@ -58,6 +61,13 @@ public class HomeMainMenu extends Table {
 			public void clicked (InputEvent event, float x, float y) {
 				game.setScreen(game.gameScreen);
 				game.gameScreen.newGame();
+			}
+		});
+
+		btnNewAIGame.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				//CODE TO BEGIN AI GAME HERE
 			}
 		});
 
