@@ -44,29 +44,45 @@ public class Overlay extends Stage {
      * rectangle behind the overlay region, hence rendering it a true overlay
      *
      * @param fillColor The colour of the overlay's background
-     * @param lineColour The colour of the overlay's border
+     * @param lineColor The colour of the overlay's border
      * @param regionWidth The width of the overlay
      * @param regionHeight The height of the overlay
      * @param lineThickness The thickness of the overlay's border
      */
-    public Overlay(Color fillColor, Color lineColour, float regionWidth, float regionHeight, int lineThickness) {
+    public Overlay(Color fillColor, Color lineColor, float regionWidth, float regionHeight, int lineThickness) {
         super();
         //Construct the core stage
 
         this.fillColor = fillColor;
-        this.lineColor = lineColour;
+        this.lineColor = lineColor;
         this.regionWidth = regionWidth;
         this.regionHeight = regionHeight;
         this.lineThickness = lineThickness;
         //Import overlay size/colour variables
 
         table = new Table();
-        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2) + lineThickness, ((Gdx.graphics.getHeight() - this.regionHeight) / 2) + lineThickness, regionWidth - (lineThickness * 2), regionHeight - (lineThickness * 2));
+        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2), ((Gdx.graphics.getHeight() - this.regionHeight) / 2), regionWidth, regionHeight);
         //Instantiate and prepare the table which will provide the overlay's spatial framework
         //This table will always inhabit the centre of the screen when this object is being drawn
 
         this.addActor(table);
         //Bind the overlay's spatial framework to the core stage
+    }
+
+    /**
+     * Creates a stage that itself places a table of the specified parameters in the centre of the screen
+     * The overlay's [draw()] method is unlike that of the standard Stage class as it also draws a bordered
+     * rectangle behind the overlay region, hence rendering it a true overlay
+     *
+     * Overloaded constructor assumes that the overlay's size is the size of the game's window at the time of the
+     * overlay's declaration
+     *
+     * @param fillColor The colour of the overlay's background
+     * @param lineColor The colour of the overlay's border
+     * @param lineThickness The thickness of the overlay's border
+     */
+    public Overlay(Color fillColor, Color lineColor, int lineThickness) {
+        this(fillColor, lineColor, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), lineThickness);
     }
 
     /**
@@ -109,6 +125,37 @@ public class Overlay extends Stage {
 
         super.draw();
         //Draw the overlay's internal contents to the screen
+    }
+
+    /**
+     * Re-sizes the overlay to cover the specified parameters
+     *
+     * @param regionWidth The overlay's new width
+     * @param regionHeight The overlay's new height
+     */
+    public void resize(float regionWidth, float regionHeight) {
+        this.regionWidth = regionWidth;
+        this.regionHeight = regionHeight;
+
+        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2), ((Gdx.graphics.getHeight() - this.regionHeight) / 2), regionWidth, regionHeight);
+    }
+
+    /**
+     * Changes the thickness of the overlay's border
+     *
+     * @param lineThickness The thickness of the overlay's new border (in pixels)
+     */
+    public void changeLineThickness(int lineThickness) {
+        this.lineThickness = lineThickness;
+    }
+
+    /**
+     * Changes the colour of the overlay's border
+     *
+     * @param lineColor The colour of the overlay's new border
+     */
+    public void changeLineColor(Color lineColor) {
+        this.lineColor = lineColor;
     }
 
     /**

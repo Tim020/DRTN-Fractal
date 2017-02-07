@@ -262,12 +262,12 @@ public class RoboticonQuest extends Game {
 
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
-		effectChance = (float) 1;
+		effectChance = (float) 0.05;
 
 		plotEffects = new PlotEffect[1];
 
 		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most " +
-				"food-producing tile, ruining many of the crops on it. Food production on that tile is reduced by " +
+				"food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
 				"80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
 			@Override
 			public void run() {
@@ -287,7 +287,7 @@ public class RoboticonQuest extends Game {
 		});
 
 		for (PlotEffect PE : plotEffects) {
-			PE.constructCustomOverlay(gameScreen);
+			PE.constructOverlay(gameScreen);
 		}
 	}
 

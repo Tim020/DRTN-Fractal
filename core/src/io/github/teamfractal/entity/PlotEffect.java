@@ -4,8 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.screens.GameScreen;
 import io.github.teamfractal.screens.Overlay;
@@ -73,7 +75,7 @@ public class PlotEffect extends Array<Float[]> {
         this.plotRegister = new Array<LandPlot>();
         //Establish the separate LandPlot stack to track affected tiles
 
-        this.overlay = new Overlay(Color.GRAY, Color.WHITE, 200, 100, 3);
+        this.overlay = new Overlay(Color.GRAY, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
 
         this.overlayActive = false;
@@ -83,19 +85,36 @@ public class PlotEffect extends Array<Float[]> {
     /**
      * Method that populates the effect's associated overlay
      */
-    public void constructCustomOverlay(final GameScreen gameScreen) {
+    public void constructOverlay(final GameScreen gameScreen) {
         /**
          * Object that automatically converts .TTF files into BitmapFonts that can then be rendered to the screen
          */
-        TTFont montserrat = new TTFont(Gdx.files.internal("font/Montserrat.ttf"));
-        montserrat.setSize(24);
+        TTFont montserratRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"));
+        TTFont montserratLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"));
+        montserratRegular.setSize(24);
+        montserratLight.setSize(24);
 
         TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        overlayButtonStyle.font = montserrat.font();
+        overlayButtonStyle.font = montserratRegular.font();
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
 
+        Label headerLabel = new Label("EFFECT IMPOSED", new Label.LabelStyle(montserratRegular.font(), Color.YELLOW));
+        Label titleLabel = new Label(name, new Label.LabelStyle(montserratLight.font(), Color.WHITE));
+        montserratLight.setSize(16);
+        Label descriptionLabel = new Label(description, new Label.LabelStyle(montserratLight.font(), Color.WHITE));
+
+        headerLabel.setAlignment(Align.left);
+        titleLabel.setAlignment(Align.right);
+        descriptionLabel.setAlignment(Align.left);
+
+        overlay.table().add(headerLabel).width(220);
+        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 220);
+        overlay.table().row();
+        overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
+
+        overlay.table().row().colspan(2);
         closeButton = new TextButton("CLOSE", overlayButtonStyle);
         closeButton.addListener(new ChangeListener() {
             @Override
@@ -105,6 +124,8 @@ public class PlotEffect extends Array<Float[]> {
         });
 
         overlay.table().add(closeButton);
+
+        overlay.resize(descriptionLabel.getWidth() + 20, headerLabel.getHeight() + descriptionLabel.getHeight() + closeButton.getHeight() + 35);
     }
 
     /**
