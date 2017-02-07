@@ -44,11 +44,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	private float maxDragY;
 	private TiledMapTileSets tiles;
 
-
-	public LandPlot getSelectedPlot() {
-		return selectedPlot;
-	}
-
 	private ArrayList<Overlay> overlayStack;
 
 
@@ -201,14 +196,14 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		// newGame();
 	}
 
-	public void setSelectedPlot(LandPlot plot){
-		selectedPlot = plot;
-
-	}
-
     public LandPlot getSelectedPlot() {
         return selectedPlot;
     }
+
+	public void setSelectedPlot(LandPlot plot) {
+		selectedPlot = plot;
+
+	}
 
 	/**
 	 * gets the players tile to put over a tile they own

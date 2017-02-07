@@ -10,12 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
-import io.github.teamfractal.entity.AIPlayer;
-import io.github.teamfractal.entity.LandPlot;
-import io.github.teamfractal.entity.PlotEffect;
+import io.github.teamfractal.entity.*;
 import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.entity.Market;
-import io.github.teamfractal.entity.Player;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.PlotManager;
 
@@ -28,20 +24,23 @@ import java.util.Random;
  */
 public class RoboticonQuest extends Game {
     private static RoboticonQuest _instance;
-    public Skin skin;
-    public GameScreen gameScreen;
-	public Market market;
 	public RoboticonMarketScreen roboticonMarket;
 	public TiledMap tmx;
+	public Skin skin;
+	public GameScreen gameScreen;
+	public Market market;
     public PlotManager plotManager;
     private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
     private SpriteBatch batch;
     private int phase;
-    private int currentPlayerIndex;
-    private int landBoughtThisTurn;
+	private int currentPlayer;
+	private int landBoughtThisTurn;
+	private PlotEffect[] plotEffects;
+	private float effectChance;
+	private int currentPlayerIndex;
 
-	public RoboticonQuest(){
+	public RoboticonQuest() {
 		_instance = this;
 		reset(false);
 	}
@@ -52,19 +51,7 @@ public class RoboticonQuest extends Game {
 
 
 
-	private PlotManager plotManager;
-	SpriteBatch batch;
-	public Skin skin;
-	public MainMenuScreen mainMenuScreen;
-	public GameScreen gameScreen;
-	private int phase;
-	private int currentPlayer;
-	public ArrayList<Player> playerList;
-	public Market market;
-	private int landBoughtThisTurn;
 
-	private PlotEffect[] plotEffects;
-	private float effectChance;
 
 	public int getPlayerIndex (Player player) {
 
@@ -116,13 +103,18 @@ public class RoboticonQuest extends Game {
 		return this.phase;
 	}
 
+	public void setPhase(int phase) {
+		this.phase = phase;
+		implementPhase();
+	}
+
 	public void reset(boolean AI) {
         this.currentPlayerIndex = 0;
         this.phase = 0;
         plotManager = new PlotManager();
         Player player1;
         Player player2;
-        if (AI == true){
+        if (AI) {
             player1 = new AIPlayer(this);
             player2 = new Player(this);
         } else{
@@ -138,15 +130,15 @@ public class RoboticonQuest extends Game {
 
     }
 
-	public void implementPhase () {
-		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+    private void implementPhase() {
+        System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
 
 				this.roboticonMarket = new RoboticonMarketScreen(this);
-				this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
-				setScreen(this.roboticonMarket);
+                this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, phase, 30));
+                setScreen(this.roboticonMarket);
 
 				this.getPlayer().takeTurn();
                 break;
@@ -180,14 +172,14 @@ public class RoboticonQuest extends Game {
 
 				this.getPlayer().takeTurn();
 				break;
-			
+
 
 			// End phase - CLean up and move to next player.
 			case 6:
 				phase = 1;
 
-				if(checkGameEnded() == true){
-					
+                if (checkGameEnded()) {
+
 					setScreen(new EndGameScreen(this));
 					break;
 				}
@@ -213,14 +205,8 @@ public class RoboticonQuest extends Game {
 			gameScreen.getActors().textUpdate();
 	}
 
-
 	public void nextPhase() {
 		phase += 1;
-		implementPhase();
-	}
-
-	public void setPhase(int phase) {
-		this.phase = phase;
 		implementPhase();
 	}
 
@@ -360,12 +346,12 @@ public class RoboticonQuest extends Game {
 
 	/**
 	 * Returns the winner of the game, based on which player has the highest score
-	 * @return
-	 */
+     * @return String returning the winning player
+     */
 
 	public String getWinner(){
-		String winner = null;
-		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
+        String winner;
+        if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
 			winner = "Player 1";
 		}
 		else{
