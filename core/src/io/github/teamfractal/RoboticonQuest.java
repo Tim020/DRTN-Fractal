@@ -31,8 +31,8 @@ public class RoboticonQuest extends Game {
 	public GameScreen gameScreen;
 	public ArrayList<Player> playerList;
 	public Market market;
-	SpriteBatch batch;
-	private PlotManager plotManager;
+    public PlotManager plotManager;
+    SpriteBatch batch;
 	private int phase;
 	private int currentPlayer;
 	private int landBoughtThisTurn;
