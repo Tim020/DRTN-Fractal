@@ -270,10 +270,8 @@ public class RoboticonQuest extends Game {
 		LandPlot[][] plots = plotManager.getLandPlots();
         for (LandPlot[] plot : plots) {
             for (LandPlot aPlot : plot) {
-                if (aPlot != null) {
-                    if (!aPlot.hasOwner()) {
-                        ended = false;
-                    }
+                if (aPlot == null) {
+					ended = false;
                 }
             }
         }
