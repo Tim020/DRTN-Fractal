@@ -1,6 +1,5 @@
 package io.github.teamfractal.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -88,7 +87,10 @@ public class Overlay extends Stage {
         renderer.rect((int) ((Gdx.graphics.getWidth() - this.regionWidth) / 2), (int) ((Gdx.graphics.getHeight() - this.regionHeight) / 2), regionWidth, regionHeight);
         //Draw the overlay region on the screen
 
-        renderer.set(ShapeRenderer.ShapeType.Line);
+        renderer.end();
+        //Stop the renderer from drawing the overlay's background
+
+        renderer.begin(ShapeRenderer.ShapeType.Line);
         //Set the renderer up to draw the overlay region's border
 
         renderer.setColor(lineColor);

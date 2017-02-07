@@ -1,11 +1,15 @@
 package io.github.teamfractal.entity;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
+import io.github.teamfractal.screens.GameScreen;
 import io.github.teamfractal.screens.Overlay;
-
-import java.util.ArrayList;
+import io.github.teamfractal.util.TTFont;
 
 /**
  * Created by Joseph on 31/01/2017.
@@ -38,6 +42,16 @@ public class PlotEffect extends Array<Float[]> {
     private Overlay overlay;
 
     /**
+     * Variable that holds true if and when the effect's associated overlay is visible
+     */
+    private boolean overlayActive;
+
+    /**
+     * Button created to close the effect's associated overlay
+     */
+    private TextButton closeButton;
+
+    /**
      * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
      *
      * @param name The name of the effect
@@ -62,14 +76,35 @@ public class PlotEffect extends Array<Float[]> {
         this.overlay = new Overlay(Color.GRAY, Color.WHITE, 200, 100, 3);
         //Construct a visual interface through which the effect can be identified
 
-        constructOverlay();
-        //Populate the effect's associated overlay with information regarding it
+        this.overlayActive = false;
+        //Note that the effect's overlay is not active at the current time
     }
 
     /**
      * Method that populates the effect's associated overlay
      */
-    private void constructOverlay() {
+    public void constructCustomOverlay(final GameScreen gameScreen) {
+        /**
+         * Object that automatically converts .TTF files into BitmapFonts that can then be rendered to the screen
+         */
+        TTFont montserrat = new TTFont(Gdx.files.internal("font/Montserrat.ttf"));
+        montserrat.setSize(24);
+
+        TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
+        overlayButtonStyle.font = montserrat.font();
+        overlayButtonStyle.pressedOffsetX = -1;
+        overlayButtonStyle.pressedOffsetY = -1;
+        overlayButtonStyle.fontColor = Color.WHITE;
+
+        closeButton = new TextButton("CLOSE", overlayButtonStyle);
+        closeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.removeOverlay();
+            }
+        });
+
+        overlay.table().add(closeButton);
     }
 
     /**
@@ -216,4 +251,12 @@ public class PlotEffect extends Array<Float[]> {
     }
 
     public Overlay overlay() { return overlay; }
+
+    public boolean getOverlayActive() {
+        return overlayActive;
+    }
+
+    public void setOverlayActive(boolean overlayActive) {
+        this.overlayActive = overlayActive;
+    }
 }

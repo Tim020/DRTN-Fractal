@@ -262,7 +262,7 @@ public class RoboticonQuest extends Game {
 
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
-		effectChance = (float) 0.05;
+		effectChance = (float) 1;
 
 		plotEffects = new PlotEffect[1];
 
@@ -285,11 +285,9 @@ public class RoboticonQuest extends Game {
 				plotEffects[0].impose(foodProducer, 1);
 			}
 		});
-	}
 
-	private void clearEffects() {
 		for (PlotEffect PE : plotEffects) {
-			PE.revertAll();
+			PE.constructCustomOverlay(gameScreen);
 		}
 	}
 
@@ -299,8 +297,15 @@ public class RoboticonQuest extends Game {
 		for (PlotEffect PE : plotEffects) {
 			if (RNGesus.nextFloat() < effectChance) {
 				PE.executeRunnable();
-				System.out.println("Effect triggered!");
+
+				gameScreen.addOverlay(PE.overlay());
 			}
+		}
+	}
+
+	private void clearEffects() {
+		for (PlotEffect PE : plotEffects) {
+			PE.revertAll();
 		}
 	}
 
