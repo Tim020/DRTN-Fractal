@@ -1,14 +1,18 @@
 package io.github.teamfractal.entity;
 
+import io.github.teamfractal.TesterFile;
 import io.github.teamfractal.entity.enums.ResourceType;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class MarketTest {
+public class MarketTest extends TesterFile {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 

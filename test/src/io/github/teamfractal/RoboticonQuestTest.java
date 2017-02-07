@@ -1,13 +1,12 @@
 package io.github.teamfractal;
 
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import io.github.teamfractal.RoboticonQuest;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
-
-public class RoboticonQuestTest extends GdxInitializer {
+public class RoboticonQuestTest extends TesterFile {
 	private RoboticonQuest game;
 	
 	@Before
