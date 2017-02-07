@@ -394,6 +394,13 @@ public class Player {
 		game.gameScreen.addAnimation(animation);
 	}
 
+	/**
+	 * Returns the array of plots owned by this player
+	 * @return ArrayList<LandPlot> The array of plots owned by this player
+	 */
+	public ArrayList<LandPlot> getLandList() {
+		return landList;
+	}
 
     /**
      * Returns the score of the player which is a combination of ore, energy and food.
@@ -409,4 +416,5 @@ public class Player {
     public void takeTurn() {
         //Overload in AIPlayer
     }
+
 }
