@@ -160,7 +160,7 @@ public class LandPlot {
 	 * @param resource  The resource type to be calculated.
 	 * @return          Calculated amount of resource to be generated.
 	 */
-	public float produceResource(ResourceType resource) {
+	public int produceResource(ResourceType resource) {
 		if (this.hasRoboticon){
 			int resIndex = resourceTypeToIndex(resource);
 			return (int) ((float) productionAmounts[resIndex] * productionModifiers[resIndex]);
