@@ -176,16 +176,22 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 					tileIndexX --;
 				}
 
-                selectedPlot = game.plotManager.getPlot(tileIndexX, tileIndexY);
-                if (selectedPlot != null) {
-                    actors.tileClicked(selectedPlot, x, y);
+                setSelectedPlot(game.plotManager.getPlot(tileIndexX, tileIndexY));
+				if (selectedPlot != null) {
+					actors.tileClicked(selectedPlot, x, y);
 				}
+
 			}
 		});
 		//</editor-fold>
 
 		// Finally, start a new game and initialise variables.
 		// newGame();
+	}
+
+	public void setSelectedPlot(LandPlot plot){
+		selectedPlot = plot;
+
 	}
 
     public LandPlot getSelectedPlot() {

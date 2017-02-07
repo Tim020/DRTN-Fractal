@@ -130,6 +130,7 @@ public class RoboticonQuest extends Game {
 				this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
 				setScreen(this.roboticonMarket);
 
+				this.getPlayer().takeTurn();
                 break;
 
 			// Phase 3: Roboticon Customisation
@@ -145,17 +146,20 @@ public class RoboticonQuest extends Game {
 				gameScreen.getActors().updateRoboticonSelection();
 				setScreen(gameScreen);
 
+				this.getPlayer().takeTurn();
                 break;
 
 			// Phase 4: Purchase Resource
 			case 4:
 				generateResources();
+				this.getPlayer().takeTurn();
                 break;
 
 			// Phase 5: Generate resource for player.
 			case 5:
 				setScreen(new ResourceMarketScreen(this));
 
+				this.getPlayer().takeTurn();
 				break;
 			
 
@@ -177,12 +181,13 @@ public class RoboticonQuest extends Game {
 				landBoughtThisTurn = 0;
 				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
 
+				this.getPlayer().takeTurn();
                 break;
         }
 
-        if (this.getPlayer() instanceof AIPlayer) {
+        /*if (this.getPlayer() instanceof AIPlayer) {
             this.getPlayer().takeTurn();
-        }
+        }*/
 
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();

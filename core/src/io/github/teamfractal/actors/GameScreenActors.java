@@ -348,10 +348,7 @@ public class GameScreenActors {
 				}
 
 				if (roboticon != null) {
-					selectedPlot.installRoboticon(roboticon);
-					TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
-					roboticonTile.setTile(TileConverter.getRoboticonTile(roboticon.getCustomisation()));
-					selectedPlot.setHasRoboticon(true);
+					installRoboticonFunction(selectedPlot,roboticon);
 					textUpdate();
 				}
 
@@ -362,4 +359,11 @@ public class GameScreenActors {
 			} else listUpdated = false;
 		}
 	}
+
+	public void installRoboticonFunction(LandPlot selectedplot, Roboticon roboticon){
+        selectedplot.installRoboticon(roboticon);
+        TiledMapTileLayer.Cell roboticonTile = selectedplot.getRoboticonTile();
+        roboticonTile.setTile(TileConverter.getRoboticonTile(roboticon.getCustomisation()));
+        selectedplot.setHasRoboticon(true);
+    }
 }
