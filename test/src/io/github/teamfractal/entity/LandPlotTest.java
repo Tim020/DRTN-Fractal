@@ -1,9 +1,10 @@
 package io.github.teamfractal.entity;
 
-import static org.junit.Assert.*;
-
 import io.github.teamfractal.entity.enums.ResourceType;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class LandPlotTest {
 	private LandPlot plot;
@@ -19,7 +20,7 @@ public class LandPlotTest {
 
 		roboticon.setCustomisation(ResourceType.ORE);
 		assertTrue(plot.installRoboticon(roboticon));
-		assertArrayEquals(new int[] {1, 0, 0}, plot.productionModifiers);
+		assertArrayEquals(new int[]{1, 1, 0}, plot.productionModifiers);
 
 		Roboticon roboticon2 = new Roboticon(0);
 		roboticon2.setCustomisation(ResourceType.ENERGY);
