@@ -44,11 +44,13 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	private float maxDragY;
 	private TiledMapTileSets tiles;
 
+
 	public LandPlot getSelectedPlot() {
 		return selectedPlot;
 	}
 
 	private ArrayList<Overlay> overlayStack;
+
 
 	/**
 	 * Initialise the class
@@ -73,9 +75,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		overlayStack = new ArrayList<Overlay>();
 		//Prepare the overlay stack to allow for numerous overlays to be stacked on top of one-another
 
-		// Drag the map within the screen.
-		stage.addListener(new DragListener() {
-			/**
+
+
+        // Drag the map within the screen.
+        stage.addListener(new DragListener() {
+            /**
 			 * On start of the drag event, record current position.
 			 * @param event    The event object
 			 * @param x        X position of mouse (on screen)
@@ -184,10 +188,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 					tileIndexX --;
 				}
 
-				selectedPlot = game.getPlotManager().getPlot(tileIndexX, tileIndexY);
+                setSelectedPlot(game.plotManager.getPlot(tileIndexX, tileIndexY));
 				if (selectedPlot != null) {
 					actors.tileClicked(selectedPlot, x, y);
 				}
+
 			}
 		});
 		//</editor-fold>
@@ -195,35 +200,49 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		// Finally, start a new game and initialise variables.
 		// newGame();
 	}
+
+	public void setSelectedPlot(LandPlot plot){
+		selectedPlot = plot;
+
+	}
+
+    public LandPlot getSelectedPlot() {
+        return selectedPlot;
+    }
+
 	/**
 	 * gets the players tile to put over a tile they own
 	 * @param player player to buy plot
-	 * @return tile that has the coloure doutline acossiated with the player
+	 * @return tile that has the coloured outline associated with the player
 	 */
 	public TiledMapTile getPlayerTile(Player player) {
-		return tiles.getTile(68 + game.getPlayerIndex(player));
+		return tiles.getTile(71 + game.getPlayerIndex(player)); //where 71 is the total amount of tiles in raw folder, 71+ flows into player folder
 	}
 	/**
 	 * gets the tile with the players colour and the roboticon specified to mine that resource
 	 * @param player player who's colour you want
 	 * @param type type of resource roboticon is specified for
-	 * @return
-	 */
-	public TiledMapTile getResourcePlayerTile(Player player, ResourceType type){
+     * @return the tile image
+     */
+    public TiledMapTile getResourcePlayerTile(Player player, ResourceType type){
 		switch(type){
-		case ORE:
-			return tiles.getTile(68 + game.getPlayerIndex(player) + 4);
-		case ENERGY:
-			return tiles.getTile(68 + game.getPlayerIndex(player) + 8);
+
+            case ORE:
+                return tiles.getTile(71 + game.getPlayerIndex(player) + 4);
+            case ENERGY:
+				return tiles.getTile(71 + game.getPlayerIndex(player) + 8);
+			case FOOD:
+				//TODO: create roboticon texture for FOOD
+				//return tiles.getTile(71 + game.getPlayerIndex(player) + ?);
 		default:
-			return tiles.getTile(68 + game.getPlayerIndex(player) + 12);
+			return tiles.getTile(71 + game.getPlayerIndex(player) + 12);
 		}
 	}
 			
 	/**
 	 * Reset to new game status.
 	 */
-	public void newGame() {
+	public void newGame(boolean AI) {
 		// Setup the game board.
 		if (tmx != null) tmx.dispose();
 		if (renderer != null) renderer.dispose();
@@ -231,16 +250,21 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		tiles = tmx.getTileSets();
 		TileConverter.setup(tiles, game);
 		renderer = new IsometricStaggeredTiledMapRenderer(tmx);
-		game.reset();
+		game.reset(AI);
 
 		mapLayer = (TiledMapTileLayer)tmx.getLayers().get("MapData");
 		playerOverlay = (TiledMapTileLayer)tmx.getLayers().get("PlayerOverlay");
 		maxDragX = 0.75f * mapLayer.getTileWidth() * (mapLayer.getWidth() + 1);
 		maxDragY = 0.75f * mapLayer.getTileHeight() * (mapLayer.getHeight() + 1);
 
-		game.getPlotManager().setup(tiles, tmx.getLayers());
-		game.nextPhase();
+        game.plotManager.setup(tiles, tmx.getLayers());
+        game.nextPhase();
+
 	}
+
+    public void plotmanagerSetup() {
+        game.plotManager.setup(tiles, tmx.getLayers());
+    }
 
 	@Override
 	public void show() {
@@ -274,10 +298,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 	/**
 	 * Resize the viewport as the render window's size change.
-	 * @param width   The new width
-	 * @param height  The new height
-	 */
-	@Override
+     * @param width   The new x
+     * @param height  The new y
+     */
+    @Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
 		game.getBatch().setProjectionMatrix(stage.getCamera().combined);

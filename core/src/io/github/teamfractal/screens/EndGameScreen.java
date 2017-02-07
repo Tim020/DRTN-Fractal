@@ -7,24 +7,24 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.actors.RoboticonMarketActors;
+import io.github.teamfractal.actors.EndGameActors;
 
-public class RoboticonMarketScreen extends AbstractAnimationScreen implements Screen {
+public class EndGameScreen implements Screen {
 
 	final RoboticonQuest game;
 	final Stage stage;
 	final Table table;
-	private RoboticonMarketActors actors;
-	
-	
-	public RoboticonMarketScreen(final RoboticonQuest game) {
+	private EndGameActors actors;
+
+
+	public EndGameScreen(final RoboticonQuest game) {
 		this.game = game;
 		this.stage = new Stage(new ScreenViewport());
 		this.table = new Table();
 		table.setFillParent(true);
 		
-		actors = new RoboticonMarketActors(game, this);
-		table.top().left().add(actors);
+		actors = new EndGameActors(game, this);
+		table.center().add(actors);
 		
 		stage.addActor(table);
 	}
@@ -41,14 +41,14 @@ public class RoboticonMarketScreen extends AbstractAnimationScreen implements Sc
 		stage.act(delta);
 		stage.draw();
 
-		renderAnimation(delta);
+
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
 		game.getBatch().setProjectionMatrix(stage.getCamera().combined);
-		actors.widgetUpdate();
+
 	}
 
 	@Override
@@ -73,24 +73,9 @@ public class RoboticonMarketScreen extends AbstractAnimationScreen implements Sc
 		stage.dispose();
 		
 	}
-	public Stage getStage(){
-		return this.stage;
-	}
 
-	@Override
-	protected RoboticonQuest getGame() {
-		return game;
-	}
 
-	@Override
-	public Size getScreenSize() {
-		Size s = new Size();
-		s.Width = stage.getViewport().getScreenWidth();
-		s.Height = stage.getViewport().getScreenHeight();
-		return s;
-	}
 
-	public RoboticonMarketActors getActors() {
-		return this.actors;
-	}
+
+
 }

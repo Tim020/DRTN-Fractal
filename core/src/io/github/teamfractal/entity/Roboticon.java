@@ -28,8 +28,8 @@ public class Roboticon {
 		return installedLandPlot != null;
 	}
 	/**
-	 * 
-	 * @param sets land plot which roboticon is installed to
+	 *
+	 * @param landplot which roboticon is installed to
 	 * @return true if roboticon is installed, false if not
 	 */
 	public synchronized boolean setInstalledLandplot(LandPlot landplot) {

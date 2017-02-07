@@ -9,13 +9,13 @@ import io.github.teamfractal.entity.LandPlot;
 import java.util.Random;
 
 public class PlotManager {
-	private LandPlot[][] plots;
+    public int x;
+    public int y;
+    private LandPlot[][] plots;
 	private TiledMapTileSets tiles;
 	private TiledMapTileLayer mapLayer;
 	private TiledMapTileLayer playerOverlay;
 	private TiledMapTileLayer roboticonOverlay;
-	private int width;
-	private int height;
 	private TiledMapTile cityTile;
 	private TiledMapTile waterTile;
 	private TiledMapTile forestTile;
@@ -39,6 +39,7 @@ public class PlotManager {
 		this.playerOverlay = (TiledMapTileLayer)layers.get("PlayerOverlay");
 		this.roboticonOverlay = (TiledMapTileLayer)layers.get("RoboticonOverlay");
 
+		//TODO: IDs may be incorrect, check/edit needed
 		this.cityTile = tiles.getTile(60);
 		this.waterTile = tiles.getTile(9);
 		this.forestTile = tiles.getTile(61);
@@ -47,10 +48,13 @@ public class PlotManager {
 		this.hillTile3 = tiles.getTile(6);
 		this.hillTile4 = tiles.getTile(7);
 
-		width = mapLayer.getWidth();
-		height = mapLayer.getHeight();
-		plots = new LandPlot[width][height];
-	}
+        this.x = mapLayer.getWidth();
+
+        this.y = mapLayer.getHeight();
+
+        this.plots = new LandPlot[x][y];
+
+    }
 
 	/**
 	 * Get {@link LandPlot} at specific position.
@@ -59,11 +63,11 @@ public class PlotManager {
 	 * @return    The corresponding {@link LandPlot} object.
 	 */
 	public LandPlot getPlot(int x, int y) {
-		if (x < 0 || x >= width || y < 0 || y >= height)
-			return null;
+        if (x < 0 || x >= this.x || y < 0 || y >= this.y)
+            return null;
 
 		// Lazy load
-		LandPlot p = plots[x][y];
+		LandPlot p = this.plots[x][y];
 		if (p == null) {
 			p = createLandPlot(x, y);
 		}
@@ -119,7 +123,7 @@ public class PlotManager {
 
 		LandPlot p = new LandPlot(ore, energy, food);
 		p.setupTile(this, x, y);
-		plots[x][y] = p;
+		this.plots[x][y] = p;
 		return p;
 	}
 
@@ -138,4 +142,5 @@ public class PlotManager {
 	public LandPlot[][] getLandPlots(){
 		return this.plots;
 	}
+
 }
