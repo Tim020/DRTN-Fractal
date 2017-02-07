@@ -27,13 +27,13 @@ public class RoboticonQuest extends Game {
 	public RoboticonMarketScreen roboticonMarket;
 	public TiledMap tmx;
 	public Skin skin;
-	public MainMenuScreen mainMenuScreen;
 	public GameScreen gameScreen;
-	public ArrayList<Player> playerList;
 	public Market market;
     public PlotManager plotManager;
-    SpriteBatch batch;
-	private int phase;
+    private MainMenuScreen mainMenuScreen;
+    private ArrayList<Player> playerList;
+    private SpriteBatch batch;
+    private int phase;
 	private int currentPlayer;
 	private int landBoughtThisTurn;
 	private PlotEffect[] plotEffects;
@@ -114,7 +114,7 @@ public class RoboticonQuest extends Game {
         plotManager = new PlotManager();
         Player player1;
         Player player2;
-        if (AI == true){
+        if (AI) {
             player1 = new AIPlayer(this);
             player2 = new Player(this);
         } else{
@@ -130,15 +130,15 @@ public class RoboticonQuest extends Game {
 
     }
 
-	public void implementPhase () {
-		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+    private void implementPhase() {
+        System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
 
 				this.roboticonMarket = new RoboticonMarketScreen(this);
-				this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
-				setScreen(this.roboticonMarket);
+                this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, phase, 30));
+                setScreen(this.roboticonMarket);
 
 				this.getPlayer().takeTurn();
                 break;
@@ -178,7 +178,7 @@ public class RoboticonQuest extends Game {
 			case 6:
 				phase = 1;
 
-				if(checkGameEnded() == true){
+                if (checkGameEnded()) {
 
 					setScreen(new EndGameScreen(this));
 					break;
@@ -346,12 +346,12 @@ public class RoboticonQuest extends Game {
 
 	/**
 	 * Returns the winner of the game, based on which player has the highest score
-	 * @return
-	 */
+     * @return String returning the winning player
+     */
 
 	public String getWinner(){
-		String winner = null;
-		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
+        String winner;
+        if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
 			winner = "Player 1";
 		}
 		else{
