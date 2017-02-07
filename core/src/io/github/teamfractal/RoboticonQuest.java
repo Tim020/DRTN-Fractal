@@ -168,10 +168,11 @@ public class RoboticonQuest extends Game {
 				if(checkGameEnded() == true){
 					
 					setScreen(new EndGameScreen(this));
-
+					break;
 				}
 				phase = newPhaseState = 1;
 				this.nextPlayer();
+
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
 
