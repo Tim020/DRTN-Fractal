@@ -147,11 +147,11 @@ public class LandPlot {
 	 *
 	 * @return The amount of resources to be produced in an 2D array.
 	 */
-	public float[] produceResources() {
-		float[] produced = new float[3];
-		for (int i = 0; i < 2; i++) {
-			produced[i] = productionAmounts[i] * productionModifiers[i];
-		}
+    public int[] produceResources() {
+        int[] produced = new int[3];
+        for (int i = 0; i < 2; i++) {
+            produced[i] = productionAmounts[i] * productionModifiers[i];
+        }
 		return produced;
 	}
 
