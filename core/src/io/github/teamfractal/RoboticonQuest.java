@@ -30,7 +30,8 @@ public class RoboticonQuest extends Game {
 	public GameScreen gameScreen;
 	public Market market;
     public PlotManager plotManager;
-	SpriteBatch batch;
+
+	private SpriteBatch batch;
 	private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
     private int phase;
@@ -48,9 +49,6 @@ public class RoboticonQuest extends Game {
 	public static RoboticonQuest getInstance() {
 		return _instance;
 	}
-
-
-
 
 
 	public int getPlayerIndex (Player player) {
