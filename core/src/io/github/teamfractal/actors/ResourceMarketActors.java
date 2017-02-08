@@ -56,8 +56,10 @@ public class ResourceMarketActors extends Table {
 
 		playerStats = new Label("", game.skin);
 		marketStats = new Label("", game.skin);
-		Label buyLabel  = new Label("Buy",  skin);
-		Label sellLabel = new Label("Sell", skin);
+
+		//spaces added to provide a gap between buy and sell columns
+		Label buyLabel  = new Label("                   Buy                  ", skin);
+		Label sellLabel = new Label("                  Sell                  ", skin);
 
 		oreBuy = createAdjustable(ResourceType.ORE, false);
 		oreSell = createAdjustable(ResourceType.ORE, true);
@@ -77,14 +79,10 @@ public class ResourceMarketActors extends Table {
 		// Add UI components to screen.
 		stage.addActor(phaseInfo);
 		stage.addActor(nextButton);
-
+        stage.addActor(marketStats);
+        stage.addActor(playerStats);
 
 		// Setup UI Layout.
-		// Row: Player and Market Stats.
-		add(playerStats);
-		add().spaceRight(20);
-		add(marketStats);
-		rowWithHeight(20);
 
 		// Row: Label of Sell and Buy
 		add(buyLabel);
@@ -213,15 +211,17 @@ public class ResourceMarketActors extends Table {
 				"Phase " + game.getPhase() + " - " + game.getPhaseString();
 
 		String statText =
-				"Ore: "    + game.getPlayer().getOre()    + "  " +
-				"Energy: " + game.getPlayer().getEnergy() + "  " +
-				"Food: "   + game.getPlayer().getFood()   + "  " +
+				"Player Resources\n\n" +
+				"Ore: "    + game.getPlayer().getOre()    + "\n\n" +
+				"Energy: " + game.getPlayer().getEnergy() + "\n\n" +
+				"Food: "   + game.getPlayer().getFood()   + "\n\n" +
 				"Money: "  + game.getPlayer().getMoney();
 
 		String marketStatText =
-				"Ore: " +    game.market.getResource(ResourceType.ORE   ) + "  " +
-				"Energy: " + game.market.getResource(ResourceType.ENERGY) + "  " +
-				"Food: " +   game.market.getResource(ResourceType.FOOD  );
+                "Market Resources\n\n" +
+				"Ore: " +    game.market.getResource(ResourceType.ORE   ) + "\n\n" +
+				"Energy: " + game.market.getResource(ResourceType.ENERGY) + "\n\n" +
+				"Food: " +   game.market.getResource(ResourceType.FOOD  ) + "\n\n";
 
 		phaseInfo.setText(phaseText);
 		playerStats.setText(statText);
@@ -251,6 +251,11 @@ public class ResourceMarketActors extends Table {
 		// Bottom Right
 		nextButton.setPosition(width - nextButton.getWidth() - 10, 10);
 
+		//Middle Right
+        playerStats.setPosition(width - 250, 300 );
+
+        //Middle Left
+        marketStats.setPosition(250, 300 );
 		setWidth(width);
 	}
 }
