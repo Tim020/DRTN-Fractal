@@ -20,6 +20,8 @@ import io.github.teamfractal.entity.Player;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.util.TileConverter;
 
+import java.util.ArrayList;
+
 public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	private final RoboticonQuest game;
 	private final OrthographicCamera camera;
@@ -42,6 +44,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	private float maxDragY;
 	private TiledMapTileSets tiles;
 
+	private ArrayList<Overlay> overlayStack;
+
 
 	/**
 	 * Initialise the class
@@ -55,7 +59,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		camera.setToOrtho(false, oldW, oldH);
 		camera.update();
 
-
 		this.game = game;
 
 		// TODO: Add some HUD gui stuff (buttons, mini-map etc...)
@@ -63,6 +66,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		this.actors = new GameScreenActors(game, this);
 		actors.initialiseButtons();
 		// actors.textUpdate();
+
+		overlayStack = new ArrayList<Overlay>();
+		//Prepare the overlay stack to allow for numerous overlays to be stacked on top of one-another
+
 
 
         // Drag the map within the screen.
@@ -189,14 +196,14 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		// newGame();
 	}
 
-	public void setSelectedPlot(LandPlot plot){
-		selectedPlot = plot;
-
-	}
-
     public LandPlot getSelectedPlot() {
         return selectedPlot;
     }
+
+	public void setSelectedPlot(LandPlot plot) {
+		selectedPlot = plot;
+
+	}
 
 	/**
 	 * gets the players tile to put over a tile they own
@@ -261,6 +268,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 	@Override
 	public void render(float delta) {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
@@ -270,6 +278,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		stage.act(delta);
 		stage.draw();
+
+		if (overlayStack.isEmpty() || overlayStack == null) {
+			Gdx.input.setInputProcessor(stage);
+		} else {
+			Gdx.input.setInputProcessor(overlayStack.get(overlayStack.size() - 1));
+
+			overlayStack.get(overlayStack.size() - 1).act(delta);
+			overlayStack.get(overlayStack.size() - 1).draw();
+		}
 
 		renderAnimation(delta);
 	}
@@ -287,6 +304,11 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		actors.resizeScreen(width, height);
 		oldW = width;
 		oldH = height;
+
+		if (mapLayer != null) {
+			camera.translate(-((Gdx.graphics.getWidth() - (mapLayer.getTileWidth() * mapLayer.getWidth())) / 2), -((Gdx.graphics.getHeight() - (mapLayer.getTileHeight() * mapLayer.getHeight())) / 2));
+		}
+		//NEED TO TRANSLATE BY (WINDOW WIDTH - MAP WIDTH) / 2, AND SAME FOR HEIGHT
 	}
 
 	@Override
@@ -340,5 +362,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	
 	public GameScreenActors getActors(){
 		return this.actors;
+	}
+
+	public void addOverlay(Overlay overlay) {
+		overlayStack.add(overlay);
+	}
+
+	public void removeOverlay() {
+		if (!overlayStack.isEmpty()) {
+			overlayStack.remove(overlayStack.size() - 1);
+		}
 	}
 }

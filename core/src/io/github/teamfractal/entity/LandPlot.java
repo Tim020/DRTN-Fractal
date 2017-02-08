@@ -7,12 +7,41 @@ import io.github.teamfractal.exception.NotCommonResourceException;
 import io.github.teamfractal.util.PlotManager;
 
 public class LandPlot {
-	private TiledMapTileLayer.Cell mapTile;
+    private final int IndexOre = 0;
+    private final int IndexEnergy = 1;
+    private final int IndexFood = 2;
+    int x, y;
+    /**
+     * Saved modifiers for LandPlot.
+     * [ Ore, Energy, Food ]
+     */
+    float[] productionModifiers = {0, 0, 0};
+    private TiledMapTileLayer.Cell mapTile;
 	private TiledMapTileLayer.Cell playerTile;
 	private TiledMapTileLayer.Cell roboticonTile;
 	private Player owner;
-	int x, y;
+    /**
+     * The base production amounts.
+     * [ Ore, Energy, Food ]
+     */
+    private int[] productionAmounts;
+    private boolean owned;
+    private Roboticon installedRoboticon;
+    private boolean hasRoboticon;
 
+    /**
+     * Initialise LandPlot with specific base amount of resources.
+     *
+     * @param ore    Amount of ore
+     * @param energy Amount of energy
+     * @param food   Amount of food
+     */
+    public LandPlot(int ore, int energy, int food) {
+        this.productionAmounts = new int[]{ore, energy, food};
+        this.owned = false;
+    }
+
+    //</editor-fold>
 
 	//<editor-fold desc="Class getters">
 	public TiledMapTileLayer.Cell getMapTile() {
@@ -39,7 +68,6 @@ public class LandPlot {
 		return y;
 	}
 
-
 	public boolean setOwner(Player player) {
 		if (hasOwner()) {
 			return false;
@@ -59,39 +87,6 @@ public class LandPlot {
 			return ;
 
 		owner.removeLandPlot(this);
-	}
-	
-	//</editor-fold>
-
-	private final int IndexOre = 0;
-	private final int IndexEnergy = 1;
-	private final int IndexFood = 2;
-
-	/**
-	 * Saved modifiers for LandPlot.
-	 * [ Ore, Energy, Food ]
-	 */
-	int[] productionModifiers = {0, 0, 0};
-
-	/**
-	 * The base production amounts.
-	 * [ Ore, Energy, Food ]
-	 */
-	private int[] productionAmounts;
-	private boolean owned;
-	private Roboticon installedRoboticon;
-	private boolean hasRoboticon;
-
-	/**
-	 * Initialise LandPlot with specific base amount of resources.
-	 *
-	 * @param ore     Amount of ore
-	 * @param energy  Amount of energy
-	 * @param food    Amount of food
-	 */
-	public LandPlot(int ore, int energy, int food) {
-		this.productionAmounts = new int[]{ore, energy, food};
-		this.owned = false;
 	}
 
 	public void setupTile (PlotManager plotManager, int x, int y) {
@@ -152,11 +147,11 @@ public class LandPlot {
 	 *
 	 * @return The amount of resources to be produced in an 2D array.
 	 */
-	public int[] produceResources() {
-		int[] produced = new int[3];
-		for (int i = 0; i < 2; i++) {
-			produced[i] = productionAmounts[i] * productionModifiers[i];
-		}
+    public int[] produceResources() {
+        int[] produced = new int[3];
+        for (int i = 0; i < 2; i++) {
+            produced[i] = (int) ((float) productionAmounts[i] * productionModifiers[i]);
+        }
 		return produced;
 	}
 
@@ -168,7 +163,7 @@ public class LandPlot {
 	public int produceResource(ResourceType resource) {
 		if (this.hasRoboticon){
 			int resIndex = resourceTypeToIndex(resource);
-			return productionAmounts[resIndex] * productionModifiers[resIndex];
+			return (int) ((float) productionAmounts[resIndex] * productionModifiers[resIndex]);
 		}
 		else return 0;
 		

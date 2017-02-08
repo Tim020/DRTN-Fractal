@@ -10,14 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
-import io.github.teamfractal.entity.AIPlayer;
-import io.github.teamfractal.entity.LandPlot;
-import io.github.teamfractal.entity.Market;
-import io.github.teamfractal.entity.Player;
+import io.github.teamfractal.entity.*;
+import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.PlotManager;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This is the main game boot up class.
@@ -25,20 +24,23 @@ import java.util.ArrayList;
  */
 public class RoboticonQuest extends Game {
     private static RoboticonQuest _instance;
-    public Skin skin;
-    public GameScreen gameScreen;
-	public Market market;
 	public RoboticonMarketScreen roboticonMarket;
 	public TiledMap tmx;
+	public Skin skin;
+	public GameScreen gameScreen;
+	public Market market;
     public PlotManager plotManager;
-    private MainMenuScreen mainMenuScreen;
+	SpriteBatch batch;
+	private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
-    private SpriteBatch batch;
     private int phase;
-    private int currentPlayerIndex;
-    private int landBoughtThisTurn;
+	private int currentPlayer;
+	private int landBoughtThisTurn;
+	private PlotEffect[] plotEffects;
+	private float effectChance;
+	private int currentPlayerIndex;
 
-	public RoboticonQuest(){
+	public RoboticonQuest() {
 		_instance = this;
 		reset(false);
 	}
@@ -47,7 +49,12 @@ public class RoboticonQuest extends Game {
 		return _instance;
 	}
 
-	public int getPlayerIndex(Player player) {
+
+
+
+
+	public int getPlayerIndex (Player player) {
+
 		return playerList.indexOf(player);
 	}
 	
@@ -55,13 +62,14 @@ public class RoboticonQuest extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		setupSkin();
-		
-	
+
 		gameScreen = new GameScreen(this);
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
-		
+
+		//Setup tile and player effects for later application
+		setupEffects();
 
 		setScreen(mainMenuScreen);
 	}
@@ -95,13 +103,18 @@ public class RoboticonQuest extends Game {
 		return this.phase;
 	}
 
+	public void setPhase(int phase) {
+		this.phase = phase;
+		implementPhase();
+	}
+
 	public void reset(boolean AI) {
         this.currentPlayerIndex = 0;
         this.phase = 0;
         plotManager = new PlotManager();
         Player player1;
         Player player2;
-        if (AI == true){
+        if (AI) {
             player1 = new AIPlayer(this);
             player2 = new Player(this);
         } else{
@@ -117,25 +130,23 @@ public class RoboticonQuest extends Game {
 
     }
 
-	public void nextPhase () {
-		int newPhaseState = phase + 1;
-		phase = newPhaseState;
-		
-
-		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + newPhaseState);
-		switch (newPhaseState) {
+    private void implementPhase() {
+        System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
+
 				this.roboticonMarket = new RoboticonMarketScreen(this);
-				this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30));
-				setScreen(this.roboticonMarket);
+                this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, phase, 30));
+                setScreen(this.roboticonMarket);
 
 				this.getPlayer().takeTurn();
                 break;
 
+
 			// Phase 3: Roboticon Customisation
 			case 3:
-				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, newPhaseState, 30);
+				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
 				timeoutAnimation.setAnimationFinish(new IAnimationFinish() {
 					@Override
@@ -161,16 +172,17 @@ public class RoboticonQuest extends Game {
 
 				this.getPlayer().takeTurn();
 				break;
-			
+
 
 			// End phase - CLean up and move to next player.
 			case 6:
-				if(checkGameEnded() == true){
-					
+				phase = 1;
+
+                if (checkGameEnded()) {
+
 					setScreen(new EndGameScreen(this));
 					break;
 				}
-				phase = newPhaseState = 1;
 				this.nextPlayer();
 
 				// No "break;" here!
@@ -182,18 +194,22 @@ public class RoboticonQuest extends Game {
 				landBoughtThisTurn = 0;
 				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
 
-				this.getPlayer().takeTurn();
-                break;
-        }
+				clearEffects();
+				setEffects();
 
-        /*if (this.getPlayer() instanceof AIPlayer) {
-            this.getPlayer().takeTurn();
-        }*/
+        		this.getPlayer().takeTurn();
+				break;
+		}
+
 
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();
 	}
 
+	public void nextPhase() {
+		phase += 1;
+		implementPhase();
+	}
 
 	/**
 	 * Phase 4: generate resources.
@@ -244,6 +260,7 @@ public class RoboticonQuest extends Game {
 	}
 
 	public Player getPlayer(){
+
         return this.playerList.get(this.currentPlayerIndex);
     }
 
@@ -260,6 +277,55 @@ public class RoboticonQuest extends Game {
 
     }
 
+	
+	private void setupEffects() {
+		//Initialise the fractional chance of any given effect being applied at the start of a round
+		effectChance = (float) 0.05;
+
+		plotEffects = new PlotEffect[1];
+
+		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most " +
+				"food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
+				"80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
+			@Override
+			public void run() {
+				if (getPlayer().getLandList().size() == 0) {
+					return;
+				}
+
+				LandPlot foodProducer = getPlayer().getLandList().get(0);
+
+				for (LandPlot plot : getPlayer().getLandList()) {
+					if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
+						foodProducer = plot;
+					}
+				}
+				plotEffects[0].impose(foodProducer, 1);
+			}
+		});
+
+		for (PlotEffect PE : plotEffects) {
+			PE.constructOverlay(gameScreen);
+		}
+	}
+
+	private void setEffects() {
+		Random RNGesus = new Random();
+
+		for (PlotEffect PE : plotEffects) {
+			if (RNGesus.nextFloat() <= effectChance) {
+				PE.executeRunnable();
+
+				gameScreen.addOverlay(PE.overlay());
+			}
+		}
+	}
+
+	private void clearEffects() {
+		for (PlotEffect PE : plotEffects) {
+			PE.revertAll();
+		}
+	}
 
 	/**
 	 * Checks whether the game has ended based on whether all of the tiles have been claimed
@@ -270,10 +336,8 @@ public class RoboticonQuest extends Game {
 		LandPlot[][] plots = plotManager.getLandPlots();
         for (LandPlot[] plot : plots) {
             for (LandPlot aPlot : plot) {
-                if (aPlot != null) {
-                    if (!aPlot.hasOwner()) {
-                        ended = false;
-                    }
+                if (aPlot == null) {
+					ended = false;
                 }
             }
         }
@@ -282,19 +346,26 @@ public class RoboticonQuest extends Game {
 
 	/**
 	 * Returns the winner of the game, based on which player has the highest score
-	 * @return
-	 */
+     * @return String returning the winning player
+     */
 
 	public String getWinner(){
-		String winner = null;
-		if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
+        String winner;
+        if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
 			winner = "Player 1";
 		}
 		else{
 				winner = "Player 2";
 			}
 		return winner;
+	}
 
+	public float getEffectChance() {
+		return effectChance;
+	}
+
+	public void setEffectChance(float effectChance) {
+		this.effectChance = effectChance;
 	}
 
 	/**

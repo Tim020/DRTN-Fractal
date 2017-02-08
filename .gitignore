@@ -13,7 +13,7 @@ hs_err_pid*
 !.idea/runConfigurations/Desktop.xml
 !.idea/runConfigurations/GradleRunDesktop.xml
 !.idea/runConfigurations/JARCompile.xml
-*.xml
+!.idea/runConfigurations/Run.xml
 
 ## Robovm
 robovm-build/
@@ -37,7 +37,6 @@ android/libs/arm64-v8a/
 android/libs/x86/
 android/libs/x86_64/
 android/gen/
-.idea/
 *.ipr
 *.iws
 *.iml

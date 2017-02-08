@@ -1,12 +1,13 @@
 package io.github.teamfractal.entity;
 
+import io.github.teamfractal.TesterFile;
+import io.github.teamfractal.entity.enums.ResourceType;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
-import org.junit.*;
-
-import io.github.teamfractal.entity.enums.ResourceType;
-
-public class RoboticonTest {
+public class RoboticonTest extends TesterFile {
 	private Roboticon roboticon;
 	
 	@Before
