@@ -6,8 +6,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class RoboticonQuestTest extends TesterFile {
+public class RoboticonQuestTest extends GdxInitializer {
 	private RoboticonQuest game;
+	//TODO: Find a different way to test
 	/*
 	@Before
 	public void setUp(){
@@ -34,4 +35,5 @@ public class RoboticonQuestTest extends TesterFile {
 		assert(game.getPlayerInt() == 0); //Test game changes players correctly
 	}
 	*/
+
 }
