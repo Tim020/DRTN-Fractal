@@ -279,6 +279,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		stage.act(delta);
 		stage.draw();
 
+		renderAnimation(delta);
+
 		if (overlayStack.isEmpty() || overlayStack == null) {
 			Gdx.input.setInputProcessor(stage);
 		} else {
@@ -287,8 +289,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 			overlayStack.get(overlayStack.size() - 1).act(delta);
 			overlayStack.get(overlayStack.size() - 1).draw();
 		}
-
-		renderAnimation(delta);
 	}
 
 	/**
