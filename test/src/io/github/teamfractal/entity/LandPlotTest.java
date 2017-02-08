@@ -26,7 +26,7 @@ public class LandPlotTest extends TesterFile {
 		for (int i = 0; i < 3; i++) {
 			intProductionModifiers[i] = (int) plot.productionModifiers[i];
 		}
-		assertArrayEquals(new int[]{1, 1, 0}, intProductionModifiers);
+		assertArrayEquals(new int[]{1, 0, 0}, intProductionModifiers);
 
 
 		Roboticon roboticon2 = new Roboticon(0);
