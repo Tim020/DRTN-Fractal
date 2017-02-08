@@ -136,8 +136,6 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 3.
      */
     private void phase3() {
-
-        //TODO: Implement
         for (LandPlot aLandPlot : this.landList) {
             if (!aLandPlot.hasRoboticon()) {
                 for (Roboticon aRoboticon: this.roboticonList
