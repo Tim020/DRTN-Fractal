@@ -68,10 +68,13 @@ public class RoboticonMarketActors2 extends Table {
         purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(4);
 
         purchaseTable.row();
-        purchaseTable.add(subRoboticonButton).width(25).padLeft(60);
-        purchaseTable.add(lblRoboticonAmount).width(25);
+        purchaseTable.add(subRoboticonButton).width(25).padLeft(66);
+        purchaseTable.add(lblRoboticonAmount).width(50);
         purchaseTable.add(addRoboticonButton).width(25);
-        purchaseTable.add(buyRoboticonsButton).expandX().align(Align.right).padRight(60);
+        purchaseTable.add(buyRoboticonsButton).expandX().align(Align.right).padRight(55);
+
+        purchaseTable.row();
+        purchaseTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(4).padTop(25);
 
         purchaseTable.debug();
 
@@ -79,7 +82,7 @@ public class RoboticonMarketActors2 extends Table {
     }
 
     private void constructLabels() {
-        lblRoboticonAmount = new Label(roboticonAmount.toString(), game.skin);
+        lblRoboticonAmount = new Label(roboticonAmount.toString() + "/" +  game.market.getResource(ResourceType.ROBOTICON), game.skin);
         lblRoboticonAmount.setAlignment(Align.center);
     }
 
@@ -89,7 +92,10 @@ public class RoboticonMarketActors2 extends Table {
         addRoboticonButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                addRoboticonFunction();
+                if (roboticonAmount < game.market.getResource(ResourceType.ROBOTICON)) {
+                    roboticonAmount += 1;
+                    setRoboticonQuantityLabel(roboticonAmount);
+                }
             }
         });
 
@@ -98,7 +104,10 @@ public class RoboticonMarketActors2 extends Table {
         subRoboticonButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                subRoboticonFunction();
+                if (roboticonAmount > 0) {
+                    roboticonAmount -= 1;
+                    setRoboticonQuantityLabel(roboticonAmount);
+                }
             }
         });
 
@@ -111,16 +120,8 @@ public class RoboticonMarketActors2 extends Table {
         });
     }
 
-    public void addRoboticonFunction() {
-        roboticonAmount += 1;
-        this.lblRoboticonAmount.setText(roboticonAmount.toString());
-    }
-
-    public void subRoboticonFunction() {
-        if (roboticonAmount > 0) {
-            roboticonAmount -= 1;
-            lblRoboticonAmount.setText(roboticonAmount.toString());
-        }
+    public void setRoboticonQuantityLabel(int quantity) {
+        lblRoboticonAmount.setText(quantity + "/" + game.market.getResource(ResourceType.ROBOTICON));
     }
 
     public void buyRoboticonFunction() {
