@@ -282,7 +282,7 @@ public class RoboticonQuest extends Game {
 
 		plotEffects = new PlotEffect[1];
 
-		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks infest your most " +
+		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks pillage your most " +
 				"food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
 				"80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
 			@Override
