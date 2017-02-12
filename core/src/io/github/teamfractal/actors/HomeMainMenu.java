@@ -71,7 +71,8 @@ public class HomeMainMenu extends Table {
 		btnNewAIGame.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				//CODE TO BEGIN AI GAME HERE
+				game.setScreen(game.gameScreen);
+				game.gameScreen.newGame(true);
 			}
 		});
 

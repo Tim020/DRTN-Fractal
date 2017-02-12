@@ -39,7 +39,6 @@ public class PlotManager {
 		this.playerOverlay = (TiledMapTileLayer)layers.get("PlayerOverlay");
 		this.roboticonOverlay = (TiledMapTileLayer)layers.get("RoboticonOverlay");
 
-		//TODO: IDs may be incorrect, check/edit needed
 		this.cityTile = tiles.getTile(60);
 		this.waterTile = tiles.getTile(9);
 		this.forestTile = tiles.getTile(61);
@@ -82,7 +81,7 @@ public class PlotManager {
      */
     private int randomResourceVal() {
         Random rand = new Random();
-        int max = 4;
+        int max = 6;
         int min = 0;
         return rand.nextInt(max) + min;
 
