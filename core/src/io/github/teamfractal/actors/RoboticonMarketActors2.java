@@ -3,10 +3,15 @@ package io.github.teamfractal.actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.RoboticonQuest;
+import io.github.teamfractal.entity.Roboticon;
+import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.RoboticonMarketScreen;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import io.github.teamfractal.util.TTFont;
@@ -60,19 +65,22 @@ public class RoboticonMarketActors2 extends Table {
         montserratRegular.setSize(24);
         montserratLight.setSize(24);
 
-        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(3);
+        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(4);
 
         purchaseTable.row();
-        purchaseTable.add(subRoboticonButton);
-        purchaseTable.add(lblRoboticonAmount);
-        purchaseTable.add(addRoboticonButton);
+        purchaseTable.add(subRoboticonButton).width(25).padLeft(60);
+        purchaseTable.add(lblRoboticonAmount).width(25);
+        purchaseTable.add(addRoboticonButton).width(25);
+        purchaseTable.add(buyRoboticonsButton).expandX().align(Align.right).padRight(60);
 
-        purchaseTable.row();
-        purchaseTable.add(buyRoboticonsButton).colspan(3);
+        purchaseTable.debug();
+
+        add(purchaseTable);
     }
 
     private void constructLabels() {
         lblRoboticonAmount = new Label(roboticonAmount.toString(), game.skin);
+        lblRoboticonAmount.setAlignment(Align.center);
     }
 
     private void constructButtons() {
@@ -94,7 +102,7 @@ public class RoboticonMarketActors2 extends Table {
             }
         });
 
-        buyRoboticonsButton = new TextButton("Purchase", game.skin);
+        buyRoboticonsButton = new TextButton("PURCHASE", game.skin);
         buyRoboticonsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -121,4 +129,96 @@ public class RoboticonMarketActors2 extends Table {
         lblRoboticonAmount.setText(roboticonAmount.toString());
         //widgetUpdate();
     }
+
+    /*
+    public void moveLeftRoboticonInventoryFunction() {
+        if (currentlySelectedRoboticonPos > 0) {
+            currentlySelectedRoboticonPos--;
+            setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
+        }
+    }
+
+    public void moveRightRoboticonInventoryFunction() {
+        if (currentlySelectedRoboticonPos < roboticons.size() - 1) {
+            currentlySelectedRoboticonPos++;
+            setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
+        }
+    }
+
+    public void buyCustomisationFunction(ResourceType customisation, int pos) {
+
+
+        game.getPlayer().purchaseCustomisationFromMarket(customisation, roboticons.get(pos), game.market);
+        widgetUpdate();
+    }
+
+    public void widgetUpdate() {
+        roboticons.clear();
+        for (Roboticon r : game.getPlayer().getRoboticons()) {
+            if (!r.isInstalled()) {
+                roboticons.add(r);
+            }
+        }
+
+        // Draws turn and phase info on screen
+        if (this.topText != null) this.topText.remove();
+        String phaseText = "Player " + (game.getPlayerInt() + 1) + "; Phase " + game.getPhase();
+        this.topText = new Label(phaseText, game.skin);
+        topText.setWidth(120);
+        topText.setPosition(screen.getStage().getWidth() / 2 - 40, screen.getStage().getViewport().getWorldHeight() - 20);
+        screen.getStage().addActor(topText);
+
+        // Draws player stats on screen
+        if (this.playerStats != null) this.playerStats.remove();
+        String statText = "Ore: " + game.getPlayer().getOre() + " Energy: " + game.getPlayer().getEnergy() + " Food: "
+                + game.getPlayer().getFood() + " Money: " + game.getPlayer().getMoney();
+        this.playerStats = new Label(statText, game.skin);
+        playerStats.setWidth(250);
+        playerStats.setPosition(0, screen.getStage().getViewport().getWorldHeight() - 20);
+        screen.getStage().addActor(playerStats);
+
+        if (roboticons.size() == 0) {
+            currentlySelectedRoboticonPos = -1;
+        } else if (currentlySelectedRoboticonPos == -1) {
+            currentlySelectedRoboticonPos = 0;
+        }
+
+        setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
+
+        marketStats.setText("Market - Roboticons: " + game.market.getResource(ResourceType.ROBOTICON));
+    }
+
+    public void setCurrentlySelectedRoboticon(int roboticonPos) {
+        if (roboticonPos != -1) {
+
+            ResourceType roboticonType = roboticons.get(roboticonPos).getCustomisation();
+
+            switch (roboticonType) {
+                case Unknown:
+                    roboticonTexture = no_cust_texture;
+                    break;
+                case ENERGY:
+                    roboticonTexture = energy_texture;
+                    break;
+                case ORE:
+                    roboticonTexture = ore_texture;
+                    break;
+                case FOOD:
+                    roboticonTexture = food_texture;
+                    break;
+                default:
+                    break;
+            }
+
+            int id = roboticons.get(roboticonPos).getID();
+            this.roboticonID.setText("Roboticon Issue Number: " + padZero(id, 4));
+
+        } else {
+            roboticonTexture = no_robotic_texture;
+            this.roboticonID.setText("Roboticon Issue Number: ####");
+        }
+
+        roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
+    }
+    */
 }
