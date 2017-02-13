@@ -26,7 +26,7 @@ public class RoboticonMarketActors extends Table {
 		no_cust_texture = new Texture(Gdx.files.internal("roboticon_images/robot.png"));
 		energy_texture = new Texture(Gdx.files.internal("roboticon_images/robot_energy.png"));
 		ore_texture = new Texture(Gdx.files.internal("roboticon_images/robot_ore.png"));
-		food_texture = new Texture(Gdx.files.internal("roboticon_images/robot_question.png")); //TODO: Create food roboticon texture and insert path here
+		food_texture = new Texture(Gdx.files.internal("roboticon_images/robot_food.png"));
 		no_robotic_texture = new Texture(Gdx.files.internal("roboticon_images/no_roboticons.png"));
 	}
 
