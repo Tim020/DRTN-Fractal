@@ -62,11 +62,19 @@ public class RoboticonMarketActors2 extends Table {
     private SelectBox<String> customisationDropDown;
     private TextButton customisationPurchaseButton;
 
+    private TTFont montserratRegular;
+    private TTFont montserratLight;
+
     public RoboticonMarketActors2(RoboticonQuest game, RoboticonMarketScreen screen) {
         this.game = game;
         this.screen = screen;
 
         this.roboticonImage = new Image();
+
+        montserratRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"));
+        montserratLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"));
+        montserratRegular.setSize(24);
+        montserratLight.setSize(12);
 
         constructInterface();
     }
@@ -79,11 +87,6 @@ public class RoboticonMarketActors2 extends Table {
 
         constructLabels();
         constructButtons();
-
-        TTFont montserratRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"));
-        TTFont montserratLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"));
-        montserratRegular.setSize(24);
-        montserratLight.setSize(24);
 
         purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(4);
 
@@ -99,20 +102,22 @@ public class RoboticonMarketActors2 extends Table {
         upgradeTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(3).padTop(25);
 
         upgradeTable.row();
-        upgradeTable.add(moveLeftInventoryButton);
-        //upgradeTable.add(roboticonImage);
-        upgradeTable.add(moveRightInventoryButton);
+        upgradeTable.add(moveLeftInventoryButton).width(25);
+        //upgradeTable.add(roboticonImage).expandX();
+        upgradeTable.add(moveRightInventoryButton).width(25);
 
         upgradeTable.row();
         upgradeTable.add(selectedRoboticonIDLabel).colspan(3).padBottom(10);
 
         upgradeTable.row();
-        this.customisationDropDown = new SelectBox<String>(game.skin);
-        this.customisationDropDown.setItems(new String[]{"Energy, Ore, Food"});
+        customisationDropDown = new SelectBox<String>(game.skin);
+        customisationDropDown.setItems(new String[]{"Energy", "Ore", "Food"});
+        upgradeTable.add(customisationDropDown).colspan(2).expandX();
+        upgradeTable.add(customisationPurchaseButton);
 
         upgradeTable.debug();
 
-        add(upgradeTable);
+        add(upgradeTable).padBottom(25);
     }
 
     private void constructLabels() {
@@ -124,6 +129,10 @@ public class RoboticonMarketActors2 extends Table {
     }
 
     private void constructButtons() {
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.font = montserratLight.font();
+        buttonStyle.fontColor = Color.WHITE;
+
         //Increases number of roboticons to be purchased
         addRoboticonButton = new TextButton("+", game.skin);
         addRoboticonButton.addListener(new ChangeListener() {
