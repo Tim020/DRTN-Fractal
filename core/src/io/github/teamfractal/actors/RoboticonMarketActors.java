@@ -349,8 +349,6 @@ public class RoboticonMarketActors extends Table {
     }
 
     public void buyCustomisationFunction(ResourceType customisation, int pos) {
-
-
         game.getPlayer().purchaseCustomisationFromMarket(customisation, roboticons.get(pos), game.market);
         widgetUpdate();
     }
