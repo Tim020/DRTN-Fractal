@@ -13,6 +13,7 @@ import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
+import io.github.teamfractal.util.PlotEffectSource;
 import io.github.teamfractal.util.PlotManager;
 
 import java.util.ArrayList;
@@ -37,9 +38,10 @@ public class RoboticonQuest extends Game {
     private int phase;
 	private int currentPlayer;
 	private int landBoughtThisTurn;
-	private PlotEffect[] plotEffects;
 	private float effectChance;
 	private int currentPlayerIndex;
+
+	private PlotEffectSource plotEffectSource;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -280,29 +282,9 @@ public class RoboticonQuest extends Game {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
 		effectChance = (float) 0.05;
 
-		plotEffects = new PlotEffect[1];
+		plotEffectSource = new PlotEffectSource(this);
 
-		plotEffects[0] = new PlotEffect("Duck-Related Disaster", "A horde of ducks pillage your most " +
-				"food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
-				"80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
-			@Override
-			public void run() {
-				if (getPlayer().getLandList().size() == 0) {
-					return;
-				}
-
-				LandPlot foodProducer = getPlayer().getLandList().get(0);
-
-				for (LandPlot plot : getPlayer().getLandList()) {
-					if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
-						foodProducer = plot;
-					}
-				}
-				plotEffects[0].impose(foodProducer, 1);
-			}
-		});
-
-		for (PlotEffect PE : plotEffects) {
+		for (PlotEffect PE : plotEffectSource) {
 			PE.constructOverlay(gameScreen);
 		}
 	}
@@ -310,7 +292,7 @@ public class RoboticonQuest extends Game {
 	private void setEffects() {
 		Random RNGesus = new Random();
 
-		for (PlotEffect PE : plotEffects) {
+		for (PlotEffect PE : plotEffectSource) {
 			if (RNGesus.nextFloat() <= effectChance) {
 				PE.executeRunnable();
 
@@ -320,7 +302,7 @@ public class RoboticonQuest extends Game {
 	}
 
 	private void clearEffects() {
-		for (PlotEffect PE : plotEffects) {
+		for (PlotEffect PE : plotEffectSource) {
 			PE.revertAll();
 		}
 	}
