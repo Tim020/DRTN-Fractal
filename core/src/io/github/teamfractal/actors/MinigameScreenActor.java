@@ -1,20 +1,19 @@
 package io.github.teamfractal.actors;
 
-        import com.badlogic.gdx.scenes.scene2d.Actor;
-        import com.badlogic.gdx.scenes.scene2d.InputEvent;
-        import com.badlogic.gdx.scenes.scene2d.Stage;
-        import com.badlogic.gdx.scenes.scene2d.ui.Label;
-        import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-        import com.badlogic.gdx.scenes.scene2d.ui.Table;
-        import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-        import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-        import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-        import com.badlogic.gdx.utils.Align;
-        import io.github.teamfractal.RoboticonQuest;
-        import io.github.teamfractal.entity.Player;
-        import io.github.teamfractal.entity.enums.ResourceType;
-        import io.github.teamfractal.screens.MinigameScreen;
-        import io.github.teamfractal.screens.ResourceMarketScreen;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
+import io.github.teamfractal.RoboticonQuest;
+import io.github.teamfractal.entity.Player;
+import io.github.teamfractal.entity.enums.ResourceType;
+import io.github.teamfractal.screens.MiniGameScreen;
 
 public class MinigameScreenActor extends Table {
     private final AdjustableActor oreBuy;
@@ -32,7 +31,7 @@ public class MinigameScreenActor extends Table {
     private Integer sellFoodAmount;
     private Label phaseInfo;
     private Label playerStats;
-    private MinigameScreen screen;
+    private MiniGameScreen screen;
     private TextButton nextButton;
     private Label marketStats;
 
@@ -42,7 +41,7 @@ public class MinigameScreenActor extends Table {
      * @param game       The game object.
      * @param screen     The screen object.
      */
-    public MinigameScreenActor(final RoboticonQuest game, MinigameScreen screen) { // need to be changed
+    public MinigameScreenActor(final RoboticonQuest game, MiniGameScreen screen) { // need to be changed
         center();
 
         Skin skin = game.skin;
