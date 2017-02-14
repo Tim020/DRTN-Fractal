@@ -11,9 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.RoboticonQuest;
+import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.entity.Player;
 import io.github.teamfractal.entity.enums.ResourceType;
+import io.github.teamfractal.screens.MiniGameScreen;
 import io.github.teamfractal.screens.ResourceMarketScreen;
+import io.github.teamfractal.screens.RoboticonMarketScreen;
 
 public class ResourceMarketActors extends Table {
 	private final AdjustableActor oreBuy;
@@ -32,8 +35,10 @@ public class ResourceMarketActors extends Table {
 	private Label phaseInfo;
 	private Label playerStats;
 	private ResourceMarketScreen screen;
+	private MiniGameScreen miniGameScreen;
 	private TextButton nextButton;
 	private Label marketStats;
+	private TextButton pubButton;
 
 
 	/**
@@ -53,6 +58,7 @@ public class ResourceMarketActors extends Table {
 		// Create UI Components
 		phaseInfo = new Label("", game.skin);
 		nextButton = new TextButton("Next ->", game.skin);
+		pubButton = new TextButton("Enter The Pub", game.skin);
 
 		playerStats = new Label("", game.skin);
 		marketStats = new Label("", game.skin);
@@ -81,6 +87,7 @@ public class ResourceMarketActors extends Table {
 		stage.addActor(nextButton);
         stage.addActor(marketStats);
         stage.addActor(playerStats);
+		stage.addActor(pubButton);
 
 		// Setup UI Layout.
 
@@ -189,6 +196,13 @@ public class ResourceMarketActors extends Table {
 				game.nextPhase();
 			}
 		});
+
+		pubButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+					//how to open a new screen?
+			}
+		});
 	}
 
 	/**
@@ -222,6 +236,8 @@ public class ResourceMarketActors extends Table {
 				"Ore: " +    game.market.getResource(ResourceType.ORE   ) + "\n\n" +
 				"Energy: " + game.market.getResource(ResourceType.ENERGY) + "\n\n" +
 				"Food: " +   game.market.getResource(ResourceType.FOOD  ) + "\n\n";
+
+
 
 		phaseInfo.setText(phaseText);
 		playerStats.setText(statText);
@@ -257,5 +273,11 @@ public class ResourceMarketActors extends Table {
         //Middle Left
         marketStats.setPosition(250, 300 );
 		setWidth(width);
+
+		//Top Left
+		pubButton.setPosition(10, height - pubButton.getHeight() - 10);
+
 	}
 }
+
+
