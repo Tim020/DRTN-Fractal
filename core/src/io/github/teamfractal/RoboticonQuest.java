@@ -158,13 +158,13 @@ public class RoboticonQuest extends Game {
 				this.getPlayer().takeTurn();
                 break;
 
-			// Phase 4: Purchase Resource
+			// Phase 4: Generate resource for player
 			case 4:
 				generateResources();
 				this.getPlayer().takeTurn();
                 break;
 
-			// Phase 5: Generate resource for player.
+			// Phase 5: Open the market
 			case 5:
 				setScreen(new ResourceMarketScreen(this));
 

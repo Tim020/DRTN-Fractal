@@ -35,7 +35,6 @@ public class ResourceMarketActors extends Table {
 	private Label phaseInfo;
 	private Label playerStats;
 	private ResourceMarketScreen screen;
-	private MiniGameScreen miniGameScreen;
 	private TextButton nextButton;
 	private Label marketStats;
 	private TextButton pubButton;
@@ -75,6 +74,8 @@ public class ResourceMarketActors extends Table {
 		foodSell = createAdjustable(ResourceType.FOOD, true);
 
 		// Adjust properties.
+		bindEvents();
+
 		phaseInfo.setAlignment(Align.right);
 		marketStats.setAlignment(Align.right);
 
@@ -115,7 +116,6 @@ public class ResourceMarketActors extends Table {
 		add(foodSell);
 		rowWithHeight(10);
 
-		bindEvents();
 		widgetUpdate();
 	}
 
@@ -200,7 +200,7 @@ public class ResourceMarketActors extends Table {
 		pubButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-					game.setScreen(miniGameScreen);
+					game.setScreen(new MiniGameScreen(game));
 			}
 		});
 	}
