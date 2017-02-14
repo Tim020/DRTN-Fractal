@@ -31,6 +31,7 @@ public class RoboticonQuest extends Game {
 	public Market market;
     public PlotManager plotManager;
 
+    private int turnNumber = 1;
 	private SpriteBatch batch;
 	private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
@@ -181,6 +182,7 @@ public class RoboticonQuest extends Game {
 					setScreen(new EndGameScreen(this));
 					break;
 				}
+				this.turnNumber += 1;
 				this.nextPlayer();
 
 				// No "break;" here!
@@ -195,6 +197,7 @@ public class RoboticonQuest extends Game {
 				clearEffects();
 				setEffects();
 
+				System.out.println("Turn:" + this.turnNumber);
         		this.getPlayer().takeTurn();
 				break;
 		}

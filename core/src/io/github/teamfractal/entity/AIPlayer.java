@@ -27,23 +27,23 @@ public class AIPlayer extends Player {
         switch (game.getPhase()) {
             case 1:
                 //"Buy Land Plot
-                System.out.println("Phase 1 in progress");
+                System.out.println("AI: Phase 1 in progress");
                 phase1();
             case 2:
                 //"Purchase Roboticons
-                System.out.println("Phase 2 in progress");
+                System.out.println("AI: Phase 2 in progress");
                 phase2();
             case 3:
                 //Install Roboticons
-                System.out.println("Phase 3 in progress");
+                System.out.println("AI: Phase 3 in progress");
                 phase3();
             case 4:
                 //Resource Generation
-                System.out.println("Phase 4 in progress");
+                System.out.println("AI: Phase 4 in progress");
                 phase4();
             case 5:
                 //Resource Auction
-                System.out.println("Phase 5 in progress");
+                System.out.println("AI: Phase 5 in progress");
                 phase5();
             default:
                 // Unknown phase
