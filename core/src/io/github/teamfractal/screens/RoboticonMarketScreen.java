@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.actors.RoboticonMarketActors;
-import io.github.teamfractal.actors.RoboticonMarketActors2;
 
 public class RoboticonMarketScreen extends AbstractAnimationScreen implements Screen {
 
@@ -16,7 +15,6 @@ public class RoboticonMarketScreen extends AbstractAnimationScreen implements Sc
 	final Stage stage;
 	final Table table;
 	private RoboticonMarketActors actors;
-	private RoboticonMarketActors2 actors2;
 	
 	
 	public RoboticonMarketScreen(final RoboticonQuest game) {
@@ -28,8 +26,8 @@ public class RoboticonMarketScreen extends AbstractAnimationScreen implements Sc
 		//actors = new RoboticonMarketActors(game, this);
 		//table.top().add(actors);
 
-		actors2 = new RoboticonMarketActors2(game, this);
-		table.top().add(actors2);
+		actors = new RoboticonMarketActors(game, this);
+		table.top().add(actors);
 		
 		stage.addActor(table);
 	}
@@ -53,7 +51,7 @@ public class RoboticonMarketScreen extends AbstractAnimationScreen implements Sc
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
 		game.getBatch().setProjectionMatrix(stage.getCamera().combined);
-		actors2.widgetUpdate();
+		actors.widgetUpdate();
 	}
 
 	@Override
