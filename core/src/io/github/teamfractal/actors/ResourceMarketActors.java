@@ -200,7 +200,7 @@ public class ResourceMarketActors extends Table {
 		pubButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-					game.setScreen(new MiniGameScreen(game));
+					game.setScreen(new MiniGameScreen(game, screen));
 			}
 		});
 	}
