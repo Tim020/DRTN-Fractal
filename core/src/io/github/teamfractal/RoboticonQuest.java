@@ -220,8 +220,7 @@ public class RoboticonQuest extends Game {
 		setScreen(gameScreen);
 
 		// Generate resources.
-		Player p = getPlayer();
-		p.generateResources();
+		this.getPlayer().generateResources();
 	}
 
 	/**
