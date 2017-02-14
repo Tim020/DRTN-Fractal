@@ -360,10 +360,10 @@ public class GameScreenActors {
 		}
 	}
 
-	public void installRoboticonFunction(LandPlot selectedplot, Roboticon roboticon){
-        selectedplot.installRoboticon(roboticon);
-        TiledMapTileLayer.Cell roboticonTile = selectedplot.getRoboticonTile();
-        roboticonTile.setTile(TileConverter.getRoboticonTile(roboticon.getCustomisation()));
-        selectedplot.setHasRoboticon(true);
+	public void installRoboticonFunction(LandPlot selectedPlot, Roboticon roboticon){
+        selectedPlot.installRoboticon(roboticon);
+        TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
+        roboticonTile.setTile(screen.getResourcePlayerTile(selectedPlot.getOwner(),roboticon.getCustomisation()));
+        selectedPlot.setHasRoboticon(true);
     }
 }
