@@ -210,7 +210,7 @@ public class RoboticonMarketActors extends Table {
     public void setRoboticonShopLabels(int quantity) {
         roboticonPurchaseAmountLabel.setText(quantity + "/" + game.market.getResource(ResourceType.ROBOTICON));
         roboticonPurchaseButton.setText("[PRICE: " + (game.market.getSellPrice(ResourceType.ROBOTICON) * roboticonPurchaseAmount) + "] PURCHASE");
-    }
+	}
 
     public void addRoboticonFunction() {
         if (roboticonPurchaseAmount < game.market.getResource(ResourceType.ROBOTICON)) {
