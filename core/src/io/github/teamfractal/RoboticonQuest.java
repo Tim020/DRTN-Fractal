@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * This is the main game boot up class.
+ * This is the main game start up class.
  * It will set up all the necessary classes.
  */
 public class RoboticonQuest extends Game {
@@ -311,7 +311,7 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Changes the current player
 	 */
-    void nextPlayer() {
+    private void nextPlayer() {
         if (this.currentPlayerIndex == playerList.size() - 1) {
             this.currentPlayerIndex = 0;
         } else {
