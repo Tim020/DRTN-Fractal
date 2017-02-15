@@ -298,10 +298,12 @@ public class Market {
 	 * Generates a random amount of roboticons within a given range if the market contains ore.
 	 */
 	public void generateRoboticon(){
-		if(this.ore > 0){
-			Random rand = new Random();
-			int roboticonsToGenerate = rand.nextInt(3) + 0;
-			this.roboticon += roboticonsToGenerate;
+		Random rand = new Random();
+		int roboticonsToGenerate = rand.nextInt(3) + 0;
+		while(this.ore >= 2 && roboticonsToGenerate > 0){
+			this.ore -= 2;
+			this.roboticon += 1;
+			roboticonsToGenerate -= 1;
 		}
 	}
 }
