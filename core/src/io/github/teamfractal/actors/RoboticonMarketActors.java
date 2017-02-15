@@ -67,6 +67,10 @@ public class RoboticonMarketActors extends Table {
     private TTFont montserratRegular;
     private TTFont montserratLight;
 
+    /**
+     * Constructor class that connects the roboticon market to the internal engine and builds its visual interface
+     * @param game The engine driving the game forward
+     */
     public RoboticonMarketActors(RoboticonQuest game) {
         this.game = game;
 
@@ -80,6 +84,9 @@ public class RoboticonMarketActors extends Table {
         constructInterface();
     }
 
+    /**
+     * Builds the visual framework that serves as the market's interface
+     */
     private void constructInterface() {
         purchaseTable = new Table();
         selectionTable = new Table();
@@ -125,6 +132,9 @@ public class RoboticonMarketActors extends Table {
         add(exitButton).expandX().width(320);
     }
 
+    /**
+     * Constructs critical label objects that may change in appearance as the market is interacted with
+     */
     private void constructLabels() {
         roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount + "/" +  game.market.getResource(ResourceType.ROBOTICON), game.skin);
         roboticonPurchaseAmountLabel.setAlignment(Align.center);
@@ -133,11 +143,10 @@ public class RoboticonMarketActors extends Table {
         selectedRoboticonIDLabel.setAlignment(Align.center);
     }
 
+    /**
+     * Constructs the buttons that users can utilise to interact with the market
+     */
     private void constructButtons() {
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = montserratLight.font();
-        buttonStyle.fontColor = Color.WHITE;
-
         //Increases number of roboticons to be purchased
         roboticonAddButton = new TextButton("+", game.skin);
         roboticonAddButton.addListener(new ChangeListener() {
@@ -165,6 +174,7 @@ public class RoboticonMarketActors extends Table {
             }
         });
 
+        //Goes back through the queue of roboticons owned by the current player
         moveLeftInventoryButton = new TextButton("<", game.skin);
         moveLeftInventoryButton.addListener(new ChangeListener() {
             @Override
@@ -176,6 +186,7 @@ public class RoboticonMarketActors extends Table {
             }
         });
 
+        //Goes forward through the queue of roboticons owned by the current player
         moveRightInventoryButton = new TextButton(">", game.skin);
         moveRightInventoryButton.addListener(new ChangeListener() {
             @Override
@@ -187,6 +198,7 @@ public class RoboticonMarketActors extends Table {
             }
         });
 
+        //Purchases a customisation and applies it to the currently-selected Roboticon
         customisationPurchaseButton = new TextButton("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE", game.skin);
         customisationPurchaseButton.addListener(new ChangeListener() {
             @Override
@@ -213,6 +225,7 @@ public class RoboticonMarketActors extends Table {
             }
         });
 
+        //Exits the shop and advances the game upon being clicked
         exitButton = new TextButton("EXIT ROBOTICON SHOP", game.skin);
         exitButton.addListener(new ChangeListener() {
             @Override
@@ -222,6 +235,11 @@ public class RoboticonMarketActors extends Table {
         });
     }
 
+    /**
+     * Refreshes the interface of the Roboticon shop whenever it's interacted with
+     * Also toggles the player's ability to make their desired purchase, depending on whether or not they hold
+     * sufficient resources
+     */
     public void refreshRoboticonShop() {
         roboticonPurchaseAmountLabel.setText(roboticonPurchaseAmount + "/" + game.market.getResource(ResourceType.ROBOTICON));
         roboticonPurchaseButton.setText("[PRICE: " + (game.market.getSellPrice(ResourceType.ROBOTICON) * roboticonPurchaseAmount) + "] PURCHASE");
@@ -233,6 +251,9 @@ public class RoboticonMarketActors extends Table {
         }
 	}
 
+    /**
+     * Adds a roboticon to the quantity selected
+     */
     public void addRoboticonFunction() {
         if (roboticonPurchaseAmount < game.market.getResource(ResourceType.ROBOTICON)) {
             roboticonPurchaseAmount += 1;
@@ -240,6 +261,9 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+    /**
+     * Subtracts a roboticon from the quantity selected
+     */
     public void subRoboticonFunction() {
         if (roboticonPurchaseAmount > 1) {
             roboticonPurchaseAmount -= 1;
@@ -247,6 +271,11 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+    /**
+     * Buys the selected customisation and adds it to the player's inventory
+     * @param resource The customisation that has been bought by the player
+     * @param index The position of the currently selected, non-customised roboticon
+     */
     public void purchaseCustomisationFunction(ResourceType resource, int index) {
         if (game.getPlayer().purchaseCustomisationFromMarket(resource, roboticons.get(index), game.market) == PurchaseStatus.Success) {
             widgetUpdate();
@@ -257,6 +286,9 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+    /**
+     * Buys the selected amount of roboticons and places them in the player's inventory
+     */
     public void purchaseRoboticonFunction() {
         if (game.getPlayer().purchaseRoboticonsFromMarket(roboticonPurchaseAmount, game.market) == PurchaseStatus.Success) {
             roboticonPurchaseAmount = 1;
@@ -266,6 +298,10 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+    /**
+     * Retrieves and draws information to the screen relating to the turn and phase info as well as the player's
+     * resource count
+     */
     public void widgetUpdate() {
         roboticons.clear();
         for (Roboticon r : game.getPlayer().getRoboticons()) {
@@ -283,6 +319,10 @@ public class RoboticonMarketActors extends Table {
         refreshCurrentlySelectedRoboticon();
     }
 
+    /**
+     * Sets the appearance of the current roboticon on the market screen. This is based on the customisation of the
+     * selected roboticon as well as the ID number
+     */
     private void refreshCurrentlySelectedRoboticon() {
         if (selectedRoboticonIndex != -1) {
             ResourceType roboticonType = roboticons.get(selectedRoboticonIndex).getCustomisation();
