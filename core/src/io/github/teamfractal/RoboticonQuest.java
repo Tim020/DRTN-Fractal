@@ -161,7 +161,6 @@ public class RoboticonQuest extends Game {
 			// Phase 4: Purchase Resource
 			case 4:
 				generateResources();
-				this.getPlayer().takeTurn(4);
                 break;
 
 			// Phase 5: Generate resource for player.
@@ -196,7 +195,7 @@ public class RoboticonQuest extends Game {
 				clearEffects();
 				setEffects();
 
-				System.out.println("Turn:" + this.turnNumber);
+				System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + Math.ceil((double) this.turnNumber / 2));
         		this.getPlayer().takeTurn(1);
 				break;
 		}

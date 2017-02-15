@@ -23,28 +23,30 @@ public class AIPlayer extends Player {
      *
      */
     public void takeTurn(int phase) {
+        //TODO get gamephase being used
         int gamephase = game.getPhase();
         switch (phase) {
             case 1:
                 //"Buy Land Plot
                 System.out.println("AI: Phase 1 in progress");
                 phase1();
+                break;
             case 2:
                 //"Purchase Roboticons
                 System.out.println("AI: Phase 2 in progress");
                 phase2();
+                break;
             case 3:
                 //Install Roboticons
                 System.out.println("AI: Phase 3 in progress");
                 phase3();
-            case 4:
-                //Resource Generation
-                System.out.println("AI: Phase 4 in progress");
-                phase4();
+                break;
+            //Phase 4 not included, no interaction required
             case 5:
                 //Resource Auction
                 System.out.println("AI: Phase 5 in progress");
                 phase5();
+                break;
             default:
                 // Unknown phase
         }
@@ -145,14 +147,7 @@ public class AIPlayer extends Player {
             }
         game.gameScreen.getActors().nextButtonFunction();
     }
-
-    /**
-     * Function simulating the Player interaction during Phase 4.
-     */
-    private void phase4() {
-        //Blank as no action required
-        //game.nextPhase();
-    }
+    
 
     /**
      * Function simulating the Player interaction during Phase 5.
