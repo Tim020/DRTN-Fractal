@@ -138,6 +138,9 @@ public class RoboticonQuest extends Game {
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
+				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
+				gameScreen.addAnimation(timeoutAnimation);
+
 				roboticonMarket.actors().widgetUpdate();
 
 				this.getPlayer().takeTurn(2);
@@ -146,7 +149,7 @@ public class RoboticonQuest extends Game {
 
 			// Phase 3: Roboticon Customisation
 			case 3:
-				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
+				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
 				timeoutAnimation.setAnimationFinish(new IAnimationFinish() {
 					@Override
@@ -339,15 +342,6 @@ public class RoboticonQuest extends Game {
 				winner = "Player 2";
 			}
 		return winner;
-	}
-
-	//TODO change these because it is basically public...
-	public float getEffectChance() {
-		return effectChance;
-	}
-
-	public void setEffectChance(float effectChance) {
-		this.effectChance = effectChance;
 	}
 
 	/**
