@@ -2,6 +2,9 @@ package io.github.teamfractal.entity;
 
 import io.github.teamfractal.entity.enums.ResourceType;
 
+/**
+ * Created by Joseph on 01/02/2017.
+ */
 public class PlayerEffect {
 
     /**
@@ -41,14 +44,8 @@ public class PlayerEffect {
         this.multiply = multiply;
     }
 
-    /**
-     * Imposes the effect on the player by changing the resources that they have. Their resources can either be
-     * multiplied or divided
-     *
-     * @param player The player that is to be effected
-     */
     public void impose(Player player) {
-        if (multiply) {
+        if (multiply == true) {
             player.setResource(ResourceType.ORE, player.getOre() * modifiers[0]);
             player.setResource(ResourceType.ENERGY, player.getEnergy() * modifiers[1]);
             player.setResource(ResourceType.FOOD, player.getFood() * modifiers[2]);
@@ -61,20 +58,10 @@ public class PlayerEffect {
         }
     }
 
-    /**
-     * Getter for the name of the effect
-     *
-     * @return The name of the effect
-     */
     public String name() {
         return name;
     }
 
-    /**
-     * Getter for the description of the effect
-     *
-     * @return The description of the effect
-     */
     public String description() {
         return description;
     }

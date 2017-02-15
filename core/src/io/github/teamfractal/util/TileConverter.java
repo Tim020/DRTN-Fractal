@@ -5,7 +5,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Player;
+import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.entity.enums.RoboticonType;
+import io.github.teamfractal.exception.NotCommonResourceException;
 
 public class TileConverter {
 	private static TiledMapTileSets tiles;
@@ -49,7 +51,7 @@ public class TileConverter {
 		return tiles.getTile(100 + resourceIndex);
 	}
 
-	/*public static TiledMapTile getRoboticonTile(ResourceType resource) {
+	public static TiledMapTile getRoboticonTile(ResourceType resource) {
 		System.out.println("WARN: getRoboticonTile(ResourceType) is old! Use getRoboticonTile(RoboticonType) instead.");
 
 		RoboticonType rt = RoboticonType.NONE;
@@ -76,8 +78,8 @@ public class TileConverter {
 			case Unknown:
 				rt = RoboticonType.NO_CUST;
 				break;
-		}*//*
+		}
 
 		return getRoboticonTile(rt);
-	}*/
+	}
 }

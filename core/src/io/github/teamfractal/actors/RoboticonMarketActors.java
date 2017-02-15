@@ -14,7 +14,9 @@ import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import io.github.teamfractal.util.Fonts;
+import io.github.teamfractal.util.TTFont;
 
 import java.util.ArrayList;
 
@@ -36,8 +38,9 @@ public class RoboticonMarketActors extends Table {
         no_robotic_texture = new Texture(Gdx.files.internal("roboticon_images/No_Roboticons.png"));
     }
 
-    public ArrayList<Roboticon> roboticons = new ArrayList<Roboticon>();
     private RoboticonQuest game;
+
+    public ArrayList<Roboticon> roboticons = new ArrayList<Roboticon>();
     private Texture roboticonTexture;
     private Image roboticonImage;
 
@@ -117,7 +120,7 @@ public class RoboticonMarketActors extends Table {
         row();
 
         customisationDropDown = new SelectBox<String>(game.skin);
-        customisationDropDown.setItems("Energy Generation", "Ore Mining", "Food Farming");
+        customisationDropDown.setItems(new String[]{"Energy Generation", "Ore Mining", "Food Farming"});
         upgradeTable.add(customisationDropDown).expandX().padRight(15);
         upgradeTable.add(customisationPurchaseButton).width(164);
 
@@ -342,106 +345,7 @@ public class RoboticonMarketActors extends Table {
                     break;
             }
 
-            /**
-             * Generates a string of a number followed by a certain amount of zeros
-             * @param number The number that the string starts with
-             * @param length The number of zeros that the number is followed by
-             * @return The string that has been generated
-             */
-        public void nextButtonFunction () {
-            game.nextPhase();
-            screen.dispose();
-        }
-
-
-        public String padZero ( int number, int length){
-            String s = "" + number;
-            while (s.length() < length) {
-                s = "0" + s;
-            }
-            return s;
-        }
-
-        /**
-         * Sets the appearance of the current roboticon on the market screen. This is based on the customisation of the
-         * selected roboticon as well as the id number.
-         * @param roboticonPos The ID of the specific roboticon
-         */
-        public void setCurrentlySelectedRoboticon ( int roboticonPos){
-            if (roboticonPos != -1) {
-
-                ResourceType roboticonType = roboticons.get(roboticonPos).getCustomisation();
-
-                switch (roboticonType) {
-                    case Unknown:
-                        roboticonTexture = no_cust_texture;
-                        break;
-                    case ENERGY:
-                        roboticonTexture = energy_texture;
-                        break;
-                    case ORE:
-                        roboticonTexture = ore_texture;
-                        break;
-                    case FOOD:
-                        roboticonTexture = food_texture;
-                        break;
-                    default:
-                        break;
-                }
-
-                int id = roboticons.get(roboticonPos).getID();
-                this.roboticonID.setText("Roboticon Issue Number: " + padZero(id, 4));
-
-            } else {
-                roboticonTexture = no_robotic_texture;
-                this.roboticonID.setText("Roboticon Issue Number: ####");
-            }
-
-            roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
-        }
-
-        /**
-         * Retrieves and draws information to the screen relating to the turn and phase info as well as the player's
-         * resource count
-         */
-        public void widgetUpdate () {
-            roboticons.clear();
-            for (Roboticon r : game.getPlayer().getRoboticons()) {
-                if (!r.isInstalled()) {
-                    roboticons.add(r);
-                }
-            }
-
-            // Draws turn and phase info on screen
-            if (this.topText != null) this.topText.remove();
-            String phaseText = "Player " + (game.getPlayerInt() + 1) + "; Phase " + game.getPhase();
-            this.topText = new Label(phaseText, game.skin);
-            topText.setWidth(120);
-            topText.setPosition(screen.getStage().getWidth() / 2 - 40, screen.getStage().getViewport().getWorldHeight() - 20);
-            screen.getStage().addActor(topText);
-
-            // Draws player stats on screen
-            if (this.playerStats != null) this.playerStats.remove();
-            String statText = "Ore: " + game.getPlayer().getOre() + " Energy: " + game.getPlayer().getEnergy() + " Food: "
-                    + game.getPlayer().getFood() + " Money: " + game.getPlayer().getMoney();
-            this.playerStats = new Label(statText, game.skin);
-            playerStats.setWidth(250);
-            playerStats.setPosition(0, screen.getStage().getViewport().getWorldHeight() - 20);
-            screen.getStage().addActor(playerStats);
-
-            if (roboticons.size() == 0) {
-                currentlySelectedRoboticonPos = -1;
-            } else if (currentlySelectedRoboticonPos == -1) {
-                currentlySelectedRoboticonPos = 0;
-            }
-
-            setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
-
-            marketStats.setText("Market - Roboticons: " + game.market.getResource(ResourceType.ROBOTICON));
-
-
             this.selectedRoboticonIDLabel.setText("[" + (selectedRoboticonIndex + 1) + "/" + roboticons.size() + "] ISSUE NUMBER: " + padZero(roboticons.get(selectedRoboticonIndex).getID(), 4));
-
 
             if (roboticonType == ResourceType.Unknown) {
                 customisationPurchaseButton.setText("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE");
@@ -462,81 +366,21 @@ public class RoboticonMarketActors extends Table {
 
             customisationPurchaseButton.setText("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE");
             customisationPurchaseButton.setTouchable(Touchable.disabled);
-
-            /**
-             * Adds a roboticon to the quantity selected
-             */
-        public void addRoboticonFunction () {
-            roboticonAmount += 1;
-            this.lblRoboticonAmount.setText(roboticonAmount.toString());
         }
 
-        /**
-         * Subtracts a roboticon from the quantity selected
-         */
-        public void subRoboticonFunction () {
-            if (roboticonAmount > 0) {
-                roboticonAmount -= 1;
-                lblRoboticonAmount.setText(roboticonAmount.toString());
-
-            }
-
-
-            roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
-        }
+        roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
+    }
 
 
     public String padZero(int number, int length) {
         String s = "" + number;
         while (s.length() < length) {
             s = "0" + s;
+        }
+        return s;
+    }
 
-            /**
-             * Buys the selected amount of roboticons and places them in the player's inventory
-             */
-            public void buyRoboticonFunction () {
-                game.getPlayer().purchaseRoboticonsFromMarket(roboticonAmount, game.market);
-                roboticonAmount = 0;
-                lblRoboticonAmount.setText(roboticonAmount.toString());
-                widgetUpdate();
-            }
-
-            /**
-             * Reduces the ID of the currently selected roboticon
-             */
-            public void moveLeftRoboticonInventoryFunction () {
-                if (currentlySelectedRoboticonPos > 0) {
-                    currentlySelectedRoboticonPos--;
-                    setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
-                }
-            }
-
-            /**
-             * Increases the ID of the currently selected roboticon
-             */
-            public void moveRightRoboticonInventoryFunction () {
-                if (currentlySelectedRoboticonPos < roboticons.size() - 1) {
-                    currentlySelectedRoboticonPos++;
-                    setCurrentlySelectedRoboticon(currentlySelectedRoboticonPos);
-
-                }
-                return s;
-            }
-
-
-            public int selectedRoboticonIndex () {
+    public int selectedRoboticonIndex() {
         return selectedRoboticonIndex;
-
-                /**
-                 * Buys the selected customisation and adds it to the player's inventory
-                 * @param customisation The customisation that has been bought by the player
-                 * @param pos The position of the currently selected, non-customised roboticon
-                 */
-            public void buyCustomisationFunction (ResourceType customisation,int pos){
-
-
-                game.getPlayer().purchaseCustomisationFromMarket(customisation, roboticons.get(pos), game.market);
-                widgetUpdate();
-
-            }
+    }
 }
