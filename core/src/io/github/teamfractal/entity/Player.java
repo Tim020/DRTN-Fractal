@@ -2,9 +2,6 @@ package io.github.teamfractal.entity;
 
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.animation.AnimationAddResources;
-import io.github.teamfractal.animation.IAnimation;
-import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.NotCommonResourceException;
@@ -250,20 +247,11 @@ public class Player {
 	}
 
 	/**
-	 * Check if the player have enough money for the {@link LandPlot}.
-	 * @param plot           The landplot to purchase
-	 * @return  true if the player have enough money for that plot.
-	 */
-	public synchronized boolean haveEnoughMoney(LandPlot plot) {
-		return getMoney() >= 10;
-	}
-
-	/**
 	 * Player add a landplot to their inventory for gold
 	 * @param plot           The landplot to purchase
 	 */
 	public synchronized boolean purchaseLandPlot(LandPlot plot){
-		if (plot.hasOwner() || !haveEnoughMoney(plot)) {
+		if (plot.hasOwner() || money < 10) {
 			return false;
 		}
 
@@ -273,6 +261,7 @@ public class Player {
 		game.landPurchasedThisTurn();
 		return true;
 	}
+	
 	/**
 	 * Get a landplot to produce resources
 	 */
@@ -282,9 +271,9 @@ public class Player {
 			ore += plot.produceResource(ResourceType.ORE);
 
 			food += plot.produceResource(ResourceType.FOOD);
-
 		}
 	}
+
 	/**
 	 * Apply roboticon customisation
 	 * @param roboticon  The roboticon to be customised

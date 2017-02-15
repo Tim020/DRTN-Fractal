@@ -15,6 +15,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true;
 		config.width = 1024;
 		config.height = 512;
+		config.resizable = false;
 
 		new LwjglApplication(new RoboticonQuest(), config);
 	}

@@ -331,12 +331,15 @@ public class RoboticonMarketActors extends Table {
                     break;
                 case ENERGY:
                     roboticonTexture = energy_texture;
+                    customisationDropDown.setSelectedIndex(0);
                     break;
                 case ORE:
                     roboticonTexture = ore_texture;
+                    customisationDropDown.setSelectedIndex(1);
                     break;
                 case FOOD:
                     roboticonTexture = food_texture;
+                    customisationDropDown.setSelectedIndex(2);
                     break;
                 default:
                     break;

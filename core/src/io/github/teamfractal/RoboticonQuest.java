@@ -148,6 +148,7 @@ public class RoboticonQuest extends Game {
 
 				roboticonMarket.actors().widgetUpdate();
 
+				gameScreen.getActors().setNextButtonVisibility(false);
 				this.getPlayer().takeTurn(2);
                 break;
 
@@ -165,8 +166,8 @@ public class RoboticonQuest extends Game {
 					}
 				});
 				gameScreen.getActors().updateRoboticonSelection();
-				setScreen(gameScreen);
 
+				gameScreen.getActors().switchNextButton();
 				this.getPlayer().takeTurn(3);
                 break;
 
@@ -180,13 +181,13 @@ public class RoboticonQuest extends Game {
                 timer.scheduleTask(new Timer.Task() {
                     @Override
                     public void run() {
-                        if (phase == 4) {
-                            nextPhase();
-                        }
+						nextPhase();
                         //This check is needed to stop any future phases from being cut short by accident
                     }
                 }, 3);
                 timer.start();
+
+				gameScreen.getActors().switchNextButton();
                 break;
 
 			// Phase 5: Purchase resources
@@ -227,6 +228,11 @@ public class RoboticonQuest extends Game {
 
 				System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + Math.ceil((double) this.turnNumber / 2));
 
+				if (getPlayer().getMoney() < 10) {
+					gameScreen.getActors().setNextButtonVisibility(true);
+				} else {
+					gameScreen.getActors().setNextButtonVisibility(false);
+				}
         		this.getPlayer().takeTurn(1);
 				break;
 		}
@@ -249,7 +255,7 @@ public class RoboticonQuest extends Game {
 	}
 
 	public boolean canPurchaseLandThisTurn () {
-		return landBoughtThisTurn < 1;
+		return (landBoughtThisTurn < 1 && getPlayer().getMoney() >= 10);
 	}
 
 	public String getPhaseString () {
