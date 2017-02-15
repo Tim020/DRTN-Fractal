@@ -67,7 +67,11 @@ public class LandPlot {
 	public int getY() {
 		return y;
 	}
-
+	/**
+	 * Sets the owner of the land plot to the specified player
+	 * @param player The player to be set as owner
+	 * @return Returns true if the land plot didn't already have an owner, false if it did
+	 */
 	public boolean setOwner(Player player) {
 		if (hasOwner()) {
 			return false;
@@ -77,18 +81,28 @@ public class LandPlot {
 		player.addLandPlot(this);
 		return true;
 	}
-
+	/**
+	 * Returns the state of the land plots ownership
+	 * @return True if owned, false otherwise
+	 */
 	public boolean hasOwner() {
 		return getOwner() != null;
 	}
-
+	/**
+	 * Removes the owner of the tile
+	 */
 	public void removeOwner() {
 		if (!hasOwner())
 			return ;
 
 		owner.removeLandPlot(this);
 	}
-
+	/**
+	 * Retrieves the overlays for the specific tile
+	 * @param plotManager The plotmanager storing the images of the current mao
+	 * @param x The x coordinate of the tile
+	 * @param y The y coordinate if the tile
+	 */
 	public void setupTile (PlotManager plotManager, int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -168,16 +182,26 @@ public class LandPlot {
 		else return 0;
 		
 	}
-
+	/**
+	 * Gets the index of the specific resource
+	 * @param resource The resource selected
+	 * @return The index of the resource
+	 */
 	public int getResource(ResourceType resource) {
 		int resIndex = resourceTypeToIndex(resource);
 		return productionAmounts[resIndex];
 	}
-	
+	/**
+	 * Checks if the tile contains a roboticon
+	 * @return True if the tile contains a roboticon, false otherwise
+	 */
 	public boolean hasRoboticon(){
 		return this.hasRoboticon;
 	}
-	
+	/**
+	 * Setter for hasRoboticon
+	 * @param roboticonInstalled The boolean that hasRoboticon is to be changed to
+	 */
 	public void setHasRoboticon(boolean roboticonInstalled){
 		this.hasRoboticon = roboticonInstalled;
 	}
