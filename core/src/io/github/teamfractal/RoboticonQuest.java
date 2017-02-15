@@ -13,7 +13,6 @@ import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
-import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.PlotEffectSource;
 import io.github.teamfractal.util.PlotManager;
@@ -32,21 +31,17 @@ public class RoboticonQuest extends Game {
 	public GameScreen gameScreen;
 	public Market market;
     public PlotManager plotManager;
-
+    public RoboticonMarketScreen roboticonMarket;
+    public GenerationOverlay genOverlay;
     private int turnNumber = 1;
-	private SpriteBatch batch;
-	private MainMenuScreen mainMenuScreen;
+    private SpriteBatch batch;
+    private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
     private int phase;
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
-
 	private PlotEffectSource plotEffectSource;
-
-    public RoboticonMarketScreen roboticonMarket;
-
-    public GenerationOverlay genOverlay;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -128,7 +123,7 @@ public class RoboticonQuest extends Game {
             player2 = new Player(this);
         }
 
-        this.playerList = new ArrayList<Player>();
+        this.playerList = new ArrayList<>();
         this.playerList.add(player1);
 		this.playerList.add(player2);
         this.currentPlayerIndex = 0;
@@ -243,8 +238,11 @@ public class RoboticonQuest extends Game {
 	}
 
 	public void nextPhase() {
-		phase += 1;
-		implementPhase();
+        if ((phase == 1) && (landBoughtThisTurn == 0)) {
+            return;
+        }
+        phase += 1;
+        implementPhase();
 	}
 
 	/**
