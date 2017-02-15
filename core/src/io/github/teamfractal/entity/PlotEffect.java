@@ -204,7 +204,9 @@ public class PlotEffect extends Array<Float[]> {
         //Push the plot that's about to be modified on to the appropriate registration stack
     }
 
-
+    /**
+     * Reverts the modifiers of the land plot to their values before the effect was applied
+     */
     public void revert() {
         if (plotRegister.size > 0) {
             Float[] originalModifiers;
@@ -220,13 +222,17 @@ public class PlotEffect extends Array<Float[]> {
             }
         }
     }
-
+    /**
+     * Reverts all tiles that have been affected back to their original state
+     */
     public void revertAll() {
         while (plotRegister.size > 0) {
             revert();
         }
     }
-
+    /**
+     * Swaps the postions of the top two values within the internal stack
+     */
     private void swapTop() {
         if (super.size > 1) {
             Float[] i = super.pop();
@@ -244,11 +250,16 @@ public class PlotEffect extends Array<Float[]> {
     public boolean active() {
         return (plotRegister.size > 0);
     }
-
+    /**
+     * Executes the runnable
+     */
     public void executeRunnable() {
         runnable.run();
     }
-
+    /**
+     * Getter for the runnable
+     * @return The runnable
+     */
     public Runnable getRunnable() {
         return runnable;
     }
@@ -261,21 +272,36 @@ public class PlotEffect extends Array<Float[]> {
     public void setRunnable(Runnable runnable) {
         this.runnable = runnable;
     }
-
+    /**
+     * Getter for the name of the effect
+     * @return The name of the effect
+     */
     public String name() {
         return name;
     }
-
+    /**
+     * Getter for the description if the effect
+     * @return The description of the effect
+     */
     public String description() {
         return description;
     }
-
+    /**
+     * Getter for the overlay
+     * @return The overlay of the effect
+     */
     public Overlay overlay() { return overlay; }
-
+    /**
+     * Getter for the overlayActive boolean
+     * @return The overlayActive boolean
+     */
     public boolean getOverlayActive() {
         return overlayActive;
     }
-
+    /**
+     * Sets the overActive boolean to the specific value
+     * @param overlayActive The state of overlayActive true/false
+     */
     public void setOverlayActive(boolean overlayActive) {
         this.overlayActive = overlayActive;
     }
