@@ -9,14 +9,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
+import io.github.teamfractal.animation.AnimationCustom;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
-import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
+import io.github.teamfractal.util.Fonts;
 import io.github.teamfractal.util.PlotEffectSource;
 import io.github.teamfractal.util.PlotManager;
+import io.github.teamfractal.util.TTFont;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -29,9 +31,17 @@ public class RoboticonQuest extends Game {
     private static RoboticonQuest _instance;
 	public TiledMap tmx;
 	public Skin skin;
-	public GameScreen gameScreen;
-	public Market market;
     public PlotManager plotManager;
+
+    public TTFont headerFontRegular;
+    public TTFont headerFontLight;
+    public TTFont smallFontRegular;
+    public TTFont smallFontLight;
+
+    public GameScreen gameScreen;
+    public Market market;
+    public RoboticonMarketScreen roboticonMarket;
+    public GenerationOverlay genOverlay;
 
     private int turnNumber = 1;
 	private SpriteBatch batch;
@@ -41,12 +51,9 @@ public class RoboticonQuest extends Game {
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
+    private Fonts fonts;
 
 	private PlotEffectSource plotEffectSource;
-
-    public RoboticonMarketScreen roboticonMarket;
-
-    public GenerationOverlay genOverlay;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -67,6 +74,19 @@ public class RoboticonQuest extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		setupSkin();
+
+        fonts = new Fonts();
+        fonts.montserratRegular.setSize(24);
+        fonts.montserratLight.setSize(24);
+        headerFontRegular = fonts.montserratRegular;
+        headerFontLight = fonts.montserratLight;
+
+        fonts = new Fonts();
+        fonts.montserratRegular.setSize(16);
+        fonts.montserratLight.setSize(16);
+        smallFontRegular = fonts.montserratRegular;
+        smallFontLight = fonts.montserratLight;
+        //Import TrueType fonts for use in drawing animations
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
@@ -115,7 +135,6 @@ public class RoboticonQuest extends Game {
 	}
 
 	public void reset(boolean AI) {
-        this.currentPlayerIndex = 0;
         this.phase = 0;
         plotManager = new PlotManager();
         Player player1;
@@ -143,7 +162,7 @@ public class RoboticonQuest extends Game {
 			case 2:
                 Gdx.input.setInputProcessor(roboticonMarket);
 
-				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
+                AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
 
 				roboticonMarket.actors().widgetUpdate();
@@ -221,7 +240,11 @@ public class RoboticonQuest extends Game {
 
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
-				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
+
+                fonts.montserratRegular.setSize(24);
+                fonts.montserratLight.setSize(24);
+				gameScreen.addAnimation(new AnimationCustom("PLAYER " + (currentPlayerIndex + 1), headerFontRegular.font(), 4));
+                gameScreen.addAnimation(new AnimationCustom("\nPHASE 1: Claim a Tile", headerFontLight.font(), 4));
 
 				clearEffects();
 				setEffects();
@@ -284,7 +307,6 @@ public class RoboticonQuest extends Game {
 	}
 
 	public Player getPlayer(){
-
         return this.playerList.get(this.currentPlayerIndex);
     }
 
