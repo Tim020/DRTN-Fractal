@@ -13,7 +13,6 @@ import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
-import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.PlotEffectSource;
 import io.github.teamfractal.util.PlotManager;
@@ -32,8 +31,9 @@ public class RoboticonQuest extends Game {
 	public GameScreen gameScreen;
 	public Market market;
     public PlotManager plotManager;
-
-    private int turnNumber = 1;
+	public RoboticonMarketScreen roboticonMarket;
+	public GenerationOverlay genOverlay;
+	private int turnNumber = 1;
 	private SpriteBatch batch;
 	private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
@@ -41,12 +41,7 @@ public class RoboticonQuest extends Game {
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
-
 	private PlotEffectSource plotEffectSource;
-
-    public RoboticonMarketScreen roboticonMarket;
-
-    public GenerationOverlay genOverlay;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -57,7 +52,12 @@ public class RoboticonQuest extends Game {
 		return _instance;
 	}
 
-
+	/**
+	 * Getter for the index of the current Player
+	 *
+	 * @param player The player that the index is being retrieved for
+	 * @return The index of the specified player
+	 */
 	public int getPlayerIndex (Player player) {
 
 		return playerList.indexOf(player);
@@ -70,9 +70,9 @@ public class RoboticonQuest extends Game {
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
-        gameScreen = new GameScreen(this);
-        roboticonMarket = new RoboticonMarketScreen(this, Color.GRAY, Color.WHITE, 3);
-        genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
+		gameScreen = new GameScreen(this);
+		roboticonMarket = new RoboticonMarketScreen(this, Color.GRAY, Color.WHITE, 3);
+		genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
 
 		//Setup tile and player effects for later application
 		setupEffects();
@@ -80,6 +80,10 @@ public class RoboticonQuest extends Game {
 		setScreen(mainMenuScreen);
 	}
 
+	/**
+	 * Getter for the batch
+	 * @return The batch of the game
+	 */
 	public Batch getBatch() {
 		return batch;
 	}
@@ -104,44 +108,59 @@ public class RoboticonQuest extends Game {
 		skin.dispose();
 		batch.dispose();
 	}
-	
+
+	/**
+	 * Getter for the current phase
+	 * @return The current phase of the game
+	 */
 	public int getPhase(){
 		return this.phase;
 	}
 
+	/**
+	 * Setter for the current phase
+	 * @param phase The phase that the current phase is to be set to
+	 */
 	public void setPhase(int phase) {
 		this.phase = phase;
 		implementPhase();
 	}
 
+	/**
+	 * Resets the statistics of all the game's entities
+	 * @param AI A boolean describing whether an AI player is playing or not
+	 */
 	public void reset(boolean AI) {
-        this.currentPlayerIndex = 0;
-        this.phase = 0;
-        plotManager = new PlotManager();
-        Player player1;
-        Player player2;
-        if (AI) {
-            player1 = new AIPlayer(this);
-            player2 = new Player(this);
-        } else{
-            player1 = new Player(this);
-            player2 = new Player(this);
-        }
+		this.currentPlayerIndex = 0;
+		this.phase = 0;
+		plotManager = new PlotManager();
+		Player player1;
+		Player player2;
+		if (AI) {
+			player1 = new AIPlayer(this);
+			player2 = new Player(this);
+		} else {
+			player1 = new Player(this);
+			player2 = new Player(this);
+		}
 
-        this.playerList = new ArrayList<Player>();
-        this.playerList.add(player1);
+		this.playerList = new ArrayList<Player>();
+		this.playerList.add(player1);
 		this.playerList.add(player2);
-        this.currentPlayerIndex = 0;
-        this.market = new Market();
+		this.currentPlayerIndex = 0;
+		this.market = new Market();
 
-    }
+	}
 
-    private void implementPhase() {
-        System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+	/**
+	 * Implements the functionality of the current phase
+	 */
+	private void implementPhase() {
+		System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
-                Gdx.input.setInputProcessor(roboticonMarket);
+				Gdx.input.setInputProcessor(roboticonMarket);
 
 				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -150,12 +169,12 @@ public class RoboticonQuest extends Game {
 
 				gameScreen.getActors().setNextButtonVisibility(false);
 				this.getPlayer().takeTurn(2);
-                break;
+				break;
 
 
 			// Phase 3: Roboticon Customisation
 			case 3:
-                Gdx.input.setInputProcessor(gameScreen.getStage());
+				Gdx.input.setInputProcessor(gameScreen.getStage());
 
 				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -169,33 +188,33 @@ public class RoboticonQuest extends Game {
 
 				gameScreen.getActors().switchNextButton();
 				this.getPlayer().takeTurn(3);
-                break;
+				break;
 
 			// Phase 4: Generate resources for player
 			case 4:
-                Gdx.input.setInputProcessor(genOverlay);
+				Gdx.input.setInputProcessor(genOverlay);
 
-                this.getPlayer().generateResources();
+				this.getPlayer().generateResources();
 
-                Timer timer = new Timer();
-                timer.scheduleTask(new Timer.Task() {
-                    @Override
-                    public void run() {
+				Timer timer = new Timer();
+				timer.scheduleTask(new Timer.Task() {
+					@Override
+					public void run() {
 						nextPhase();
-                        //This check is needed to stop any future phases from being cut short by accident
-                    }
-                }, 3);
-                timer.start();
+						//This check is needed to stop any future phases from being cut short by accident
+					}
+				}, 3);
+				timer.start();
 
 				gameScreen.getActors().switchNextButton();
-                break;
+				break;
 
 			// Phase 5: Purchase resources
 			case 5:
-			    ResourceMarketScreen RMS = new ResourceMarketScreen(this);
+				ResourceMarketScreen RMS = new ResourceMarketScreen(this);
 				setScreen(RMS);
 
-                Gdx.input.setInputProcessor(RMS.getStage());
+				Gdx.input.setInputProcessor(RMS.getStage());
 
 				this.getPlayer().takeTurn(5);
 				break;
@@ -204,7 +223,7 @@ public class RoboticonQuest extends Game {
 			case 6:
 				phase = 1;
 
-                if (checkGameEnded()) {
+				if (checkGameEnded()) {
 					setScreen(new EndGameScreen(this));
 					break;
 				}
@@ -215,9 +234,9 @@ public class RoboticonQuest extends Game {
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
 
-			// Phase 1: Enable of purchase LandPlot
+				// Phase 1: Enable of purchase LandPlot
 			case 1:
-                Gdx.input.setInputProcessor(gameScreen.getStage());
+				Gdx.input.setInputProcessor(gameScreen.getStage());
 
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
@@ -233,7 +252,7 @@ public class RoboticonQuest extends Game {
 				} else {
 					gameScreen.getActors().setNextButtonVisibility(false);
 				}
-        		this.getPlayer().takeTurn(1);
+				this.getPlayer().takeTurn(1);
 				break;
 		}
 
@@ -242,6 +261,9 @@ public class RoboticonQuest extends Game {
 			gameScreen.getActors().textUpdate();
 	}
 
+	/**
+	 * Advances the current phase
+	 */
 	public void nextPhase() {
 		phase += 1;
 		implementPhase();
@@ -251,13 +273,21 @@ public class RoboticonQuest extends Game {
 	 * Event callback on player bought a {@link io.github.teamfractal.entity.LandPlot}
 	 */
 	public void landPurchasedThisTurn() {
-		landBoughtThisTurn ++;
+		landBoughtThisTurn++;
 	}
 
+	/**
+	 * Getter for landBoughtThisTurn
+	 * @return Returns true if land hasn't been purchased this turn, false otherwise
+	 */
 	public boolean canPurchaseLandThisTurn () {
 		return (landBoughtThisTurn < 1 && getPlayer().getMoney() >= 10);
 	}
 
+	/**
+	 * Returns a string describing the current phase
+	 * @return A string with the description of the current phase
+	 */
 	public String getPhaseString () {
 		int phase = getPhase();
 
@@ -283,26 +313,41 @@ public class RoboticonQuest extends Game {
 
 	}
 
-	public Player getPlayer(){
+	/**
+	 * Getter for the current player
+	 *
+	 * @return The current player
+	 */
+	public Player getPlayer() {
 
-        return this.playerList.get(this.currentPlayerIndex);
-    }
+		return this.playerList.get(this.currentPlayerIndex);
+	}
 
-    public int getPlayerInt() {
-        return this.currentPlayerIndex;
-    }
+	/**
+	 * Getter for the index of the current player
+	 *
+	 * @return The index of the current player
+	 */
+	public int getPlayerInt() {
+		return this.currentPlayerIndex;
+	}
 
-    void nextPlayer() {
-        if (this.currentPlayerIndex == playerList.size() - 1) {
-            this.currentPlayerIndex = 0;
-        } else {
-            this.currentPlayerIndex++;
-        }
+	/**
+	 * Changes the current player
+	 */
+	void nextPlayer() {
+		if (this.currentPlayerIndex == playerList.size() - 1) {
+			this.currentPlayerIndex = 0;
+		} else {
+			this.currentPlayerIndex++;
+		}
 
 
-    }
+	}
 
-	
+	/**
+	 * Creates and initialises all of the effects
+	 */
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
 		effectChance = (float) 0.05;
@@ -314,6 +359,9 @@ public class RoboticonQuest extends Game {
 		}
 	}
 
+	/**
+	 * Randomly applies the effects
+	 */
 	private void setEffects() {
 		Random RNGesus = new Random();
 
@@ -326,6 +374,9 @@ public class RoboticonQuest extends Game {
 		}
 	}
 
+	/**
+	 * Clears the effects of all the effects
+	 */
 	private void clearEffects() {
 		for (PlotEffect PE : plotEffectSource) {
 			PE.revertAll();

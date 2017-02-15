@@ -31,6 +31,7 @@ public class GameScreenActors {
 	private Label plotStats;
 	private TextButton nextButton;
 	private boolean listUpdated;
+	private Table installRoboticonTable;
 
 	/**
 	 * Initialise the main game screen components.
@@ -79,8 +80,6 @@ public class GameScreenActors {
 		AbstractAnimationScreen.Size size = screen.getScreenSize();
 		resizeScreen(size.Width, size.Height);
 	}
-
-	private Table installRoboticonTable;
 
 	/**
 	 * Create the roboticon installation menu.
@@ -274,6 +273,9 @@ public class GameScreenActors {
 		return installRoboticonTable.isVisible();
 	}
 
+	/**
+	 * Purchases the landplot that the player has clicked on if it is not already owned.
+	 */
 	public void buyLandPlotFunction(){
 		hideBuyLand();
 		if (buyLandPlotBtn.isDisabled()) {
@@ -295,6 +297,9 @@ public class GameScreenActors {
 		}
 	}
 
+	/**
+	 * The function that advances the phase of the game when the next button is clicked
+	 */
 	public void nextButtonFunction(){
 		if (nextButton.isDisabled()) {
 			return ;
@@ -309,7 +314,11 @@ public class GameScreenActors {
 		}
 	}
 
-	private void installRoboticonFunction(){
+	/**
+	 * Presents the user with a list of roboticons that they can install on the land plot that they have clicked on. Once they have selected
+	 * a roboticon to install, a function is called that will install the roboticon.
+	 */
+	public void installRoboticonFunction(){
 		if (installRoboticonBtn.isDisabled()) {
 			return ;
 		}
@@ -355,12 +364,20 @@ public class GameScreenActors {
 		}
 	}
 
-	public void installRoboticonFunction(LandPlot selectedPlot, Roboticon roboticon){
-        selectedPlot.installRoboticon(roboticon);
-        TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
-        roboticonTile.setTile(screen.getResourcePlayerTile(selectedPlot.getOwner(),roboticon.getCustomisation()));
-        selectedPlot.setHasRoboticon(true);
-    }
+
+	/**
+	 * Installs the specified roboticon on the specified land plot.
+	 *
+	 * @param selectedPlot
+	 * @param roboticon
+	 */
+	public void installRoboticonFunction(LandPlot selectedPlot, Roboticon roboticon) {
+		selectedPlot.installRoboticon(roboticon);
+		TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
+		roboticonTile.setTile(screen.getResourcePlayerTile(selectedPlot.getOwner(), roboticon.getCustomisation()));
+		selectedPlot.setHasRoboticon(true);
+
+	}
 
     public void switchNextButton() {
 		nextButton.setVisible(!nextButton.isVisible());

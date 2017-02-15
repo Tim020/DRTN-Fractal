@@ -11,19 +11,39 @@ public class Roboticon {
 		this.ID = ID;
 		customisation = ResourceType.Unknown;
 	}
-	
-	public int getID () {
+
+	/**
+	 * Getter for the roboticon ID
+	 *
+	 * @return The roboticon ID
+	 */
+	public int getID() {
 		return this.ID;
 	}
 
+	/**
+	 * Getter for the customisation
+	 *
+	 * @return The customisation of the roboticon
+	 */
 	public ResourceType getCustomisation() {
 		return this.customisation;
 	}
-	
+
+	/**
+	 * Sets the customisation of the roboticon to the specific type
+	 *
+	 * @param type The type of customisation
+	 */
 	void setCustomisation(ResourceType type) {
 		this.customisation = type;
 	}
 
+	/**
+	 * Getter for installedLandPlot
+	 *
+	 * @return The state of installedLandplot, true if installed and false if otherwise
+	 */
 	public synchronized boolean isInstalled() {
 		return installedLandPlot != null;
 	}
