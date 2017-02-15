@@ -149,7 +149,7 @@ public class RoboticonMarketActors extends Table {
 		nextButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.nextPhase();
+				nextButtonFunction();
 			}
 		});
 
@@ -235,6 +235,11 @@ public class RoboticonMarketActors extends Table {
 		add();
 		add(nextButton).padTop(40);
 
+	}
+
+	public void nextButtonFunction(){
+		game.nextPhase();
+		screen.dispose();
 	}
 
 	public String padZero(int number, int length) {
