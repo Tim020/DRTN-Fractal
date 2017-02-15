@@ -14,9 +14,7 @@ import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import io.github.teamfractal.util.Fonts;
-import io.github.teamfractal.util.TTFont;
 
 import java.util.ArrayList;
 
@@ -370,7 +368,12 @@ public class RoboticonMarketActors extends Table {
 
         roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
     }
-
+    /**
+     * Generates a string of a number followed by a certain amount of zeros
+     * @param number The number that the string starts with
+     * @param length The number of zeros that the number is followed by
+     * @return The string that has been generated
+     */
 
     public String padZero(int number, int length) {
         String s = "" + number;
@@ -380,6 +383,10 @@ public class RoboticonMarketActors extends Table {
         return s;
     }
 
+    /**
+     * Getter for the index of the selected Roboticon
+     * @return The index of the selected Roboticon
+     */
     public int selectedRoboticonIndex() {
         return selectedRoboticonIndex;
     }
