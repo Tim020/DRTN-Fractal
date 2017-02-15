@@ -2,6 +2,7 @@ package io.github.teamfractal;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -71,6 +72,8 @@ public class RoboticonQuest extends Game {
 		//Setup tile and player effects for later application
 		setupEffects();
 
+		roboticonMarket = new RoboticonMarketScreen(this, Color.GRAY, Color.WHITE, 3);
+
 		setScreen(mainMenuScreen);
 	}
 
@@ -135,10 +138,7 @@ public class RoboticonQuest extends Game {
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
-
-				this.roboticonMarket = new RoboticonMarketScreen(this);
-                this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, phase, 30));
-                setScreen(this.roboticonMarket);
+				roboticonMarket.actors().widgetUpdate();
 
 				this.getPlayer().takeTurn();
                 break;
@@ -160,13 +160,13 @@ public class RoboticonQuest extends Game {
 				this.getPlayer().takeTurn();
                 break;
 
-			// Phase 4: Purchase Resource
+			// Phase 4: Generate resources for player
 			case 4:
 				generateResources();
 				this.getPlayer().takeTurn();
                 break;
 
-			// Phase 5: Generate resource for player.
+			// Phase 5: Purchase resources
 			case 5:
 				setScreen(new ResourceMarketScreen(this));
 
