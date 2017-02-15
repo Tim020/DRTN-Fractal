@@ -149,7 +149,7 @@ public class RoboticonMarketActors extends Table {
 		nextButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.nextPhase();
+				nextButtonFunction();
 			}
 		});
 
@@ -237,12 +237,19 @@ public class RoboticonMarketActors extends Table {
 
 	}
 
-	/**
+
+  /**
 	 * Generates a string of a number followed by a certain amount of zeros
 	 * @param number The number that the string starts with
 	 * @param length The number of zeros that the number is followed by
 	 * @return The string that has been generated
 	 */
+	public void nextButtonFunction(){
+		game.nextPhase();
+		screen.dispose();
+	}
+
+
 	public String padZero(int number, int length) {
 		String s = "" + number;
 		while (s.length() < length) {
