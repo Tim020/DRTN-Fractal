@@ -13,7 +13,6 @@ import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
-import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.PlotEffectSource;
 import io.github.teamfractal.util.PlotManager;
@@ -176,7 +175,8 @@ public class RoboticonQuest extends Game {
                 Gdx.input.setInputProcessor(genOverlay);
 
                 this.getPlayer().generateResources();
-
+				this.market.generateRoboticon();
+				this.roboticonMarket.actors().refreshRoboticonShop();
                 Timer timer = new Timer();
                 timer.scheduleTask(new Timer.Task() {
                     @Override
