@@ -237,6 +237,12 @@ public class RoboticonMarketActors extends Table {
 
 	}
 
+	/**
+	 * Generates a string of a number followed by a certain amount of zeros
+	 * @param number The number that the string starts with
+	 * @param length The number of zeros that the number is followed by
+	 * @return The string that has been generated
+	 */
 	public String padZero(int number, int length) {
 		String s = "" + number;
 		while (s.length() < length) {
@@ -245,6 +251,11 @@ public class RoboticonMarketActors extends Table {
 		return s;
 	}
 
+	/**
+	 * Sets the appearance of the current roboticon on the market screen. This is based on the customisation of the
+	 * selected roboticon as well as the id number.
+	 * @param roboticonPos The ID of the specific roboticon
+	 */
 	public void setCurrentlySelectedRoboticon(int roboticonPos) {
 		if (roboticonPos != -1) {
 
@@ -278,6 +289,10 @@ public class RoboticonMarketActors extends Table {
 		roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
 	}
 
+	/**
+	 * Retrieves and draws information to the screen relating to the turn and phase info as well as the player's
+	 * resource count
+	 */
 	public void widgetUpdate() {
 		roboticons.clear();
 		for (Roboticon r : game.getPlayer().getRoboticons()) {
@@ -315,11 +330,17 @@ public class RoboticonMarketActors extends Table {
 
 	}
 
+	/**
+	 * Adds a roboticon to the quantity selected
+	 */
     public void addRoboticonFunction() {
         roboticonAmount += 1;
         this.lblRoboticonAmount.setText(roboticonAmount.toString());
     }
 
+	/**
+	 * Subtracts a roboticon from the quantity selected
+	 */
     public void subRoboticonFunction() {
         if (roboticonAmount > 0) {
             roboticonAmount -= 1;
@@ -327,6 +348,9 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+	/**
+	 * Buys the selected amount of roboticons and places them in the player's inventory
+	 */
     public void buyRoboticonFunction() {
         game.getPlayer().purchaseRoboticonsFromMarket(roboticonAmount, game.market);
         roboticonAmount = 0;
@@ -334,6 +358,9 @@ public class RoboticonMarketActors extends Table {
         widgetUpdate();
     }
 
+	/**
+	 * Reduces the ID of the currently selected roboticon
+	 */
     public void moveLeftRoboticonInventoryFunction() {
         if (currentlySelectedRoboticonPos > 0) {
             currentlySelectedRoboticonPos--;
@@ -341,6 +368,9 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+	/**
+	 * Increases the ID of the currently selected roboticon
+	 */
     public void moveRightRoboticonInventoryFunction() {
         if (currentlySelectedRoboticonPos < roboticons.size() - 1) {
             currentlySelectedRoboticonPos++;
@@ -348,6 +378,11 @@ public class RoboticonMarketActors extends Table {
         }
     }
 
+	/**
+	 * Buys the selected customisation and adds it to the player's inventory
+	 * @param customisation The customisation that has been bought by the player
+	 * @param pos The position of the currently selected, non-customised roboticon
+	 */
     public void buyCustomisationFunction(ResourceType customisation, int pos) {
 
 
