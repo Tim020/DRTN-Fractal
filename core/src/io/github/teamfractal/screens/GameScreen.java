@@ -251,7 +251,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
         game.plotManager.setup(tiles, tmx.getLayers());
         game.nextPhase();
-
 	}
 
     public void plotmanagerSetup() {
@@ -278,20 +277,25 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		renderAnimation(delta);
 
-		if (game.getPhase() == 1) {
-			if (overlayStack.isEmpty() || overlayStack == null) {
-				Gdx.input.setInputProcessor(stage);
-			} else {
-				Gdx.input.setInputProcessor(overlayStack.get(overlayStack.size() - 1));
+		switch (game.getPhase()) {
+			case (1):
+				if (overlayStack.isEmpty() || overlayStack == null) {
+					Gdx.input.setInputProcessor(stage);
+				} else {
+					Gdx.input.setInputProcessor(overlayStack.get(overlayStack.size() - 1));
 
-				overlayStack.get(overlayStack.size() - 1).act(delta);
-				overlayStack.get(overlayStack.size() - 1).draw();
-			}
-		} else if (game.getPhase() == 2) {
-			Gdx.input.setInputProcessor(game.roboticonMarket);
-
-			game.roboticonMarket.act(delta);
-			game.roboticonMarket.draw();
+					overlayStack.get(overlayStack.size() - 1).act(delta);
+					overlayStack.get(overlayStack.size() - 1).draw();
+				}
+				break;
+			case (2):
+				game.roboticonMarket.act(delta);
+				game.roboticonMarket.draw();
+				break;
+			case (4):
+				game.genOverlay.act(delta);
+				game.genOverlay.draw();
+				break;
 		}
 	}
 

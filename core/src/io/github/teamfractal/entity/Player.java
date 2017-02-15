@@ -373,25 +373,14 @@ public class Player {
 		for (LandPlot land : landList) {
 			energy += land.produceResource(ResourceType.ENERGY);
 			ore += land.produceResource(ResourceType.ORE);
-
 			food += land.produceResource(ResourceType.FOOD);
-
 		}
 
 		setEnergy(getEnergy() + energy);
 		setFood(getFood() + food);
 		setOre(getOre() + ore);
 
-		IAnimation animation = new AnimationAddResources(this, energy, food, ore);
-		animation.setAnimationFinish(new IAnimationFinish() {
-			@Override
-			public void OnAnimationFinish() {
-				if (game.getPlayer() == Player.this){
-					game.nextPhase();
-				}
-			}
-		});
-		game.gameScreen.addAnimation(animation);
+		game.genOverlay.updateYieldLabels(energy, ore, food);
 	}
 
 	/**

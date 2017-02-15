@@ -15,6 +15,7 @@ import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import io.github.teamfractal.util.Fonts;
 import io.github.teamfractal.util.TTFont;
 
 import java.util.ArrayList;
@@ -64,9 +65,7 @@ public class RoboticonMarketActors extends Table {
 
     private TextButton exitButton;
 
-    private TTFont montserratRegular;
-    private TTFont montserratLight;
-
+    private Fonts fonts;
     /**
      * Constructor class that connects the roboticon market to the internal engine and builds its visual interface
      * @param game The engine driving the game forward
@@ -76,10 +75,9 @@ public class RoboticonMarketActors extends Table {
 
         this.roboticonImage = new Image();
 
-        montserratRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"));
-        montserratLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"));
-        montserratRegular.setSize(24);
-        montserratLight.setSize(12);
+        fonts = new Fonts();
+        fonts.montserratRegular.setSize(24);
+        fonts.montserratLight.setSize(12);
 
         constructInterface();
     }
@@ -97,7 +95,7 @@ public class RoboticonMarketActors extends Table {
         constructLabels();
         constructButtons();
 
-        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(4);
+        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(fonts.montserratRegular.font(), Color.WHITE))).colspan(4);
 
         purchaseTable.row();
         purchaseTable.add(roboticonSubButton).width(25);
@@ -108,7 +106,7 @@ public class RoboticonMarketActors extends Table {
         add(purchaseTable).padBottom(35);
         row();
 
-        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(3);
+        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(fonts.montserratRegular.font(), Color.WHITE))).colspan(3);
 
         selectionTable.row();
         selectionTable.add(moveLeftInventoryButton).width(25);
@@ -348,7 +346,13 @@ public class RoboticonMarketActors extends Table {
 
             if (roboticonType == ResourceType.Unknown) {
                 customisationPurchaseButton.setText("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE");
-                customisationPurchaseButton.setTouchable(Touchable.enabled);
+
+                if (game.getPlayer().getMoney() >= game.market.getSellPrice(ResourceType.CUSTOMISATION)) {
+                    customisationPurchaseButton.setTouchable(Touchable.enabled);
+                } else {
+                    customisationPurchaseButton.setTouchable(Touchable.disabled);
+                }
+
             } else {
                 customisationPurchaseButton.setText("CUSTOMISED");
                 customisationPurchaseButton.setTouchable(Touchable.disabled);
@@ -375,9 +379,5 @@ public class RoboticonMarketActors extends Table {
 
     public int selectedRoboticonIndex() {
         return selectedRoboticonIndex;
-    }
-
-    public void updateUpgradePriceLabels() {
-
     }
 }

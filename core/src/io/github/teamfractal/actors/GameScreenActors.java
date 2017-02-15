@@ -32,7 +32,6 @@ public class GameScreenActors {
 	private SelectBox<String> installRoboticonSelect;
 	private Label plotStats;
 	private TextButton nextButton;
-	private boolean dropDownActive;
 	private boolean listUpdated;
 
 	/**
@@ -142,7 +141,6 @@ public class GameScreenActors {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				event.stop();
-				dropDownActive = false;
 				hideInstallRoboticon();
 			}
 		});
@@ -307,7 +305,6 @@ public class GameScreenActors {
 			plotStats.setVisible(false);
 			hideInstallRoboticon();
 			game.nextPhase();
-			dropDownActive = true;
 			installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
 			textUpdate();
 		}
@@ -354,7 +351,6 @@ public class GameScreenActors {
 
 				hideInstallRoboticon();
 				updateRoboticonList();
-				dropDownActive = true;
 
 			} else listUpdated = false;
 		}
