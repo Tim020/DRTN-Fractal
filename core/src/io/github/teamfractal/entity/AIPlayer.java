@@ -12,39 +12,41 @@ import java.util.Random;
  * @since Assessment 3
  */
 public class AIPlayer extends Player {
-    private int money = 100000;
-
 
     public AIPlayer(RoboticonQuest game) {
         super(game);
+        this.setMoney(20000);
     }
 
     /**
      * Function calling the AIPlayer to take action.
      *
      */
-    public void takeTurn() {
-        switch (game.getPhase()) {
+    public void takeTurn(int phase) {
+        //TODO get gamephase being used
+        int gamephase = game.getPhase();
+        switch (phase) {
             case 1:
                 //"Buy Land Plot
-                System.out.println("Phase 1 in progress");
+                System.out.println("AI: Phase 1 in progress");
                 phase1();
+                break;
             case 2:
                 //"Purchase Roboticons
-                System.out.println("Phase 2 in progress");
+                System.out.println("AI: Phase 2 in progress");
                 phase2();
+                break;
             case 3:
                 //Install Roboticons
-                System.out.println("Phase 3 in progress");
+                System.out.println("AI: Phase 3 in progress");
                 phase3();
-            case 4:
-                //Resource Generation
-                System.out.println("Phase 4 in progress");
-                phase4();
+                break;
+            //Phase 4 not included, no interaction required
             case 5:
                 //Resource Auction
-                System.out.println("Phase 5 in progress");
+                System.out.println("AI: Phase 5 in progress");
                 phase5();
+                break;
             default:
                 // Unknown phase
         }
@@ -87,8 +89,6 @@ public class AIPlayer extends Player {
      */
     private void phase2() {
 
-        //TODO Make correct
-
         for (LandPlot aLandList : this.landList) {
             if (!aLandList.hasRoboticon()) {
                 int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
@@ -104,25 +104,23 @@ public class AIPlayer extends Player {
                 switch (max_index) {
                     case 0:
                         //ORE
-
                         game.roboticonMarket.getActors().addRoboticonFunction();
                         game.roboticonMarket.getActors().buyRoboticonFunction();
                         game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ORE, game.roboticonMarket.getActors().currentlySelectedRoboticonPos);
-
                         break;
-                    case 1:
+                        case 1:
                         //FOOD
                         game.roboticonMarket.getActors().addRoboticonFunction();
                         game.roboticonMarket.getActors().buyRoboticonFunction();
                         game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.FOOD,  game.roboticonMarket.getActors().currentlySelectedRoboticonPos);
-                        break;
-                    case 2:
+                            break;
+                        case 2:
                         //ENERGY
                         game.roboticonMarket.getActors().addRoboticonFunction();
                         game.roboticonMarket.getActors().buyRoboticonFunction();
                         game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.getActors().currentlySelectedRoboticonPos);
                         break;
-                    default:
+                        default:
                         //uh oh
 
                 }
@@ -149,21 +147,14 @@ public class AIPlayer extends Player {
             }
         game.gameScreen.getActors().nextButtonFunction();
     }
-
-    /**
-     * Function simulating the Player interaction during Phase 4.
-     */
-    private void phase4() {
-        //Blank as no action required
-    }
+    
 
     /**
      * Function simulating the Player interaction during Phase 5.
      */
     private void phase5() {
 
-        //TODO: Implement
-        //game.nextPhase();
+        game.nextPhase();
     }
 
 }

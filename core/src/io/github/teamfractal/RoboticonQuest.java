@@ -31,11 +31,11 @@ public class RoboticonQuest extends Game {
 	public Market market;
     public PlotManager plotManager;
 
+    private int turnNumber = 1;
 	private SpriteBatch batch;
 	private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
     private int phase;
-	private int currentPlayer;
 	private int landBoughtThisTurn;
 	private PlotEffect[] plotEffects;
 	private float effectChance;
@@ -138,7 +138,7 @@ public class RoboticonQuest extends Game {
                 this.roboticonMarket.addAnimation(new AnimationPhaseTimeout(getPlayer(), this, phase, 30));
                 setScreen(this.roboticonMarket);
 
-				this.getPlayer().takeTurn();
+				this.getPlayer().takeTurn(2);
                 break;
 
 
@@ -155,20 +155,19 @@ public class RoboticonQuest extends Game {
 				gameScreen.getActors().updateRoboticonSelection();
 				setScreen(gameScreen);
 
-				this.getPlayer().takeTurn();
+				this.getPlayer().takeTurn(3);
                 break;
 
 			// Phase 4: Purchase Resource
 			case 4:
 				generateResources();
-				this.getPlayer().takeTurn();
                 break;
 
 			// Phase 5: Generate resource for player.
 			case 5:
 				setScreen(new ResourceMarketScreen(this));
 
-				this.getPlayer().takeTurn();
+				this.getPlayer().takeTurn(5);
 				break;
 
 
@@ -181,6 +180,7 @@ public class RoboticonQuest extends Game {
 					setScreen(new EndGameScreen(this));
 					break;
 				}
+				this.turnNumber += 1;
 				this.nextPlayer();
 
 				// No "break;" here!
@@ -195,7 +195,8 @@ public class RoboticonQuest extends Game {
 				clearEffects();
 				setEffects();
 
-        		this.getPlayer().takeTurn();
+				System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + Math.ceil((double) this.turnNumber / 2));
+        		this.getPlayer().takeTurn(1);
 				break;
 		}
 
@@ -217,8 +218,7 @@ public class RoboticonQuest extends Game {
 		setScreen(gameScreen);
 
 		// Generate resources.
-		Player p = getPlayer();
-		p.generateResources();
+		this.getPlayer().generateResources();
 	}
 
 	/**
@@ -272,6 +272,7 @@ public class RoboticonQuest extends Game {
         } else {
             this.currentPlayerIndex++;
         }
+
 
     }
 
@@ -358,6 +359,7 @@ public class RoboticonQuest extends Game {
 		return winner;
 	}
 
+	//TODO change these because it is basically public...
 	public float getEffectChance() {
 		return effectChance;
 	}
