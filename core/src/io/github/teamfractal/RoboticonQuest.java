@@ -31,21 +31,17 @@ public class RoboticonQuest extends Game {
 	public GameScreen gameScreen;
 	public Market market;
     public PlotManager plotManager;
-
-    private int turnNumber = 1;
-	private SpriteBatch batch;
-	private MainMenuScreen mainMenuScreen;
+    public RoboticonMarketScreen roboticonMarket;
+    public GenerationOverlay genOverlay;
+    private int trueTurnNumber = 1;
+    private SpriteBatch batch;
+    private MainMenuScreen mainMenuScreen;
     private ArrayList<Player> playerList;
     private int phase;
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
-
 	private PlotEffectSource plotEffectSource;
-
-    public RoboticonMarketScreen roboticonMarket;
-
-    public GenerationOverlay genOverlay;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -227,8 +223,8 @@ public class RoboticonQuest extends Game {
 					break;
 				}
 
-				this.turnNumber += 1;
-				this.nextPlayer();
+                this.trueTurnNumber += 1;
+                this.nextPlayer();
 
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
@@ -244,7 +240,7 @@ public class RoboticonQuest extends Game {
 				clearEffects();
 				setEffects();
 
-				System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + Math.ceil((double) this.turnNumber / 2));
+                System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + this.getTurnNumber());
 
 				if (getPlayer().getMoney() < 10) {
 					gameScreen.getActors().setNextButtonVisibility(true);
@@ -263,8 +259,11 @@ public class RoboticonQuest extends Game {
 	 * Advances the current phase
 	 */
 	public void nextPhase() {
-		phase += 1;
-		implementPhase();
+        if ((phase == 1) && (landBoughtThisTurn == 0) && (this.getPlayer().getMoney() >= 10)) {
+            return;
+        }
+        phase += 1;
+        implementPhase();
 	}
 
 	/**
@@ -415,4 +414,10 @@ public class RoboticonQuest extends Game {
 	public ArrayList<Player> getPlayerList(){
 		return this.playerList;
 	}
+
+    public int getTurnNumber() {
+        return (int) Math.ceil((double) trueTurnNumber / 2);
+    }
 }
+
+
