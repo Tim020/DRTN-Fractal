@@ -123,7 +123,7 @@ public class RoboticonQuest extends Game {
             player2 = new Player(this);
         }
 
-        this.playerList = new ArrayList<>();
+        this.playerList = new ArrayList<Player>();
         this.playerList.add(player1);
 		this.playerList.add(player2);
         this.currentPlayerIndex = 0;

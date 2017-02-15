@@ -14,7 +14,7 @@ import java.util.Random;
 public class Player {
 	public RoboticonQuest game;
 	Array<Roboticon> roboticonList;
-    ArrayList<LandPlot> landList = new ArrayList<>();
+    ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
     //<editor-fold desc="Resource getter and setter">
     private int money = 100;
     private int ore = 0;
@@ -24,7 +24,7 @@ public class Player {
 
 	public Player(RoboticonQuest game){
 		this.game = game;
-        this.roboticonList = new Array<>();
+        this.roboticonList = new Array<Roboticon>();
 
 	}
 
@@ -320,7 +320,7 @@ public class Player {
 		int energy = 0;
 		int food = 0;
 		int uncustomised = 0;
-        Array<String> roboticonAmountList = new Array<>();
+        Array<String> roboticonAmountList = new Array<String>();
 
         for (Roboticon r : roboticonList) {
             if (!r.isInstalled()) {

@@ -3,7 +3,6 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 
-
 import java.util.Random;
 
 /**
@@ -107,7 +106,14 @@ public class AIPlayer extends Player {
 
                         game.roboticonMarket.actors().addRoboticonFunction();
                         game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, game.roboticonMarket.actors().selectedRoboticonIndex());
+                        int robotIndex = game.roboticonMarket.actors().selectedRoboticonIndex();
+
+                        try {
+                            game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, robotIndex);
+                        } catch (ArrayIndexOutOfBoundsException e) {
+
+                        }
+
                         break;
                         case 1:
                         //FOOD
@@ -122,7 +128,7 @@ public class AIPlayer extends Player {
                         game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.actors().selectedRoboticonIndex());
                         break;
                         default:
-                        //Uh oh! You friccin moron. You just got BEANED!!! Tag your friends to totally BEAN! them
+
                 }
 
             }
