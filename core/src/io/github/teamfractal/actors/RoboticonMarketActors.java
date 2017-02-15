@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -84,7 +85,7 @@ public class RoboticonMarketActors extends Table {
         selectionTable = new Table();
         upgradeTable = new Table();
 
-        roboticonPurchaseAmount = 0;
+        roboticonPurchaseAmount = 1;
 
         constructLabels();
         constructButtons();
@@ -115,8 +116,8 @@ public class RoboticonMarketActors extends Table {
 
         customisationDropDown = new SelectBox<String>(game.skin);
         customisationDropDown.setItems(new String[]{"Energy Generation", "Ore Mining", "Food Farming"});
-        upgradeTable.add(customisationDropDown).expandX().width(143).padRight(15);
-        upgradeTable.add(customisationPurchaseButton);
+        upgradeTable.add(customisationDropDown).expandX().padRight(15);
+        upgradeTable.add(customisationPurchaseButton).width(164);
 
         add(upgradeTable).padBottom(35);
         row();
@@ -160,7 +161,7 @@ public class RoboticonMarketActors extends Table {
         roboticonPurchaseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                buyRoboticonFunction();
+                purchaseRoboticonFunction();
             }
         });
 
@@ -170,7 +171,7 @@ public class RoboticonMarketActors extends Table {
             public void changed(ChangeEvent event, Actor actor) {
                 if (selectedRoboticonIndex > 0) {
                     selectedRoboticonIndex--;
-                    setCurrentlySelectedRoboticon(selectedRoboticonIndex);
+                    refreshCurrentlySelectedRoboticon();
                 }
             }
         });
@@ -181,7 +182,7 @@ public class RoboticonMarketActors extends Table {
             public void changed(ChangeEvent event, Actor actor) {
                 if (selectedRoboticonIndex < roboticons.size() - 1) {
                     selectedRoboticonIndex++;
-                    setCurrentlySelectedRoboticon(selectedRoboticonIndex);
+                    refreshCurrentlySelectedRoboticon();
                 }
             }
         });
@@ -196,7 +197,7 @@ public class RoboticonMarketActors extends Table {
 
                 ResourceType resource = null;
 
-                switch (customisationDropDown.getSelectedIndex()) {
+                switch(customisationDropDown.getSelectedIndex()) {
                     case (0):
                         resource = ResourceType.ENERGY;
                         break;
@@ -221,22 +222,28 @@ public class RoboticonMarketActors extends Table {
         });
     }
 
-    public void refreshRoboticonShopLabels() {
+    public void refreshRoboticonShop() {
         roboticonPurchaseAmountLabel.setText(roboticonPurchaseAmount + "/" + game.market.getResource(ResourceType.ROBOTICON));
         roboticonPurchaseButton.setText("[PRICE: " + (game.market.getSellPrice(ResourceType.ROBOTICON) * roboticonPurchaseAmount) + "] PURCHASE");
+
+        if (game.getPlayer().getMoney() >= game.market.getSellPrice(ResourceType.ROBOTICON) * roboticonPurchaseAmount) {
+            roboticonPurchaseButton.setTouchable(Touchable.enabled);
+        } else {
+            roboticonPurchaseButton.setTouchable(Touchable.disabled);
+        }
 	}
 
     public void addRoboticonFunction() {
         if (roboticonPurchaseAmount < game.market.getResource(ResourceType.ROBOTICON)) {
             roboticonPurchaseAmount += 1;
-            refreshRoboticonShopLabels();
+            refreshRoboticonShop();
         }
     }
 
     public void subRoboticonFunction() {
-        if (roboticonPurchaseAmount > 0) {
+        if (roboticonPurchaseAmount > 1) {
             roboticonPurchaseAmount -= 1;
-            refreshRoboticonShopLabels();
+            refreshRoboticonShop();
         }
     }
 
@@ -244,13 +251,16 @@ public class RoboticonMarketActors extends Table {
         if (game.getPlayer().purchaseCustomisationFromMarket(resource, roboticons.get(index), game.market) == PurchaseStatus.Success) {
             widgetUpdate();
             game.gameScreen.getActors().textUpdate();
+
+            customisationPurchaseButton.setText("CUSTOMISED");
+            customisationPurchaseButton.setTouchable(Touchable.disabled);
         }
     }
 
-    public void buyRoboticonFunction() {
+    public void purchaseRoboticonFunction() {
         if (game.getPlayer().purchaseRoboticonsFromMarket(roboticonPurchaseAmount, game.market) == PurchaseStatus.Success) {
-            roboticonPurchaseAmount = 0;
-            refreshRoboticonShopLabels();
+            roboticonPurchaseAmount = 1;
+            refreshRoboticonShop();
             widgetUpdate();
             game.gameScreen.getActors().textUpdate();
         }
@@ -270,12 +280,12 @@ public class RoboticonMarketActors extends Table {
             selectedRoboticonIndex = 0;
         }
 
-        setCurrentlySelectedRoboticon(selectedRoboticonIndex);
+        refreshCurrentlySelectedRoboticon();
     }
 
-    public void setCurrentlySelectedRoboticon(int roboticonPos) {
-        if (roboticonPos != -1) {
-            ResourceType roboticonType = roboticons.get(roboticonPos).getCustomisation();
+    private void refreshCurrentlySelectedRoboticon() {
+        if (selectedRoboticonIndex != -1) {
+            ResourceType roboticonType = roboticons.get(selectedRoboticonIndex).getCustomisation();
 
             switch (roboticonType) {
                 case Unknown:
@@ -294,12 +304,21 @@ public class RoboticonMarketActors extends Table {
                     break;
             }
 
-            int id = roboticons.get(roboticonPos).getID();
-            this.selectedRoboticonIDLabel.setText("ISSUE NUMBER: " + padZero(id, 4));
+            this.selectedRoboticonIDLabel.setText("[" + (selectedRoboticonIndex + 1) + "/" + roboticons.size() + "] ISSUE NUMBER: " + padZero(roboticons.get(selectedRoboticonIndex).getID(), 4));
 
+            if (roboticonType == ResourceType.Unknown) {
+                customisationPurchaseButton.setText("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE");
+                customisationPurchaseButton.setTouchable(Touchable.enabled);
+            } else {
+                customisationPurchaseButton.setText("CUSTOMISED");
+                customisationPurchaseButton.setTouchable(Touchable.disabled);
+            }
         } else {
             roboticonTexture = no_robotic_texture;
             this.selectedRoboticonIDLabel.setText("ISSUE NUMBER: ####");
+
+            customisationPurchaseButton.setText("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE");
+            customisationPurchaseButton.setTouchable(Touchable.disabled);
         }
 
         roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));

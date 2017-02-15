@@ -106,19 +106,19 @@ public class AIPlayer extends Player {
                         //ORE
 
                         game.roboticonMarket.actors().addRoboticonFunction();
-                        game.roboticonMarket.actors().buyRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseRoboticonFunction();
                         game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, game.roboticonMarket.actors().selectedRoboticonIndex());
                         break;
                         case 1:
                         //FOOD
                         game.roboticonMarket.actors().addRoboticonFunction();
-                        game.roboticonMarket.actors().buyRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseRoboticonFunction();
                         game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD,  game.roboticonMarket.actors().selectedRoboticonIndex());
                         break;
                     case 2:
                         //ENERGY
                         game.roboticonMarket.actors().addRoboticonFunction();
-                        game.roboticonMarket.actors().buyRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseRoboticonFunction();
                         game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.actors().selectedRoboticonIndex());
                         break;
                         default:
