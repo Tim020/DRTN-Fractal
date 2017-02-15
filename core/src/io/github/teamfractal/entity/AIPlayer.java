@@ -12,19 +12,19 @@ import java.util.Random;
  * @since Assessment 3
  */
 public class AIPlayer extends Player {
-    private int money = 100000;
-
 
     public AIPlayer(RoboticonQuest game) {
         super(game);
+        this.setMoney(20000);
     }
 
     /**
      * Function calling the AIPlayer to take action.
      *
      */
-    public void takeTurn() {
-        switch (game.getPhase()) {
+    public void takeTurn(int phase) {
+        int gamephase = game.getPhase();
+        switch (phase) {
             case 1:
                 //"Buy Land Plot
                 System.out.println("AI: Phase 1 in progress");
@@ -86,8 +86,6 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 2.
      */
     private void phase2() {
-
-        //TODO Make correct
 
         for (LandPlot aLandList : this.landList) {
             if (!aLandList.hasRoboticon()) {
@@ -153,6 +151,7 @@ public class AIPlayer extends Player {
      */
     private void phase4() {
         //Blank as no action required
+        //game.nextPhase();
     }
 
     /**
@@ -160,8 +159,7 @@ public class AIPlayer extends Player {
      */
     private void phase5() {
 
-        //TODO: Implement
-        //game.nextPhase();
+        game.nextPhase();
     }
 
 }
