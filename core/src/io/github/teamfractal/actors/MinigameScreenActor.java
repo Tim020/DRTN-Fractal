@@ -28,11 +28,14 @@ public class MinigameScreenActor extends Table {
     private Integer sellFoodAmount;
     private Label phaseInfo;
     private Label playerStats;
+    private Label gamblingInfo;
     private MiniGameScreen screen;
     //private ResourceMarketScreen screen;
     private TextButton backButton;
     private Label marketStats;
     private Label wellcomeLabel;
+    private int diceValue1 = 0;
+    private int diceValue2 = 0;
 
 
     /**
@@ -55,6 +58,7 @@ public class MinigameScreenActor extends Table {
 
         playerStats = new Label("", game.skin);
         marketStats = new Label("", game.skin);
+        gamblingInfo = new Label("", game.skin);
         wellcomeLabel = new Label("Wellcome to the Pub", game.skin);
 
         play = createAdjustable("Amount to gamble", "Roll a dice");
@@ -93,7 +97,7 @@ public class MinigameScreenActor extends Table {
 
         // Row: text
         add(textLabel);
-        rowWithHeight(20);
+        rowWithHeight(80);
 
         // Row: Player and Market Stats.
         add(playerStats);
@@ -104,6 +108,9 @@ public class MinigameScreenActor extends Table {
         rowWithHeight(20);
         ///
         add(play);
+        rowWithHeight(20);
+        add(gamblingInfo);
+
 
 
         bindEvents();
@@ -145,8 +152,14 @@ public class MinigameScreenActor extends Table {
         String statText =
                         "Your Money: "  + game.getPlayer().getMoney();
 
+        String dice =
+                "You scored: " + "[" + diceValue1 + "]" + " " +
+                        "Opponent scored: " + "[" + diceValue2 + "]" ;
+
+
         phaseInfo.setText(phaseText);
         playerStats.setText(statText);
+        gamblingInfo.setText(dice);
 
 
     }
@@ -182,6 +195,24 @@ public class MinigameScreenActor extends Table {
         //adjustableActor.setTitle(getPriceString(resource, bIsSell));
     }
 
+    private int getDiceValue1() {
+        return diceValue1;
+    }
+
+    private void setDiceValue1(int value){
+        this.diceValue1 = value;
+    }
+
+
+    private int getDiceValue2() {
+        return diceValue2;
+    }
+
+    private void setDiceValue2(int value){
+        this.diceValue2 = value;
+    }
+
+
     /**
      * Generate an adjustable actor for gambling.
      * @return The adjustable actor generated.
@@ -195,18 +226,20 @@ public class MinigameScreenActor extends Table {
             public void changed(ChangeEvent event, Actor actor) {
                 final MiniGame diceValue1 = new MiniGame();
                 final MiniGame diceValue2 = new MiniGame();
-                if (diceValue1.WinGame() == diceValue2.WinGame()) {
-                    return; ///???
+                setDiceValue1(diceValue1.WinGame());
+                setDiceValue2(diceValue2.WinGame());
+                if (player.getMoney() == 0) {
+                    // does nothing
                 }
-                else if (diceValue1.WinGame() < diceValue2.WinGame()) {
+                else if (getDiceValue1() == getDiceValue2()) {
+                    // does nothing
+                }
+                else if (getDiceValue1() < getDiceValue2()) {
                     player.setGamblingMoney(player.getMoney() - adjustableActor.getValue());
                 }
                 else {
                     player.setGamblingMoney(player.getMoney() + adjustableActor.getValue());
                 }
-
-
-
 
                 MinigameScreenActor.this.widgetUpdate();
             }
