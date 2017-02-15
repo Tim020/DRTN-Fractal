@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import io.github.teamfractal.MiniGame;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Player;
 import io.github.teamfractal.entity.enums.ResourceType;
@@ -17,6 +18,7 @@ import io.github.teamfractal.screens.MiniGameScreen;
 import io.github.teamfractal.screens.ResourceMarketScreen;
 
 public class MinigameScreenActor extends Table {
+    private final AdjustableActor play;
     private RoboticonQuest game;
     private Integer buyOreAmount;
     private Integer sellOreAmount;
@@ -55,12 +57,15 @@ public class MinigameScreenActor extends Table {
         marketStats = new Label("", game.skin);
         wellcomeLabel = new Label("Wellcome to the Pub", game.skin);
 
+        play = createAdjustable("Amount to gamble", "Roll a dice");
+
+
         //Label wellcomeLabel = new Label("Wellcome to the Pub", skin);
-        Label introLabel = new Label("You have entered a pub and the owner\n" +
-                "is suggesting to gamble by rolling a dice", skin);
+        Label introLabel = new Label("You have entered a pub\n" +
+                "here you can gamble by rolling a dice", skin);
         Label textLabel = new Label("Bet some money, roll a dice and if you will beat the opponent, \n" +
                 "your money will be doubled", skin);
-        Label choiceLabel = new Label("Amount to gamble", skin);
+        //Label choiceLabel = new Label("Amount to gamble", skin);
 
         // Adjust properties.
         phaseInfo.setAlignment(Align.right);
@@ -68,7 +73,7 @@ public class MinigameScreenActor extends Table {
         wellcomeLabel.setAlignment(Align.center);
         introLabel.setAlignment(Align.center);
         textLabel.setAlignment(Align.center);
-        choiceLabel.setAlignment(Align.center);
+        //choiceLabel.setAlignment(Align.center);
 
         // Add UI components to screen.
         stage.addActor(phaseInfo);
@@ -76,7 +81,7 @@ public class MinigameScreenActor extends Table {
         stage.addActor(wellcomeLabel);
         stage.addActor(introLabel);
         stage.addActor(textLabel);
-        stage.addActor(choiceLabel);
+        //stage.addActor(choiceLabel);
 
 
 
@@ -93,9 +98,12 @@ public class MinigameScreenActor extends Table {
         // Row: Player and Market Stats.
         add(playerStats);
         add();
-        add(choiceLabel);
+        add(play);
+        //add(choiceLabel);
         add().spaceRight(20);
         rowWithHeight(20);
+        ///
+        add(play);
 
 
         bindEvents();
@@ -110,6 +118,7 @@ public class MinigameScreenActor extends Table {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(screen.getRMS());
+                widgetUpdate();
             }
         });
     }
@@ -161,4 +170,48 @@ public class MinigameScreenActor extends Table {
         backButton.setPosition(width - backButton.getWidth() - 10, 10);
         setWidth(width);
     }
+
+
+    /**
+     * Sync. information with the adjustable.
+     *
+     * @param adjustableActor The adjustable to manipulate with.
+     */
+    private void updateAdjustable(AdjustableActor adjustableActor) {
+        adjustableActor.setMax(game.getPlayer().getMoney());
+        //adjustableActor.setTitle(getPriceString(resource, bIsSell));
+    }
+
+    /**
+     * Generate an adjustable actor for gambling.
+     * @return The adjustable actor generated.
+     */
+    private AdjustableActor createAdjustable(String title, String action) {
+        final Player player = game.getPlayer();
+        final AdjustableActor adjustableActor = new AdjustableActor(game.skin, title, action);
+        updateAdjustable(adjustableActor);
+        adjustableActor.setActionEvent(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                final MiniGame diceValue1 = new MiniGame();
+                final MiniGame diceValue2 = new MiniGame();
+                if (diceValue1.WinGame() == diceValue2.WinGame()) {
+                    return; ///???
+                }
+                else if (diceValue1.WinGame() < diceValue2.WinGame()) {
+                    player.setGamblingMoney(player.getMoney() - adjustableActor.getValue());
+                }
+                else {
+                    player.setGamblingMoney(player.getMoney() + adjustableActor.getValue());
+                }
+
+
+
+
+                MinigameScreenActor.this.widgetUpdate();
+            }
+        });
+        return adjustableActor;
+    }
+
 }

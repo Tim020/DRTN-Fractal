@@ -5,15 +5,15 @@ import java.util.Scanner;
 
 public class MiniGame {
 	private static final Random rand = new Random();
-	public boolean WinGame(int guessedNumber){
-		int max = 3;
+	public int WinGame(){
+		int max = 6;
 		int min = 1;
 		int generatedNumber = rand.nextInt((max - min) + 1) + min;
 
-		return guessedNumber == generatedNumber;
+		return generatedNumber;
 	}
 
-	public int getPrice(boolean bIsWin){
+	public int theGame(boolean bIsWin){
 		if (bIsWin){
 			return 1000;
 		}
