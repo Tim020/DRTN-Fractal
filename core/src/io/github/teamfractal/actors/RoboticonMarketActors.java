@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Roboticon;
+import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import io.github.teamfractal.util.TTFont;
@@ -60,6 +61,8 @@ public class RoboticonMarketActors extends Table {
     private SelectBox<String> customisationDropDown;
     private TextButton customisationPurchaseButton;
 
+    private TextButton exitButton;
+
     private TTFont montserratRegular;
     private TTFont montserratLight;
 
@@ -94,10 +97,10 @@ public class RoboticonMarketActors extends Table {
         purchaseTable.add(roboticonAddButton).width(25);
         purchaseTable.add(roboticonPurchaseButton).align(Align.right).width(200).padLeft(15);
 
-        add(purchaseTable).padBottom(10);
+        add(purchaseTable).padBottom(35);
         row();
 
-        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(3).padTop(25);
+        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(montserratRegular.font(), Color.WHITE))).colspan(3);
 
         selectionTable.row();
         selectionTable.add(moveLeftInventoryButton).width(25);
@@ -111,15 +114,18 @@ public class RoboticonMarketActors extends Table {
         row();
 
         customisationDropDown = new SelectBox<String>(game.skin);
-        customisationDropDown.setItems(new String[]{"[PRICE: 20] Energy Generation", "[PRICE: 20] Ore Mining", "[PRICE: 20] Food Farming"});
-        upgradeTable.add(customisationDropDown).expandX().width(222).padRight(15);
+        customisationDropDown.setItems(new String[]{"Energy Generation", "Ore Mining", "Food Farming"});
+        upgradeTable.add(customisationDropDown).expandX().width(143).padRight(15);
         upgradeTable.add(customisationPurchaseButton);
 
-        add(upgradeTable);
+        add(upgradeTable).padBottom(35);
+        row();
+
+        add(exitButton).expandX().width(320);
     }
 
     private void constructLabels() {
-        roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount.toString() + "/" +  game.market.getResource(ResourceType.ROBOTICON), game.skin);
+        roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount + "/" +  game.market.getResource(ResourceType.ROBOTICON), game.skin);
         roboticonPurchaseAmountLabel.setAlignment(Align.center);
 
         selectedRoboticonIDLabel = new Label("", game.skin);
@@ -180,7 +186,7 @@ public class RoboticonMarketActors extends Table {
             }
         });
 
-        customisationPurchaseButton = new TextButton("PURCHASE", game.skin);
+        customisationPurchaseButton = new TextButton("[PRICE: " + game.market.getSellPrice(ResourceType.CUSTOMISATION) + "] PURCHASE", game.skin);
         customisationPurchaseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -205,37 +211,49 @@ public class RoboticonMarketActors extends Table {
                 purchaseCustomisationFunction(resource, selectedRoboticonIndex);
             }
         });
+
+        exitButton = new TextButton("EXIT ROBOTICON SHOP", game.skin);
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.nextPhase();
+            }
+        });
     }
 
-    public void setRoboticonShopLabels(int quantity) {
-        roboticonPurchaseAmountLabel.setText(quantity + "/" + game.market.getResource(ResourceType.ROBOTICON));
+    public void refreshRoboticonShopLabels() {
+        roboticonPurchaseAmountLabel.setText(roboticonPurchaseAmount + "/" + game.market.getResource(ResourceType.ROBOTICON));
         roboticonPurchaseButton.setText("[PRICE: " + (game.market.getSellPrice(ResourceType.ROBOTICON) * roboticonPurchaseAmount) + "] PURCHASE");
 	}
 
     public void addRoboticonFunction() {
         if (roboticonPurchaseAmount < game.market.getResource(ResourceType.ROBOTICON)) {
             roboticonPurchaseAmount += 1;
-            setRoboticonShopLabels(roboticonPurchaseAmount);
+            refreshRoboticonShopLabels();
         }
     }
 
     public void subRoboticonFunction() {
         if (roboticonPurchaseAmount > 0) {
             roboticonPurchaseAmount -= 1;
-            setRoboticonShopLabels(roboticonPurchaseAmount);
+            refreshRoboticonShopLabels();
         }
     }
 
     public void purchaseCustomisationFunction(ResourceType resource, int index) {
-        game.getPlayer().purchaseCustomisationFromMarket(resource, roboticons.get(index), game.market);
-        widgetUpdate();
+        if (game.getPlayer().purchaseCustomisationFromMarket(resource, roboticons.get(index), game.market) == PurchaseStatus.Success) {
+            widgetUpdate();
+            game.gameScreen.getActors().textUpdate();
+        }
     }
 
     public void buyRoboticonFunction() {
-        game.getPlayer().purchaseRoboticonsFromMarket(roboticonPurchaseAmount, game.market);
-        roboticonPurchaseAmount = 0;
-        roboticonPurchaseAmountLabel.setText(roboticonPurchaseAmount.toString());
-        widgetUpdate();
+        if (game.getPlayer().purchaseRoboticonsFromMarket(roboticonPurchaseAmount, game.market) == PurchaseStatus.Success) {
+            roboticonPurchaseAmount = 0;
+            refreshRoboticonShopLabels();
+            widgetUpdate();
+            game.gameScreen.getActors().textUpdate();
+        }
     }
 
     public void widgetUpdate() {
@@ -298,5 +316,9 @@ public class RoboticonMarketActors extends Table {
 
     public int selectedRoboticonIndex() {
         return selectedRoboticonIndex;
+    }
+
+    public void updateUpgradePriceLabels() {
+
     }
 }

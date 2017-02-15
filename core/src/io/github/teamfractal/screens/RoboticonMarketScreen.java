@@ -12,7 +12,7 @@ public class RoboticonMarketScreen extends Overlay {
     private RoboticonMarketActors actors;
 
     public RoboticonMarketScreen(RoboticonQuest game, Color fillColor, Color lineColor, int lineThickness) {
-        super(fillColor, lineColor, 340, 340, lineThickness);
+        super(fillColor, lineColor, 340, 400, lineThickness);
 
         actors = new RoboticonMarketActors(game);
         table().add(actors);
