@@ -17,7 +17,6 @@ import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.AbstractAnimationScreen;
 import io.github.teamfractal.screens.GameScreen;
-import io.github.teamfractal.util.TileConverter;
 
 public class GameScreenActors {
 	private final Stage stage;
@@ -28,11 +27,9 @@ public class GameScreenActors {
 	private TextButton buyLandPlotBtn;
 	private TextButton installRoboticonBtn;
 	private TextButton installRoboticonBtnCancel;
-	private Label installRoboticonLabel;
 	private SelectBox<String> installRoboticonSelect;
 	private Label plotStats;
 	private TextButton nextButton;
-	private boolean dropDownActive;
 	private boolean listUpdated;
 
 	/**
@@ -95,7 +92,7 @@ public class GameScreenActors {
 		installRoboticonSelect = new SelectBox<String>(game.skin);
 		installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
 
-		installRoboticonLabel = new Label("Install Roboticon: ", game.skin);
+		Label installRoboticonLabel = new Label("Install Roboticon: ", game.skin);
 		installRoboticonBtn = new TextButton("Confirm", game.skin);
 		installRoboticonBtnCancel = new TextButton("Cancel", game.skin);
 
@@ -142,7 +139,6 @@ public class GameScreenActors {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				event.stop();
-				dropDownActive = false;
 				hideInstallRoboticon();
 			}
 		});
@@ -164,8 +160,7 @@ public class GameScreenActors {
 			case 1:
 				buyLandPlotBtn.setPosition(x + 10, y);
 				if (game.canPurchaseLandThisTurn()
-						&& !plot.hasOwner()
-						&& player.haveEnoughMoney(plot)) {
+						&& !plot.hasOwner()) {
 					buyLandPlotBtn.setDisabled(false);
 				} else {
 					buyLandPlotBtn.setDisabled(true);
@@ -242,7 +237,7 @@ public class GameScreenActors {
 	 * @param x              The <i>x</i> position to display the information.
 	 * @param y              The <i>y</i> position to display the information.
 	 */
-	public void showPlotStats(LandPlot plot, float x, float y) {
+	private void showPlotStats(LandPlot plot, float x, float y) {
 		String plotStatText = "Ore: " + plot.getResource(ResourceType.ORE) + "\n"
 				+ "Energy: " + plot.getResource(ResourceType.ENERGY) + "\n"
 				+ "Food: " + plot.getResource(ResourceType.FOOD);
@@ -279,9 +274,6 @@ public class GameScreenActors {
 		return installRoboticonTable.isVisible();
 	}
 
-	/**
-	 * Purchases the landplot that the player has clicked on if it is not already owned.
-	 */
 	public void buyLandPlotFunction(){
 		hideBuyLand();
 		if (buyLandPlotBtn.isDisabled()) {
@@ -298,12 +290,11 @@ public class GameScreenActors {
 			TiledMapTileLayer.Cell playerTile = selectedPlot.getPlayerTile();
 			playerTile.setTile(screen.getPlayerTile(player));
 			textUpdate();
+
+			nextButton.setVisible(true);
 		}
 	}
 
-	/**
-	 * The function that advances the phase of the game when the next button is clicked
-	 */
 	public void nextButtonFunction(){
 		if (nextButton.isDisabled()) {
 			return ;
@@ -313,17 +304,12 @@ public class GameScreenActors {
 			plotStats.setVisible(false);
 			hideInstallRoboticon();
 			game.nextPhase();
-			dropDownActive = true;
 			installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
 			textUpdate();
 		}
 	}
 
-	/**
-	 * Presents the user with a list of roboticons that they can install on the land plot that they have clicked on. Once they have selected
-	 * a roboticon to install, a function is called that will install the roboticon.
-	 */
-	public void installRoboticonFunction(){
+	private void installRoboticonFunction(){
 		if (installRoboticonBtn.isDisabled()) {
 			return ;
 		}
@@ -364,23 +350,23 @@ public class GameScreenActors {
 
 				hideInstallRoboticon();
 				updateRoboticonList();
-				dropDownActive = true;
 
 			} else listUpdated = false;
 		}
 	}
 
-
-  	/**
-	 * Installs the specified roboticon on the specified land plot.
-	 * @param selectedplot
-	 * @param roboticon
-	 */
 	public void installRoboticonFunction(LandPlot selectedPlot, Roboticon roboticon){
         selectedPlot.installRoboticon(roboticon);
         TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
         roboticonTile.setTile(screen.getResourcePlayerTile(selectedPlot.getOwner(),roboticon.getCustomisation()));
         selectedPlot.setHasRoboticon(true);
-
     }
+
+    public void switchNextButton() {
+		nextButton.setVisible(!nextButton.isVisible());
+	}
+
+	public void setNextButtonVisibility(boolean visible) {
+		nextButton.setVisible(visible);
+	}
 }

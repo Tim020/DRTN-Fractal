@@ -104,25 +104,25 @@ public class AIPlayer extends Player {
                 switch (max_index) {
                     case 0:
                         //ORE
-                        game.roboticonMarket.getActors().addRoboticonFunction();
-                        game.roboticonMarket.getActors().buyRoboticonFunction();
-                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ORE, game.roboticonMarket.getActors().currentlySelectedRoboticonPos);
+
+                        game.roboticonMarket.actors().addRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, game.roboticonMarket.actors().selectedRoboticonIndex());
                         break;
                         case 1:
                         //FOOD
-                        game.roboticonMarket.getActors().addRoboticonFunction();
-                        game.roboticonMarket.getActors().buyRoboticonFunction();
-                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.FOOD,  game.roboticonMarket.getActors().currentlySelectedRoboticonPos);
-                            break;
-                        case 2:
+                        game.roboticonMarket.actors().addRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD,  game.roboticonMarket.actors().selectedRoboticonIndex());
+                        break;
+                    case 2:
                         //ENERGY
-                        game.roboticonMarket.getActors().addRoboticonFunction();
-                        game.roboticonMarket.getActors().buyRoboticonFunction();
-                        game.roboticonMarket.getActors().buyCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.getActors().currentlySelectedRoboticonPos);
+                        game.roboticonMarket.actors().addRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseRoboticonFunction();
+                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.actors().selectedRoboticonIndex());
                         break;
                         default:
-                        //uh oh
-
+                        //Uh oh! You friccin moron. You just got BEANED!!! Tag your friends to totally BEAN! them
                 }
 
             }
