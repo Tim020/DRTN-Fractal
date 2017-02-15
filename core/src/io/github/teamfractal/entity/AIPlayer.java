@@ -87,6 +87,8 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 2.
      */
     private void phase2() {
+        boolean purchased = false;
+        int robotIndex = 0;
 
         for (LandPlot aLandList : this.landList) {
             if (!aLandList.hasRoboticon()) {
@@ -101,31 +103,33 @@ public class AIPlayer extends Player {
                 }
                 System.out.println(max_index);
                 switch (max_index) {
+
                     case 0:
                         //ORE
-
-                        game.roboticonMarket.actors().addRoboticonFunction();
                         game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        int robotIndex = game.roboticonMarket.actors().selectedRoboticonIndex();
-
                         try {
                             game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, robotIndex);
-                        } catch (ArrayIndexOutOfBoundsException e) {
-
+                        } catch (IndexOutOfBoundsException e) {
+                            break;
                         }
-
                         break;
-                        case 1:
+                    case 1:
                         //FOOD
-                        game.roboticonMarket.actors().addRoboticonFunction();
                         game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD,  game.roboticonMarket.actors().selectedRoboticonIndex());
+                        try {
+                            game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD, robotIndex);
+                        } catch (IndexOutOfBoundsException e) {
+                            break;
+                        }
                         break;
                     case 2:
                         //ENERGY
-                        game.roboticonMarket.actors().addRoboticonFunction();
                         game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.actors().selectedRoboticonIndex());
+                        try {
+                            game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY, robotIndex);
+                        } catch (IndexOutOfBoundsException e) {
+                            break;
+                        }
                         break;
                         default:
 
