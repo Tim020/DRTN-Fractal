@@ -53,7 +53,11 @@ public class RoboticonQuest extends Game {
 		return _instance;
 	}
 
-
+	/**
+	 * Getter for the index of the current Player
+	 * @param player The player that the index is being retrieved for
+	 * @return The index of the specified player
+	 */
 	public int getPlayerIndex (Player player) {
 
 		return playerList.indexOf(player);
@@ -77,6 +81,10 @@ public class RoboticonQuest extends Game {
 		setScreen(mainMenuScreen);
 	}
 
+	/**
+	 * Getter for the batch
+	 * @return The batch of the game
+	 */
 	public Batch getBatch() {
 		return batch;
 	}
@@ -101,16 +109,28 @@ public class RoboticonQuest extends Game {
 		skin.dispose();
 		batch.dispose();
 	}
-	
+
+	/**
+	 * Getter for the current phase
+	 * @return The current phase of the game
+	 */
 	public int getPhase(){
 		return this.phase;
 	}
 
+	/**
+	 * Setter for the current phase
+	 * @param phase The phase that the current phase is to be set to
+	 */
 	public void setPhase(int phase) {
 		this.phase = phase;
 		implementPhase();
 	}
 
+	/**
+	 * Resets the statistics of all the game's entities
+	 * @param AI A boolean describing whether an AI player is playing or not
+	 */
 	public void reset(boolean AI) {
         this.currentPlayerIndex = 0;
         this.phase = 0;
@@ -133,6 +153,9 @@ public class RoboticonQuest extends Game {
 
     }
 
+	/**
+	 * Implements the functionality of the current phase
+	 */
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 		switch (phase) {
@@ -210,6 +233,9 @@ public class RoboticonQuest extends Game {
 			gameScreen.getActors().textUpdate();
 	}
 
+	/**
+	 * Advances the current phase
+	 */
 	public void nextPhase() {
 		phase += 1;
 		implementPhase();
@@ -233,10 +259,18 @@ public class RoboticonQuest extends Game {
 		landBoughtThisTurn ++;
 	}
 
+	/**
+	 * Getter for landBoughtThisTurn
+	 * @return Returns true if land hasn't been purchased this turn, false otherwise
+	 */
 	public boolean canPurchaseLandThisTurn () {
 		return landBoughtThisTurn < 1;
 	}
 
+	/**
+	 * Returns a string describing the current phase
+	 * @return A string with the description of the current phase
+	 */
 	public String getPhaseString () {
 		int phase = getPhase();
 
@@ -262,15 +296,26 @@ public class RoboticonQuest extends Game {
 
 	}
 
+	/**
+	 * Getter for the current player
+	 * @return The current player
+	 */
 	public Player getPlayer(){
 
         return this.playerList.get(this.currentPlayerIndex);
     }
 
+	/**
+	 * Getter for the index of the current player
+	 * @return The index of the current player
+	 */
     public int getPlayerInt() {
         return this.currentPlayerIndex;
     }
 
+	/**
+	 * Changes the current player
+	 */
     void nextPlayer() {
         if (this.currentPlayerIndex == playerList.size() - 1) {
             this.currentPlayerIndex = 0;
@@ -281,7 +326,9 @@ public class RoboticonQuest extends Game {
 
     }
 
-	
+	/**
+	 * Creates and initialises all of the effects
+	 */
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
 		effectChance = (float) 0.05;
@@ -293,6 +340,9 @@ public class RoboticonQuest extends Game {
 		}
 	}
 
+	/**
+	 * Randomly applies the effects
+	 */
 	private void setEffects() {
 		Random RNGesus = new Random();
 
@@ -305,6 +355,9 @@ public class RoboticonQuest extends Game {
 		}
 	}
 
+	/**
+	 * Clears the effects of all the effects
+	 */
 	private void clearEffects() {
 		for (PlotEffect PE : plotEffectSource) {
 			PE.revertAll();

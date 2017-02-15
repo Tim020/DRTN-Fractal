@@ -279,6 +279,9 @@ public class GameScreenActors {
 		return installRoboticonTable.isVisible();
 	}
 
+	/**
+	 * Purchases the landplot that the player has clicked on if it is not already owned.
+	 */
 	public void buyLandPlotFunction(){
 		hideBuyLand();
 		if (buyLandPlotBtn.isDisabled()) {
@@ -298,6 +301,9 @@ public class GameScreenActors {
 		}
 	}
 
+	/**
+	 * The function that advances the phase of the game when the next button is clicked
+	 */
 	public void nextButtonFunction(){
 		if (nextButton.isDisabled()) {
 			return ;
@@ -313,6 +319,10 @@ public class GameScreenActors {
 		}
 	}
 
+	/**
+	 * Presents the user with a list of roboticons that they can install on the land plot that they have clicked on. Once they have selected
+	 * a roboticon to install, a function is called that will install the roboticon.
+	 */
 	public void installRoboticonFunction(){
 		if (installRoboticonBtn.isDisabled()) {
 			return ;
@@ -360,10 +370,17 @@ public class GameScreenActors {
 		}
 	}
 
+
+  	/**
+	 * Installs the specified roboticon on the specified land plot.
+	 * @param selectedplot
+	 * @param roboticon
+	 */
 	public void installRoboticonFunction(LandPlot selectedPlot, Roboticon roboticon){
         selectedPlot.installRoboticon(roboticon);
         TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();
         roboticonTile.setTile(screen.getResourcePlayerTile(selectedPlot.getOwner(),roboticon.getCustomisation()));
         selectedPlot.setHasRoboticon(true);
+
     }
 }
