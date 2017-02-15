@@ -2,9 +2,6 @@ package io.github.teamfractal.entity;
 
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.animation.AnimationAddResources;
-import io.github.teamfractal.animation.IAnimation;
-import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.NotCommonResourceException;
@@ -250,20 +247,11 @@ public class Player {
 	}
 
 	/**
-	 * Check if the player have enough money for the {@link LandPlot}.
-	 * @param plot           The landplot to purchase
-	 * @return  true if the player have enough money for that plot.
-	 */
-	public synchronized boolean haveEnoughMoney(LandPlot plot) {
-		return getMoney() >= 10;
-	}
-
-	/**
 	 * Player add a landplot to their inventory for gold
 	 * @param plot           The landplot to purchase
 	 */
 	public synchronized boolean purchaseLandPlot(LandPlot plot){
-		if (plot.hasOwner() || !haveEnoughMoney(plot)) {
+		if (plot.hasOwner() || money < 10) {
 			return false;
 		}
 
@@ -273,6 +261,7 @@ public class Player {
 		game.landPurchasedThisTurn();
 		return true;
 	}
+	
 	/**
 	 * Get a landplot to produce resources
 	 */
@@ -282,9 +271,9 @@ public class Player {
 			ore += plot.produceResource(ResourceType.ORE);
 
 			food += plot.produceResource(ResourceType.FOOD);
-
 		}
 	}
+
 	/**
 	 * Apply roboticon customisation
 	 * @param roboticon  The roboticon to be customised
@@ -373,25 +362,14 @@ public class Player {
 		for (LandPlot land : landList) {
 			energy += land.produceResource(ResourceType.ENERGY);
 			ore += land.produceResource(ResourceType.ORE);
-
 			food += land.produceResource(ResourceType.FOOD);
-
 		}
 
 		setEnergy(getEnergy() + energy);
 		setFood(getFood() + food);
 		setOre(getOre() + ore);
 
-		IAnimation animation = new AnimationAddResources(this, energy, food, ore);
-		animation.setAnimationFinish(new IAnimationFinish() {
-			@Override
-			public void OnAnimationFinish() {
-				if (game.getPlayer() == Player.this){
-					game.nextPhase();
-				}
-			}
-		});
-		game.gameScreen.addAnimation(animation);
+		game.genOverlay.updateYieldLabels(energy, ore, food);
 	}
 
 	/**
@@ -413,7 +391,7 @@ public class Player {
     /**
      * Method to be overloaded by AI inheritance
      */
-    public void takeTurn() {
+    public void takeTurn(int phase) {
         //Overload in AIPlayer
     }
 

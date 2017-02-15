@@ -2,6 +2,7 @@ package io.github.teamfractal.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.*;
@@ -46,7 +47,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 	private ArrayList<Overlay> overlayStack;
 
-
 	/**
 	 * Initialise the class
 	 * @param game  The game object
@@ -69,8 +69,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		overlayStack = new ArrayList<Overlay>();
 		//Prepare the overlay stack to allow for numerous overlays to be stacked on top of one-another
-
-
 
         // Drag the map within the screen.
         stage.addListener(new DragListener() {
@@ -224,11 +222,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
             case ORE:
                 return tiles.getTile(71 + game.getPlayerIndex(player) + 4);
-            case ENERGY:
+			case ENERGY:
 				return tiles.getTile(71 + game.getPlayerIndex(player) + 8);
 			case FOOD:
-				//TODO: create roboticon texture for FOOD
-				//return tiles.getTile(71 + game.getPlayerIndex(player) + ?);
+				return tiles.getTile(71 + game.getPlayerIndex(player) + 16);
 		default:
 			return tiles.getTile(71 + game.getPlayerIndex(player) + 12);
 		}
@@ -254,7 +251,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
         game.plotManager.setup(tiles, tmx.getLayers());
         game.nextPhase();
-
 	}
 
     public void plotmanagerSetup() {
@@ -281,13 +277,25 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		renderAnimation(delta);
 
-		if (overlayStack.isEmpty() || overlayStack == null) {
-			Gdx.input.setInputProcessor(stage);
-		} else {
-			Gdx.input.setInputProcessor(overlayStack.get(overlayStack.size() - 1));
+		switch (game.getPhase()) {
+			case (1):
+				if (overlayStack.isEmpty() || overlayStack == null) {
+					Gdx.input.setInputProcessor(stage);
+				} else {
+					Gdx.input.setInputProcessor(overlayStack.get(overlayStack.size() - 1));
 
-			overlayStack.get(overlayStack.size() - 1).act(delta);
-			overlayStack.get(overlayStack.size() - 1).draw();
+					overlayStack.get(overlayStack.size() - 1).act(delta);
+					overlayStack.get(overlayStack.size() - 1).draw();
+				}
+				break;
+			case (2):
+				game.roboticonMarket.act(delta);
+				game.roboticonMarket.draw();
+				break;
+			case (4):
+				game.genOverlay.act(delta);
+				game.genOverlay.draw();
+				break;
 		}
 	}
 
