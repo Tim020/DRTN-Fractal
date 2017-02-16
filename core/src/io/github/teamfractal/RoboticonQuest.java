@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
-import io.github.teamfractal.animation.AnimationCustom;
+import io.github.teamfractal.animation.AnimationCustomHeader;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
@@ -264,8 +264,8 @@ public class RoboticonQuest extends Game {
 
                 fonts.montserratRegular.setSize(24);
                 fonts.montserratLight.setSize(24);
-				gameScreen.addAnimation(new AnimationCustom("PLAYER " + (currentPlayerIndex + 1), headerFontRegular.font(), 4));
-                gameScreen.addAnimation(new AnimationCustom("\nPHASE 1: Claim a Tile", headerFontLight.font(), 4));
+				gameScreen.addAnimation(new AnimationCustomHeader("PLAYER " + (currentPlayerIndex + 1), headerFontRegular.font(), 5));
+                gameScreen.addAnimation(new AnimationCustomHeader("\nPHASE 1: Claim a Tile", headerFontLight.font(), 5));
 
 				clearEffects();
 				setEffects();
