@@ -4,6 +4,8 @@ import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;
 import io.github.teamfractal.exception.NotCommonResourceException;
 
+import java.util.Random;
+
 public class Market {
 	//<editor-fold desc="Resource getters and setters">
 	private int food;
@@ -290,6 +292,19 @@ public class Market {
 	 */
 	public synchronized void sellResource(ResourceType resource, int amount) {
 		setResource(resource, getResource(resource) - amount);
+	}
+
+	/**
+	 * Generates a random amount of roboticons within a given range if the market contains ore.
+	 */
+	public void generateRoboticon(){
+		Random rand = new Random();
+		int roboticonsToGenerate = rand.nextInt(3) + 0;
+		while(this.ore >= 2 && roboticonsToGenerate > 0){
+			this.ore -= 2;
+			this.roboticon += 1;
+			roboticonsToGenerate -= 1;
+		}
 	}
 }
 
