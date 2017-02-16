@@ -24,7 +24,7 @@ public class Player {
 
 	public Player(RoboticonQuest game){
 		this.game = game;
-		this.roboticonList = new Array<Roboticon>();
+        this.roboticonList = new Array<Roboticon>();
 
 	}
 
@@ -43,6 +43,10 @@ public class Player {
 		}
 
 		this.money = money;
+	}
+
+	public void setGamblingMoney(int money){
+		setMoney(money);
 	}
 
 	public int getOre() {
@@ -320,7 +324,7 @@ public class Player {
 		int energy = 0;
 		int food = 0;
 		int uncustomised = 0;
-		Array<String> roboticonAmountList = new Array<String>();
+        Array<String> roboticonAmountList = new Array<String>();
 
         for (Roboticon r : roboticonList) {
             if (!r.isInstalled()) {
@@ -393,6 +397,7 @@ public class Player {
      */
     public void takeTurn(int phase) {
         //Overload in AIPlayer
+        System.out.println("Human turn");
     }
 
 }

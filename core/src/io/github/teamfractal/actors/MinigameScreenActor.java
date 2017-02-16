@@ -10,30 +10,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import io.github.teamfractal.MiniGame;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Player;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.MiniGameScreen;
+import io.github.teamfractal.screens.ResourceMarketScreen;
 
 public class MinigameScreenActor extends Table {
-    private final AdjustableActor oreBuy;
-    private final AdjustableActor oreSell;
-    private final AdjustableActor energyBuy;
-    private final AdjustableActor energySell;
-    private final AdjustableActor foodBuy;
-    private final AdjustableActor foodSell;
+    private final AdjustableActor play;
     private RoboticonQuest game;
-    private Integer buyOreAmount;
-    private Integer sellOreAmount;
-    private Integer buyEnergyAmount;
-    private Integer sellEnergyAmount;
-    private Integer buyFoodAmount;
-    private Integer sellFoodAmount;
     private Label phaseInfo;
     private Label playerStats;
+    private Label gamblingInfo;
+    private Label comment;
+    private Label win;
     private MiniGameScreen screen;
-    private TextButton nextButton;
+    private TextButton backButton;
     private Label marketStats;
+    private Label wellcomeLabel;
+    private int diceValue1;
+    private int diceValue2;
+    private int gamblingMoney;
+    private int totalWin;
 
 
     /**
@@ -52,143 +51,78 @@ public class MinigameScreenActor extends Table {
 
         // Create UI Components
         phaseInfo = new Label("", game.skin);
-        nextButton = new TextButton("Next ->", game.skin);
+        backButton = new TextButton("Back to Market ->", game.skin);
 
         playerStats = new Label("", game.skin);
         marketStats = new Label("", game.skin);
-        Label buyLabel  = new Label("Buy",  skin);
-        Label sellLabel = new Label("Sell", skin);
+        gamblingInfo = new Label("", game.skin);
+        comment = new Label("", game.skin);
+        win = new Label("", game.skin);
+        wellcomeLabel = new Label("Wellcome to the Pub", game.skin);
 
-        oreBuy = createAdjustable(ResourceType.ORE, false);
-        oreSell = createAdjustable(ResourceType.ORE, true);
-        energyBuy = createAdjustable(ResourceType.ENERGY, false);
-        energySell = createAdjustable(ResourceType.ENERGY, true);
-        foodBuy = createAdjustable(ResourceType.FOOD, false);
-        foodSell = createAdjustable(ResourceType.FOOD, true);
+        play = createAdjustable("Amount to gamble", "Roll a dice");
+
+
+        Label introLabel = new Label("You have entered a pub\n" +
+                "here you can gamble by rolling a dice", skin);
+        Label textLabel = new Label("Bet some money, roll a dice and if you will beat the opponent, \n" +
+                "your money will be doubled", skin);
 
         // Adjust properties.
         phaseInfo.setAlignment(Align.right);
         marketStats.setAlignment(Align.right);
-
-        buyLabel.setAlignment(Align.center);
-        sellLabel.setAlignment(Align.center);
-
+        wellcomeLabel.setAlignment(Align.center);
+        introLabel.setAlignment(Align.center);
+        textLabel.setAlignment(Align.center);
 
         // Add UI components to screen.
         stage.addActor(phaseInfo);
-        stage.addActor(nextButton);
+        stage.addActor(backButton);
+        stage.addActor(wellcomeLabel);
+        stage.addActor(introLabel);
+        stage.addActor(textLabel);
 
 
         // Setup UI Layout.
+
+        // Row: intro text
+        add(introLabel);
+        rowWithHeight(40);
+
+        // Row: text
+        add(textLabel);
+        rowWithHeight(80);
+
         // Row: Player and Market Stats.
         add(playerStats);
+        add();
         add().spaceRight(20);
-        add(marketStats);
         rowWithHeight(20);
 
-        // Row: Label of Sell and Buy
-        add(buyLabel);
-        add();
-        add(sellLabel);
+        // Row: Playing console
+        add(play);
+        rowWithHeight(20);
+
+        // Row: Dice value
+        add(gamblingInfo);
         rowWithHeight(10);
 
-        // Row: Ore buy/sell
-        add(oreBuy);
-        add();
-        add(oreSell);
-        rowWithHeight(10);
-
-        // Row: Energy buy/sell
-        add(energyBuy);
-        add();
-        add(energySell);
-        rowWithHeight(10);
-
-        // Row: Food buy/sell
-        add(foodBuy);
-        add();
-        add(foodSell);
-        rowWithHeight(10);
+        // Row: winning/loosing info
+        add(comment);
 
         bindEvents();
         widgetUpdate();
     }
 
     /**
-     * Get price in string format
-     *
-     * @param resource The resource type.
-     * @param bIsSell  <code>true</code> if is for sell,
-     *                 or <code>false</code> if is for buy in.
-     * @return The formatted string for the resource.
-     */
-    private String getPriceString(ResourceType resource, boolean bIsSell) {
-        // getBuyPrice: market buy-in price (user sell price)
-        // getSellPrice: market sell price (user buy price)
-        return resource.toString() + ": "
-                + (bIsSell
-                ? game.market.getBuyPrice(resource)
-                : game.market.getSellPrice(resource))
-                + " Gold";
-    }
-
-    /**
-     * Sync. information with the adjustable.
-     *
-     * @param adjustableActor The adjustable to manipulate with.
-     * @param resource        The resource type.
-     * @param bIsSell         <code>true</code> if the adjustable is for sell,
-     *                        <code>false</code> if is for buy.
-     */
-    private void updateAdjustable(AdjustableActor adjustableActor, ResourceType resource,
-                                  boolean bIsSell) {
-        if (bIsSell) {
-            adjustableActor.setMax(game.getPlayer().getResource(resource));
-        } else {
-            adjustableActor.setMax(game.market.getResource(resource));
-        }
-
-        adjustableActor.setTitle(getPriceString(resource, bIsSell));
-    }
-
-    /**
-     * Generate an adjustable actor for sell/buy.
-     *
-     * @param resource The resource type.
-     * @param bIsSell  <code>true</code> if is for sell,
-     *                 or <code>false</code> if is for buy in.
-     * @return The adjustable actor generated.
-     */
-    private AdjustableActor createAdjustable(final ResourceType resource, final boolean bIsSell) {
-        final Player player = game.getPlayer();
-        final AdjustableActor adjustableActor = new AdjustableActor(game.skin, getPriceString(resource, bIsSell),
-                (bIsSell ? "Sell" : "Buy") + " " + resource.toString());
-        updateAdjustable(adjustableActor, resource, bIsSell);
-        adjustableActor.setActionEvent(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (bIsSell) {
-                    // Sell from player to market.
-                    player.sellResourceToMarket(adjustableActor.getValue(), game.market, resource);
-                } else {
-                    // Player buy from market.
-                    player.purchaseResourceFromMarket(adjustableActor.getValue(), game.market, resource);
-                }
-
-                MinigameScreenActor.this.widgetUpdate();
-            }
-        });
-        return adjustableActor;
-    }
-
-    /**
      * Bind button events.
      */
     private void bindEvents() {
-        nextButton.addListener(new ClickListener() {
+        backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.nextPhase();
+                game.setScreen(screen.getRMS());
+                widgetUpdate();
             }
         });
     }
@@ -207,34 +141,48 @@ public class MinigameScreenActor extends Table {
      * Updates all widgets on screen
      */
     private void widgetUpdate() {
-        // update player stats, phase text, and the market stats.
+        // update player stats, phase text and gambling information.
         String phaseText =
                 "Player " + (game.getPlayerInt() + 1) + "; " +
                         "Phase " + game.getPhase() + " - " + game.getPhaseString();
 
         String statText =
-                "Ore: "    + game.getPlayer().getOre()    + "  " +
-                        "Energy: " + game.getPlayer().getEnergy() + "  " +
-                        "Food: "   + game.getPlayer().getFood()   + "  " +
-                        "Money: "  + game.getPlayer().getMoney();
+                        "Your Money: "  + game.getPlayer().getMoney() + "      " +
+                                "Total win/loss: " + totalWin;
 
-        String marketStatText =
-                "Ore: " +    game.market.getResource(ResourceType.ORE   ) + "  " +
-                        "Energy: " + game.market.getResource(ResourceType.ENERGY) + "  " +
-                        "Food: " +   game.market.getResource(ResourceType.FOOD  );
+        String dice =
+                "You scored: " + "[" + diceValue1 + "]" + "  " +
+                        "Opponent scored: " + "[" + diceValue2 + "]" ;
+
+        String result1 = "Draw!";
+
+        String result2 = "You loose " + gamblingMoney + " !";
+
+        String result3 = "You win " + gamblingMoney + " !";
+
+        String result4 = " ";
+
+        String winValue = "Total win/loss: " + totalWin;
+
+
 
         phaseInfo.setText(phaseText);
         playerStats.setText(statText);
-        marketStats.setText(marketStatText);
+        gamblingInfo.setText(dice);
+        win.setText(winValue);
 
-        updateAdjustable(oreBuy, ResourceType.ORE, false);
-        updateAdjustable(oreSell, ResourceType.ORE, true);
-
-        updateAdjustable(energyBuy, ResourceType.ENERGY, false);
-        updateAdjustable(energySell, ResourceType.ENERGY, true);
-
-        updateAdjustable(foodBuy, ResourceType.FOOD, false);
-        updateAdjustable(foodSell, ResourceType.FOOD, true);
+        if (diceValue1 == 0){
+            comment.setText(result4);
+        }
+        else if (diceValue1 < diceValue2) {
+            comment.setText(result2);
+        }
+        else if (diceValue1 > diceValue2) {
+            comment.setText(result3);
+        }
+        else {
+            comment.setText(result1);
+        }
     }
 
     /**
@@ -244,13 +192,87 @@ public class MinigameScreenActor extends Table {
      * @param height   The new Height.
      */
     public void screenResize(float width, float height) {
-        // Bottom Left
+
+        // Top center
+        wellcomeLabel.setPosition((width - wellcomeLabel.getWidth())/2, height - 20);
+
+        // Top Left
         phaseInfo.setPosition(0, height - 20);
         phaseInfo.setWidth(width - 10);
 
         // Bottom Right
-        nextButton.setPosition(width - nextButton.getWidth() - 10, 10);
-
+        backButton.setPosition(width - backButton.getWidth() - 10, 10);
         setWidth(width);
     }
+
+
+    /**
+     * Sync. information with the adjustable.
+     *
+     * @param adjustableActor The adjustable to manipulate with.
+     */
+    private void updateAdjustable(AdjustableActor adjustableActor) {
+        adjustableActor.setMax(game.getPlayer().getMoney());
+    }
+
+    private int getDiceValue1() {
+        return diceValue1;
+    }
+
+    private void setDiceValue1(int value){
+        this.diceValue1 = value;
+    }
+
+    private int getDiceValue2() {
+        return diceValue2;
+    }
+
+    private void setDiceValue2(int value){
+        this.diceValue2 = value;
+    }
+
+    private void setGamblingMoney(int money) {
+        this.gamblingMoney = money;
+    }
+
+    /**
+     * Generate an adjustable actor for gambling.
+     * @return The adjustable actor generated.
+     */
+    private AdjustableActor createAdjustable(String title, String action) {
+        final Player player = game.getPlayer();
+        final AdjustableActor adjustableActor = new AdjustableActor(game.skin, title, action);
+        updateAdjustable(adjustableActor);
+        adjustableActor.setActionEvent(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                final MiniGame diceValue1 = new MiniGame();
+                final MiniGame diceValue2 = new MiniGame();
+                setDiceValue1(diceValue1.WinGame());
+                setDiceValue2(diceValue2.WinGame());
+                if (player.getMoney() == 0) {
+                    setGamblingMoney(adjustableActor.getValue());
+                }
+                else if (getDiceValue1() == getDiceValue2()) {
+                    // does nothing
+                }
+                else if (getDiceValue1() < getDiceValue2()) {
+                    player.setGamblingMoney(player.getMoney() - adjustableActor.getValue());
+                    setGamblingMoney(adjustableActor.getValue());
+                    totalWin = totalWin - adjustableActor.getValue();
+                    updateAdjustable(adjustableActor);
+                }
+                else {
+                    player.setGamblingMoney(player.getMoney() + adjustableActor.getValue());
+                    setGamblingMoney(adjustableActor.getValue());
+                    totalWin = totalWin + adjustableActor.getValue();
+                    updateAdjustable(adjustableActor);
+                }
+
+                MinigameScreenActor.this.widgetUpdate();
+            }
+        });
+        return adjustableActor;
+    }
+
 }

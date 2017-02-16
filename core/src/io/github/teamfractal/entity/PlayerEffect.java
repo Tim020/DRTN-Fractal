@@ -43,7 +43,11 @@ public class PlayerEffect {
 
         this.multiply = multiply;
     }
-
+    /**
+     * Imposes the effect on the player by changing the resources that they have. Their resources can either be
+     * multiplied or divided
+     * @param player The player that is to be effected
+     */
     public void impose(Player player) {
         if (multiply == true) {
             player.setResource(ResourceType.ORE, player.getOre() * modifiers[0]);
@@ -57,11 +61,17 @@ public class PlayerEffect {
             player.setMoney(player.getMoney() + modifiers[3]);
         }
     }
-
+    /**
+     * Getter for the name of the effect
+     * @return The name of the effect
+     */
     public String name() {
         return name;
     }
-
+    /**
+     * Getter for the description of the effect
+     * @return The description of the effect
+     */
     public String description() {
         return description;
     }

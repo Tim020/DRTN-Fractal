@@ -4,7 +4,14 @@ import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;
 import io.github.teamfractal.exception.NotCommonResourceException;
 
+import java.util.Random;
+
 public class Market {
+	//<editor-fold desc="Resource getters and setters">
+	private int food;
+	private int energy;
+	private int ore;
+	private int roboticon;
 	/**
 	 * Initialise the market
 	 */
@@ -15,18 +22,26 @@ public class Market {
 		setRoboticon(12);
 	}
 
-	//<editor-fold desc="Resource getters and setters">
-	private int food;
-	private int energy;
-	private int ore;
-	private int roboticon;
-
 	/**
 	 * Get the amount of food in the market
 	 * @return The amount of food in the market.
 	 */
 	int getFood() {
 		return food;
+	}
+
+	/**
+	 * Set the amount of food in the market
+	 *
+	 * @param amount The amount of new food amount.
+	 * @throws IllegalArgumentException If the new amount if negative, this exception will be thrown.
+	 */
+	synchronized void setFood(int amount) throws IllegalArgumentException {
+		if (amount < 0) {
+			throw new IllegalArgumentException("Error: Food can't be negative.");
+		}
+
+		this.food = amount;
 	}
 
 	/**
@@ -38,27 +53,25 @@ public class Market {
 	}
 
 	/**
+	 * Set the amount of energy in the market
+	 *
+	 * @param amount The amount of new energy count.
+	 * @throws IllegalArgumentException If the new amount if negative, this exception will be thrown.
+	 */
+	synchronized void setEnergy(int amount) throws IllegalArgumentException {
+		if (amount < 0) {
+			throw new IllegalArgumentException("Error: Energy can't be negative.");
+		}
+
+		this.energy = amount;
+	}
+
+	/**
 	 * Get the amount of ore in the market
 	 * @return The amount of ore in the market.
 	 */
 	int getOre() {
 		return ore;
-	}
-
-	/**
-	 * Get the amount of roboticon in the market
-	 * @return The amount of roboticon in the market.
-	 */
-	int getRoboticon() {
-		return roboticon;
-	}
-
-	/**
-	 * Get the total amount of all available resources added together.
-	 * @return   The total amount.
-	 */
-	private synchronized int getTotalResourceCount() {
-		return food + energy + ore + roboticon;
 	}
 
 	/**
@@ -75,29 +88,11 @@ public class Market {
 	}
 
 	/**
-	 * Set the amount of energy in the market
-	 * @param amount                     The amount of new energy count.
-	 * @throws IllegalArgumentException  If the new amount if negative, this exception will be thrown.
+	 * Get the amount of roboticon in the market
+	 * @return The amount of roboticon in the market.
 	 */
-	synchronized void setEnergy(int amount) throws IllegalArgumentException {
-		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Energy can't be negative.");
-		}
-
-		this.energy = amount;
-	}
-
-	/**
-	 * Set the amount of food in the market
-	 * @param amount                     The amount of new food amount.
-	 * @throws IllegalArgumentException  If the new amount if negative, this exception will be thrown.
-	 */
-	synchronized void setFood(int amount) throws IllegalArgumentException {
-		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Food can't be negative.");
-		}
-
-		this.food = amount;
+	int getRoboticon() {
+		return roboticon;
 	}
 
 	/**
@@ -111,6 +106,15 @@ public class Market {
 		}
 
 		roboticon = amount;
+	}
+
+	/**
+	 * Get the total amount of all available resources added together.
+	 *
+	 * @return The total amount.
+	 */
+	private synchronized int getTotalResourceCount() {
+		return food + energy + ore + roboticon;
 	}
 	//</editor-fold>
 
@@ -198,9 +202,9 @@ public class Market {
 	 * @return           The buy in price.
 	 */
 	public int getBuyPrice(ResourceType resource) {
-		int buyPrice = (int)(getSellPrice(resource) * 0.2f);
-		if (buyPrice < 1){
-			buyPrice = 1;
+		int buyPrice = (int) (getSellPrice(resource) * 0.6f);
+		if (buyPrice < 5) {
+			buyPrice = 5;
 			return buyPrice;
 		}
 		else {
@@ -288,6 +292,19 @@ public class Market {
 	 */
 	public synchronized void sellResource(ResourceType resource, int amount) {
 		setResource(resource, getResource(resource) - amount);
+	}
+
+	/**
+	 * Generates a random amount of roboticons within a given range if the market contains ore.
+	 */
+	public void generateRoboticon(){
+		Random rand = new Random();
+		int roboticonsToGenerate = rand.nextInt(3) + 0;
+		while(this.ore >= 2 && roboticonsToGenerate > 0){
+			this.ore -= 2;
+			this.roboticon += 1;
+			roboticonsToGenerate -= 1;
+		}
 	}
 }
 
