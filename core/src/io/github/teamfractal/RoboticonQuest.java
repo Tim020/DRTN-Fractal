@@ -35,6 +35,8 @@ public class RoboticonQuest extends Game {
     public TTFont headerFontLight;
     public TTFont smallFontRegular;
     public TTFont smallFontLight;
+	public TTFont tinyFontRegular;
+	public TTFont tinyFontLight;
 
     public GameScreen gameScreen;
     public Market market;
@@ -95,6 +97,12 @@ public class RoboticonQuest extends Game {
         fonts.montserratLight.setSize(16);
         smallFontRegular = fonts.montserratRegular;
         smallFontLight = fonts.montserratLight;
+
+		fonts = new Fonts();
+		fonts.montserratRegular.setSize(12);
+		fonts.montserratLight.setSize(12);
+		tinyFontRegular = fonts.montserratRegular;
+		tinyFontLight = fonts.montserratLight;
         //Import TrueType fonts for use in drawing textual elements
 
 		// Setup other screens.

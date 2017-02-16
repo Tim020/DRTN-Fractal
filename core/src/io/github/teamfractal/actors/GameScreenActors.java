@@ -1,5 +1,7 @@
 package io.github.teamfractal.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,7 +25,11 @@ public class GameScreenActors {
 	private RoboticonQuest game;
 	private GameScreen screen;
 	private Label phaseInfo;
-	private Label playerStats;
+	private Table playerStats;
+	private Label playerOreLabel;
+	private Label playerEnergyLabel;
+	private Label playerFoodLabel;
+	private Label playerMoneyLabel;
 	private TextButton buyLandPlotBtn;
 	private TextButton installRoboticonBtn;
 	private TextButton installRoboticonBtnCancel;
@@ -46,14 +52,34 @@ public class GameScreenActors {
 	/**
 	 * Setup buttons.
 	 */
-	public void initialiseButtons() {
+	public void constructElements() {
+
 		// Create UI components
 		phaseInfo = new Label("", game.skin);
 		plotStats = new Label("", game.skin);
-		playerStats = new Label("Ore:\nEnergy:\nFood\nMoney:", game.skin);
 		nextButton = new TextButton("Next Phase", game.skin);
 		buyLandPlotBtn = new TextButton("Buy Plot", game.skin);
 		createRoboticonInstallMenu();
+
+		// Create player stats table
+		playerStats = new Table();
+		playerStats.align(Align.left);
+		playerOreLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerFoodLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerEnergyLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerMoneyLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerStats.add(new Label("Ore", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerOreLabel).width(50);
+		playerStats.row();
+		playerStats.add(new Label("Food", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerFoodLabel).width(50);
+		playerStats.row();
+		playerStats.add(new Label("Energy", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerEnergyLabel).width(50);
+		playerStats.row();
+		playerStats.add(new Label("Money", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerMoneyLabel).width(50);
+
 
 		// Adjust properties.
 		listUpdated = false;
@@ -81,7 +107,7 @@ public class GameScreenActors {
 		phaseInfo.setWidth(size.Width - 10);
 		phaseInfo.setPosition(0, size.Height - 20);
 
-		playerStats.setPosition(10, size.Height - playerStats.getHeight() - 10);
+		playerStats.setPosition(8, Gdx.graphics.getHeight() - 50);
 		nextButton.setPosition(size.Width - nextButton.getWidth() - 10, 10);
 	}
 
@@ -212,12 +238,10 @@ public class GameScreenActors {
 		String phaseText = "Player " + (game.getPlayerInt() + 1) + "; Phase " + game.getPhase() + " - " + game.getPhaseString();
 		phaseInfo.setText(phaseText);
 
-		String statText = "Ore: " + game.getPlayer().getOre()
-				+ "\nEnergy: " + game.getPlayer().getEnergy()
-				+ "\nFood: " + game.getPlayer().getFood()
-				+ "\nMoney: " + game.getPlayer().getMoney();
-
-		playerStats.setText(statText);
+		playerOreLabel.setText(String.valueOf(game.getPlayer().getOre()));
+		playerEnergyLabel.setText(String.valueOf(game.getPlayer().getEnergy()));
+		playerFoodLabel.setText(String.valueOf(game.getPlayer().getFood()));
+		playerMoneyLabel.setText(String.valueOf(game.getPlayer().getMoney()));
 	}
 
 	/**

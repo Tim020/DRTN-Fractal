@@ -2,7 +2,6 @@ package io.github.teamfractal.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.*;
@@ -62,7 +61,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		// TODO: Add some HUD gui stuff (buttons, mini-map etc...)
 		this.stage = new Stage(new ScreenViewport());
 		this.actors = new GameScreenActors(game, this);
-		actors.initialiseButtons();
+		actors.constructElements();
 		// actors.textUpdate();
 
 		overlayStack = new ArrayList<Overlay>();
