@@ -189,7 +189,8 @@ public class RoboticonQuest extends Game {
                 Gdx.input.setInputProcessor(genOverlay);
 
                 this.getPlayer().generateResources();
-
+				this.market.generateRoboticon();
+				this.roboticonMarket.actors().refreshRoboticonShop();
                 Timer timer = new Timer();
                 timer.scheduleTask(new Timer.Task() {
                     @Override
