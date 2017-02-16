@@ -24,6 +24,16 @@ public class Overlay extends Stage {
     private float regionHeight;
 
     /**
+     * Distance between the centre of the overlay and the centre of window on the X-axis (in pixels)
+     */
+    private float xOffset;
+
+    /**
+     * Distance between the centre of the overlay and the centre of window on the Y-axis (in pixels)
+     */
+    private float yOffset;
+
+    /**
      * Thickness of the overlay region's border
      */
     private int lineThickness;
@@ -39,9 +49,46 @@ public class Overlay extends Stage {
     private Color lineColor;
 
     /**
+     * Creates a stage that itself places a table of the specified parameters to an offset away from centre of the screen
+     * The overlay's [draw()] method is unlike that of the standard Stage class as it also draws a bordered
+     * rectangle behind the overlay region, hence rendering it a true overlay
+     *
+     * @param fillColor The colour of the overlay's background
+     * @param lineColor The colour of the overlay's border
+     * @param regionWidth The width of the overlay
+     * @param regionHeight The height of the overlay
+     * @param xOffset Distance between the centre of the overlay and the centre of window on the X-axis (in pixels)
+     * @param yOffset Distance between the centre of the overlay and the centre of window on the Y-axis (in pixels)
+     * @param lineThickness The thickness of the overlay's border
+     */
+    public Overlay(Color fillColor, Color lineColor, float regionWidth, float regionHeight, float xOffset, float yOffset, int lineThickness) {
+        super();
+        //Construct the core stage
+
+        this.fillColor = fillColor;
+        this.lineColor = lineColor;
+        this.regionWidth = regionWidth;
+        this.regionHeight = regionHeight;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        this.lineThickness = lineThickness;
+        //Import overlay size/colour variables
+
+        table = new Table();
+        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2) + xOffset, ((Gdx.graphics.getHeight() - this.regionHeight) / 2) - yOffset, regionWidth, regionHeight);
+        //Instantiate and prepare the table which will provide the overlay's spatial framework
+        //This table will always inhabit the centre of the screen when this object is being drawn
+
+        this.addActor(table);
+        //Bind the overlay's spatial framework to the core stage
+    }
+
+    /**
      * Creates a stage that itself places a table of the specified parameters in the centre of the screen
      * The overlay's [draw()] method is unlike that of the standard Stage class as it also draws a bordered
      * rectangle behind the overlay region, hence rendering it a true overlay
+     *
+     * Overloaded constructor places the overlay at the very centre of the screen
      *
      * @param fillColor The colour of the overlay's background
      * @param lineColor The colour of the overlay's border
@@ -50,23 +97,7 @@ public class Overlay extends Stage {
      * @param lineThickness The thickness of the overlay's border
      */
     public Overlay(Color fillColor, Color lineColor, float regionWidth, float regionHeight, int lineThickness) {
-        super();
-        //Construct the core stage
-
-        this.fillColor = fillColor;
-        this.lineColor = lineColor;
-        this.regionWidth = regionWidth;
-        this.regionHeight = regionHeight;
-        this.lineThickness = lineThickness;
-        //Import overlay size/colour variables
-
-        table = new Table();
-        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2), ((Gdx.graphics.getHeight() - this.regionHeight) / 2), regionWidth, regionHeight);
-        //Instantiate and prepare the table which will provide the overlay's spatial framework
-        //This table will always inhabit the centre of the screen when this object is being drawn
-
-        this.addActor(table);
-        //Bind the overlay's spatial framework to the core stage
+        this(fillColor, lineColor, regionWidth, regionHeight, 0, 0, lineThickness);
     }
 
     /**
@@ -82,7 +113,7 @@ public class Overlay extends Stage {
      * @param lineThickness The thickness of the overlay's border
      */
     public Overlay(Color fillColor, Color lineColor, int lineThickness) {
-        this(fillColor, lineColor, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), lineThickness);
+        this(fillColor, lineColor, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 0, 0, lineThickness);
     }
 
     /**
@@ -100,7 +131,7 @@ public class Overlay extends Stage {
         renderer.setColor(fillColor);
         //Set the colour of the overlay region's background
 
-        renderer.rect((int) ((Gdx.graphics.getWidth() - this.regionWidth) / 2), (int) ((Gdx.graphics.getHeight() - this.regionHeight) / 2), regionWidth, regionHeight);
+        renderer.rect((int) (((Gdx.graphics.getWidth() - this.regionWidth) / 2) + xOffset), (int) (((Gdx.graphics.getHeight() - this.regionHeight) / 2) - yOffset), regionWidth, regionHeight);
         //Draw the overlay region on the screen
 
         renderer.end();
@@ -113,7 +144,7 @@ public class Overlay extends Stage {
         //Set the colour of the overlay region's border
 
         for (int i = 0; i < lineThickness; i++) {
-            renderer.rect((int) ((Gdx.graphics.getWidth() - this.regionWidth) / 2) + i, (int) ((Gdx.graphics.getHeight() - this.regionHeight) / 2) + i, regionWidth - (i * 2), regionHeight - (i * 2));
+            renderer.rect((int) (((Gdx.graphics.getWidth() - this.regionWidth) / 2) + xOffset) + i, (int) (((Gdx.graphics.getHeight() - this.regionHeight) / 2) - yOffset) + i, regionWidth - (i * 2), regionHeight - (i * 2));
         }
         //Draw the overlay region's border on the screen (by executing one draw-call for each line of pixels comprising the border)
 
@@ -137,7 +168,14 @@ public class Overlay extends Stage {
         this.regionWidth = regionWidth;
         this.regionHeight = regionHeight;
 
-        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2), ((Gdx.graphics.getHeight() - this.regionHeight) / 2), regionWidth, regionHeight);
+        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2) + xOffset, ((Gdx.graphics.getHeight() - this.regionHeight) / 2) - yOffset, regionWidth, regionHeight);
+    }
+
+    public void reposition(float xOffset, float yOffset) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+
+        table.setBounds(((Gdx.graphics.getWidth() - this.regionWidth) / 2) + xOffset, ((Gdx.graphics.getHeight() - this.regionHeight) / 2) - yOffset, regionWidth, regionHeight);
     }
 
     /**

@@ -14,7 +14,7 @@ import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.util.Fonts;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.ArrayList;
 
@@ -63,7 +63,6 @@ public class RoboticonMarketActors extends Table {
 
     private TextButton exitButton;
 
-    private Fonts fonts;
     /**
      * Constructor class that connects the roboticon market to the internal engine and builds its visual interface
      * @param game The engine driving the game forward
@@ -72,10 +71,6 @@ public class RoboticonMarketActors extends Table {
         this.game = game;
 
         this.roboticonImage = new Image();
-
-        fonts = new Fonts();
-        fonts.montserratRegular.setSize(24);
-        fonts.montserratLight.setSize(12);
 
         constructInterface();
     }
@@ -93,7 +88,7 @@ public class RoboticonMarketActors extends Table {
         constructLabels();
         constructButtons();
 
-        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(fonts.montserratRegular.font(), Color.WHITE))).colspan(4);
+        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).colspan(4);
 
         purchaseTable.row();
         purchaseTable.add(roboticonSubButton).width(25);
@@ -104,7 +99,7 @@ public class RoboticonMarketActors extends Table {
         add(purchaseTable).padBottom(35);
         row();
 
-        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(fonts.montserratRegular.font(), Color.WHITE))).colspan(3);
+        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).colspan(3);
 
         selectionTable.row();
         selectionTable.add(moveLeftInventoryButton).width(25);

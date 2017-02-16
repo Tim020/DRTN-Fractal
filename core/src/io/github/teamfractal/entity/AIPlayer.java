@@ -90,54 +90,61 @@ public class AIPlayer extends Player {
         boolean purchased = false;
         int robotIndex = 0;
 
-        for (LandPlot aLandList : this.landList) {
-            if (!aLandList.hasRoboticon()) {
-                int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
-                int max = 0;
-                int max_index = -1; //Initialise to index not used to not return false positives
-                for (int j = 0; j < resources.length; j++) {
-                    if (resources[j] > max) {
-                        max = resources[j];
-                        max_index = j;
+        try {
+            for (LandPlot aLandList : this.landList) {
+                if (!aLandList.hasRoboticon()) {
+                    int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
+                    int max = 0;
+                    int max_index = -1; //Initialise to index not used to not return false positives
+                    for (int j = 0; j < resources.length; j++) {
+                        if (resources[j] > max) {
+                            max = resources[j];
+                            max_index = j;
+                        }
                     }
-                }
-                System.out.println(max_index);
-                switch (max_index) {
+                    System.out.println(max_index);
+                    switch (max_index) {
 
-                    case 0:
-                        //ORE
-                        game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        try {
-                            game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, robotIndex);
-                        } catch (IndexOutOfBoundsException e) {
+                        case 0:
+                            //ORE
+                            game.roboticonMarket.actors().purchaseRoboticonFunction();
+                            try {
+                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, robotIndex);
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
                             break;
-                        }
-                        break;
-                    case 1:
-                        //FOOD
-                        game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        try {
-                            game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD, robotIndex);
-                        } catch (IndexOutOfBoundsException e) {
+                        case 1:
+                            //FOOD
+                            game.roboticonMarket.actors().purchaseRoboticonFunction();
+                            try {
+                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD, robotIndex);
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
                             break;
-                        }
-                        break;
-                    case 2:
-                        //ENERGY
-                        game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        try {
-                            game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY, robotIndex);
-                        } catch (IndexOutOfBoundsException e) {
+                        case 2:
+                            //ENERGY
+                            game.roboticonMarket.actors().purchaseRoboticonFunction();
+                            try {
+                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY, robotIndex);
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
                             break;
-                        }
-                        break;
                         default:
 
-                }
+                    }
 
+                }
             }
             game.nextPhase();
+
+        } finally {
+            game.nextPhase();
         }
+
+
     }
 
     /**
