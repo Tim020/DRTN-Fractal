@@ -50,7 +50,6 @@ public class RoboticonQuest extends Game {
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
-    private Fonts fonts;
 
 	private AnimationCustomHeader playerHeader;
 	private AnimationCustomHeader phase1description;
@@ -85,7 +84,7 @@ public class RoboticonQuest extends Game {
 		batch = new SpriteBatch();
 		setupSkin();
 
-        fonts = new Fonts();
+        Fonts fonts = new Fonts();
         fonts.montserratRegular.setSize(24);
         fonts.montserratLight.setSize(24);
         headerFontRegular = fonts.montserratRegular;
@@ -96,7 +95,7 @@ public class RoboticonQuest extends Game {
         fonts.montserratLight.setSize(16);
         smallFontRegular = fonts.montserratRegular;
         smallFontLight = fonts.montserratLight;
-        //Import TrueType fonts for use in drawing animations
+        //Import TrueType fonts for use in drawing textual elements
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);

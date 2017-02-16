@@ -50,9 +50,9 @@ public class GameScreenActors {
 		// Create UI components
 		phaseInfo = new Label("", game.skin);
 		plotStats = new Label("", game.skin);
-		playerStats = new Label("", game.skin);
-		nextButton = new TextButton("Next ->", game.skin);
-		buyLandPlotBtn = new TextButton("Buy LandPlot", game.skin);
+		playerStats = new Label("Ore:\nEnergy:\nFood\nMoney:", game.skin);
+		nextButton = new TextButton("Next Phase", game.skin);
+		buyLandPlotBtn = new TextButton("Buy Plot", game.skin);
 		createRoboticonInstallMenu();
 
 		// Adjust properties.
@@ -77,7 +77,12 @@ public class GameScreenActors {
 
 		// Update UI positions.
 		AbstractAnimationScreen.Size size = screen.getScreenSize();
-		resizeScreen(size.Width, size.Height);
+		//resizeScreen(size.Width, size.Height);
+		phaseInfo.setWidth(size.Width - 10);
+		phaseInfo.setPosition(0, size.Height - 20);
+
+		playerStats.setPosition(10, size.Height - playerStats.getHeight() - 10);
+		nextButton.setPosition(size.Width - nextButton.getWidth() - 10, 10);
 	}
 
 	private Table installRoboticonTable;
@@ -208,9 +213,9 @@ public class GameScreenActors {
 		phaseInfo.setText(phaseText);
 
 		String statText = "Ore: " + game.getPlayer().getOre()
-				+ " Energy: " + game.getPlayer().getEnergy()
-				+ " Food: " + game.getPlayer().getFood()
-				+ " Money: " + game.getPlayer().getMoney();
+				+ "\nEnergy: " + game.getPlayer().getEnergy()
+				+ "\nFood: " + game.getPlayer().getFood()
+				+ "\nMoney: " + game.getPlayer().getMoney();
 
 		playerStats.setText(statText);
 	}
@@ -222,14 +227,16 @@ public class GameScreenActors {
 	 * @param width    The new Width.
 	 * @param height   The new Height.
 	 */
+	/*
 	public void resizeScreen(float width, float height) {
 		float topBarY = height - 20;
 		phaseInfo.setWidth(width - 10);
 		phaseInfo.setPosition(0, topBarY);
 
-		playerStats.setPosition(10, topBarY);
+		playerStats.setPosition(10, height - playerStats.getHeight());
 		nextButton.setPosition(width - nextButton.getWidth() - 10, 10);
 	}
+	*/
 
 	/**
 	 * Show plot information about current selected stats.
