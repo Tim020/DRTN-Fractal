@@ -184,6 +184,7 @@ public class RoboticonQuest extends Game {
 				this.getPlayer().takeTurn(3);
                 break;
 
+
 			// Phase 4: Generate resources for player
 			case 4:
                 Gdx.input.setInputProcessor(genOverlay);
@@ -204,7 +205,8 @@ public class RoboticonQuest extends Game {
 				gameScreen.getActors().switchNextButton();
                 break;
 
-			// Phase 5: Purchase resources
+			// Phase 5: Open the market
+
 			case 5:
 			    ResourceMarketScreen RMS = new ResourceMarketScreen(this);
 				setScreen(RMS);
