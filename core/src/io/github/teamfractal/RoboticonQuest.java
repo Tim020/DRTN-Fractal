@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
 import io.github.teamfractal.animation.AnimationCustomHeader;
@@ -387,8 +386,8 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Changes the current player
 	 */
-    private void nextPlayer() {
-        this.currentPlayerIndex = 1 - this.currentPlayerIndex;
+	public void nextPlayer() {
+		this.currentPlayerIndex = 1 - this.currentPlayerIndex;
 
 		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
     }
