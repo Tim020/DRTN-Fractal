@@ -158,7 +158,7 @@ public class GameScreenActors {
 		installRoboticonSelect = new SelectBox<String>(game.skin);
 		installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
 
-		Label installRoboticonLabel = new Label("Install Roboticon:", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		Label installRoboticonLabel = new Label("Install Roboticon", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
 		installRoboticonBtn = new TextButton("Confirm", game.skin);
 		installRoboticonBtnCancel = new TextButton("Cancel", game.skin);
 
