@@ -2,7 +2,6 @@ package io.github.teamfractal.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.*;
@@ -36,13 +35,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	private float oldX;
 	private float oldY;
 
-	private float oldW;
-	private float oldH;
 	private GameScreenActors actors;
 
 	private LandPlot selectedPlot;
-	private float maxDragX;
-	private float maxDragY;
 	private TiledMapTileSets tiles;
 
 	private ArrayList<Overlay> overlayStack;
@@ -52,19 +47,21 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	 * @param game  The game object
 	 */
 	public GameScreen(final RoboticonQuest game) {
-		oldW = Gdx.graphics.getWidth();
-		oldH = Gdx.graphics.getHeight();
-
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, oldW, oldH);
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
+
+		/**
+		 * Defines the amount of pixels from each edge over which the map can be dragged off-screen
+		 */
+		final int spaceEdgePadding = 0;
 
 		this.game = game;
 
 		// TODO: Add some HUD gui stuff (buttons, mini-map etc...)
 		this.stage = new Stage(new ScreenViewport());
 		this.actors = new GameScreenActors(game, this);
-		actors.initialiseButtons();
+		actors.constructElements();
 		// actors.textUpdate();
 
 		overlayStack = new ArrayList<Overlay>();
@@ -108,10 +105,10 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 				// The camera translates in a different direction...
 				camera.translate(-deltaX, -deltaY);
-				if (camera.position.x < 20) camera.position.x = 20;
-				if (camera.position.y < 20) camera.position.y = 20;
-				if (camera.position.x > maxDragX) camera.position.x = maxDragX;
-				if (camera.position.y > maxDragY) camera.position.y = maxDragY;
+				if (camera.position.x < 188 - spaceEdgePadding) camera.position.x = 188 - spaceEdgePadding;
+				if (camera.position.y < 100 - spaceEdgePadding) camera.position.y = 100 - spaceEdgePadding;
+				if (camera.position.x > 462 + spaceEdgePadding) camera.position.x = 462 + spaceEdgePadding;
+				if (camera.position.y > 255 + spaceEdgePadding) camera.position.y = 255 + spaceEdgePadding;
 
 				// Record cords
 				oldX = x;
@@ -122,9 +119,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		});
 
 
-		// Set initial camera position.
-		camera.position.x = 20;
-		camera.position.y = 50;
+		// Set initial camera position
+		camera.position.x = 325;
+		camera.position.y = 220;
 
 		//<editor-fold desc="Click event handler. Check `tileClicked` for how to handle tile click.">
 		// Bind click event.
@@ -153,7 +150,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 				}
 
 				// The Y from screen starts from bottom left.
-				Vector3 cord = new Vector3(x, oldH - y, 0);
+				Vector3 cord = new Vector3(x, Gdx.graphics.getHeight() - y, 0);
 				camera.unproject(cord);
 
 				// Padding offset
@@ -246,8 +243,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		mapLayer = (TiledMapTileLayer)tmx.getLayers().get("MapData");
 		playerOverlay = (TiledMapTileLayer)tmx.getLayers().get("PlayerOverlay");
-		maxDragX = 0.75f * mapLayer.getTileWidth() * (mapLayer.getWidth() + 1);
-		maxDragY = 0.75f * mapLayer.getTileHeight() * (mapLayer.getHeight() + 1);
 
         game.plotManager.setup(tiles, tmx.getLayers());
         game.nextPhase();
@@ -306,6 +301,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
      */
     @Override
 	public void resize(int width, int height) {
+		/*
 		stage.getViewport().update(width, height, true);
 		game.getBatch().setProjectionMatrix(stage.getCamera().combined);
 		camera.setToOrtho(false, width, height);
@@ -317,6 +313,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 			camera.translate(-((Gdx.graphics.getWidth() - (mapLayer.getTileWidth() * mapLayer.getWidth())) / 2), -((Gdx.graphics.getHeight() - (mapLayer.getTileHeight() * mapLayer.getHeight())) / 2));
 		}
 		//NEED TO TRANSLATE BY (WINDOW WIDTH - MAP WIDTH) / 2, AND SAME FOR HEIGHT
+		*/
+
+		//Disabled this code for now as the game window is not currently resizable
 	}
 
 	@Override
@@ -359,8 +358,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	@Override
 	public Size getScreenSize() {
 		Size s = new Size();
-		s.Height = oldH;
-		s.Width = oldW;
+		s.Width = Gdx.graphics.getWidth();
+		s.Height = Gdx.graphics.getHeight();
 		return s;
 	}
 
