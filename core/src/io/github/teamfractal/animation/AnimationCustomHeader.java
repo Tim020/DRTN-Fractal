@@ -70,9 +70,9 @@ public class AnimationCustomHeader implements IAnimation {
             GlyphLayout GL = new GlyphLayout(font, text);
 
             if (time < 1) {
-                font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 20 - (((float) Math.pow(time, 2)) * 30));
+                font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 5 - (((float) Math.pow(time, 2)) * 30));
             } else {
-                font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 50);
+                font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 35);
             }
 
             batch.end();

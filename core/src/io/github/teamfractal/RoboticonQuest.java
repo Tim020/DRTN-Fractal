@@ -28,7 +28,6 @@ import java.util.Random;
  */
 public class RoboticonQuest extends Game {
     private static RoboticonQuest _instance;
-	public TiledMap tmx;
 	public Skin skin;
     public PlotManager plotManager;
 
@@ -102,7 +101,7 @@ public class RoboticonQuest extends Game {
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
         gameScreen = new GameScreen(this);
-        roboticonMarket = new RoboticonMarketScreen(this, Color.GRAY, Color.WHITE, 3);
+        roboticonMarket = new RoboticonMarketScreen(this);
         genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
 
 		//Setup tile and player effects for later application
