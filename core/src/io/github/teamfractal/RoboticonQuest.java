@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -42,8 +43,6 @@ public class RoboticonQuest extends Game {
     public Market market;
     public RoboticonMarketScreen roboticonMarket;
     public GenerationOverlay genOverlay;
-
-	public TextButton.TextButtonStyle buttonStyle;
 
 	private int turnNumber = 1;
 	private SpriteBatch batch;
@@ -86,7 +85,6 @@ public class RoboticonQuest extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setupSkin();
 
         Fonts fonts = new Fonts();
         fonts.montserratRegular.setSize(24);
@@ -106,6 +104,8 @@ public class RoboticonQuest extends Game {
 		tinyFontRegular = fonts.montserratRegular;
 		tinyFontLight = fonts.montserratLight;
         //Import TrueType fonts for use in drawing textual elements
+
+		setupSkin();
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
@@ -133,10 +133,10 @@ public class RoboticonQuest extends Game {
 	 * Setup the default skin for GUI components.
 	 */
 	private void setupSkin() {
-		skin = new Skin(
-			Gdx.files.internal("skin/skin.json"),
-			new TextureAtlas(Gdx.files.internal("skin/skin.atlas"))
-		);
+		skin = new Skin();
+		skin.add("default", smallFontLight.font());
+		skin.addRegions(new TextureAtlas(Gdx.files.internal("skin/skin.atlas")));
+		skin.load(Gdx.files.internal("skin/skin.json"));
 	}
 
 	/**
@@ -146,7 +146,6 @@ public class RoboticonQuest extends Game {
 	public void dispose () {
 		mainMenuScreen.dispose();
 		gameScreen.dispose();
-		skin.dispose();
 		batch.dispose();
 	}
 	/**

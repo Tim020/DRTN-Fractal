@@ -94,7 +94,7 @@ public class RoboticonMarketActors extends Table {
         purchaseTable.add(roboticonSubButton).width(25);
         purchaseTable.add(roboticonPurchaseAmountLabel).width(50).expandX();
         purchaseTable.add(roboticonAddButton).width(25);
-        purchaseTable.add(roboticonPurchaseButton).align(Align.right).width(200).padLeft(15);
+        purchaseTable.add(roboticonPurchaseButton).align(Align.right).width(268).padLeft(14);
 
         add(purchaseTable).padBottom(35);
         row();
@@ -102,9 +102,9 @@ public class RoboticonMarketActors extends Table {
         selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).colspan(3);
 
         selectionTable.row();
-        selectionTable.add(moveLeftInventoryButton).width(25);
+        selectionTable.add(moveLeftInventoryButton).width(50);
         selectionTable.add(roboticonImage).expandX();
-        selectionTable.add(moveRightInventoryButton).width(25);
+        selectionTable.add(moveRightInventoryButton).width(50);
 
         selectionTable.row();
         selectionTable.add(selectedRoboticonIDLabel).colspan(3);
@@ -114,13 +114,13 @@ public class RoboticonMarketActors extends Table {
 
         customisationDropDown = new SelectBox<String>(game.skin);
         customisationDropDown.setItems(new String[]{"Energy Generation", "Ore Mining", "Food Farming"});
-        upgradeTable.add(customisationDropDown).expandX().padRight(15);
-        upgradeTable.add(customisationPurchaseButton).width(164);
+        upgradeTable.add(customisationDropDown).expandX().padRight(14);
+        upgradeTable.add(customisationPurchaseButton).width(196);
 
         add(upgradeTable).padBottom(35);
         row();
 
-        add(exitButton).expandX().width(320);
+        add(exitButton).expandX().width(382);
     }
 
     /**
