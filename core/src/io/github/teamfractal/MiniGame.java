@@ -12,15 +12,4 @@ public class MiniGame {
 
 		return generatedNumber;
 	}
-
-	public int theGame(boolean bIsWin){
-		if (bIsWin){
-			return 1000;
-		}
-		else {
-			return 0;
-		}
-
-	}
-	
 }

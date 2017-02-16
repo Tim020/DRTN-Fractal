@@ -20,22 +20,19 @@ import io.github.teamfractal.screens.ResourceMarketScreen;
 public class MinigameScreenActor extends Table {
     private final AdjustableActor play;
     private RoboticonQuest game;
-    private Integer buyOreAmount;
-    private Integer sellOreAmount;
-    private Integer buyEnergyAmount;
-    private Integer sellEnergyAmount;
-    private Integer buyFoodAmount;
-    private Integer sellFoodAmount;
     private Label phaseInfo;
     private Label playerStats;
     private Label gamblingInfo;
+    private Label comment;
+    private Label win;
     private MiniGameScreen screen;
-    //private ResourceMarketScreen screen;
     private TextButton backButton;
     private Label marketStats;
     private Label wellcomeLabel;
-    private int diceValue1 = 0;
-    private int diceValue2 = 0;
+    private int diceValue1;
+    private int diceValue2;
+    private int gamblingMoney;
+    private int totalWin;
 
 
     /**
@@ -59,17 +56,17 @@ public class MinigameScreenActor extends Table {
         playerStats = new Label("", game.skin);
         marketStats = new Label("", game.skin);
         gamblingInfo = new Label("", game.skin);
+        comment = new Label("", game.skin);
+        win = new Label("", game.skin);
         wellcomeLabel = new Label("Wellcome to the Pub", game.skin);
 
         play = createAdjustable("Amount to gamble", "Roll a dice");
 
 
-        //Label wellcomeLabel = new Label("Wellcome to the Pub", skin);
         Label introLabel = new Label("You have entered a pub\n" +
                 "here you can gamble by rolling a dice", skin);
         Label textLabel = new Label("Bet some money, roll a dice and if you will beat the opponent, \n" +
                 "your money will be doubled", skin);
-        //Label choiceLabel = new Label("Amount to gamble", skin);
 
         // Adjust properties.
         phaseInfo.setAlignment(Align.right);
@@ -77,7 +74,6 @@ public class MinigameScreenActor extends Table {
         wellcomeLabel.setAlignment(Align.center);
         introLabel.setAlignment(Align.center);
         textLabel.setAlignment(Align.center);
-        //choiceLabel.setAlignment(Align.center);
 
         // Add UI components to screen.
         stage.addActor(phaseInfo);
@@ -85,8 +81,6 @@ public class MinigameScreenActor extends Table {
         stage.addActor(wellcomeLabel);
         stage.addActor(introLabel);
         stage.addActor(textLabel);
-        //stage.addActor(choiceLabel);
-
 
 
         // Setup UI Layout.
@@ -102,16 +96,14 @@ public class MinigameScreenActor extends Table {
         // Row: Player and Market Stats.
         add(playerStats);
         add();
-        add(play);
-        //add(choiceLabel);
+        //add(win);
         add().spaceRight(20);
         rowWithHeight(20);
-        ///
         add(play);
         rowWithHeight(20);
         add(gamblingInfo);
-
-
+        rowWithHeight(10);
+        add(comment);
 
         bindEvents();
         widgetUpdate();
@@ -144,24 +136,48 @@ public class MinigameScreenActor extends Table {
      * Updates all widgets on screen
      */
     private void widgetUpdate() {
-        // update player stats, phase text, and the market stats.
+        // update player stats, phase text and gambling information.
         String phaseText =
                 "Player " + (game.getPlayerInt() + 1) + "; " +
                         "Phase " + game.getPhase() + " - " + game.getPhaseString();
 
         String statText =
-                        "Your Money: "  + game.getPlayer().getMoney();
+                        "Your Money: "  + game.getPlayer().getMoney() + "      " +
+                                "Total win/loss: " + totalWin;
 
         String dice =
-                "You scored: " + "[" + diceValue1 + "]" + " " +
+                "You scored: " + "[" + diceValue1 + "]" + "  " +
                         "Opponent scored: " + "[" + diceValue2 + "]" ;
+
+        String result1 = "Draw!";
+
+        String result2 = "You loose " + gamblingMoney + " !";
+
+        String result3 = "You win " + gamblingMoney + " !";
+
+        String result4 = " ";
+
+        String winValue = "Total win/loss: " + totalWin;
+
 
 
         phaseInfo.setText(phaseText);
         playerStats.setText(statText);
         gamblingInfo.setText(dice);
+        win.setText(winValue);
 
-
+        if (diceValue1 == 0){
+            comment.setText(result4);
+        }
+        else if (diceValue1 < diceValue2) {
+            comment.setText(result2);
+        }
+        else if (diceValue1 > diceValue2) {
+            comment.setText(result3);
+        }
+        else {
+            comment.setText(result1);
+        }
     }
 
     /**
@@ -192,7 +208,6 @@ public class MinigameScreenActor extends Table {
      */
     private void updateAdjustable(AdjustableActor adjustableActor) {
         adjustableActor.setMax(game.getPlayer().getMoney());
-        //adjustableActor.setTitle(getPriceString(resource, bIsSell));
     }
 
     private int getDiceValue1() {
@@ -203,7 +218,6 @@ public class MinigameScreenActor extends Table {
         this.diceValue1 = value;
     }
 
-
     private int getDiceValue2() {
         return diceValue2;
     }
@@ -212,6 +226,9 @@ public class MinigameScreenActor extends Table {
         this.diceValue2 = value;
     }
 
+    private void setGamblingMoney(int money) {
+        this.gamblingMoney = money;
+    }
 
     /**
      * Generate an adjustable actor for gambling.
@@ -236,9 +253,15 @@ public class MinigameScreenActor extends Table {
                 }
                 else if (getDiceValue1() < getDiceValue2()) {
                     player.setGamblingMoney(player.getMoney() - adjustableActor.getValue());
+                    setGamblingMoney(adjustableActor.getValue());
+                    totalWin = totalWin - adjustableActor.getValue();
+                    updateAdjustable(adjustableActor);
                 }
                 else {
                     player.setGamblingMoney(player.getMoney() + adjustableActor.getValue());
+                    setGamblingMoney(adjustableActor.getValue());
+                    totalWin = totalWin + adjustableActor.getValue();
+                    updateAdjustable(adjustableActor);
                 }
 
                 MinigameScreenActor.this.widgetUpdate();
