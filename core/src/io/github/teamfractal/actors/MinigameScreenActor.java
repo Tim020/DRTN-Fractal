@@ -246,7 +246,7 @@ public class MinigameScreenActor extends Table {
                 setDiceValue1(diceValue1.WinGame());
                 setDiceValue2(diceValue2.WinGame());
                 if (player.getMoney() == 0) {
-                    // does nothing
+                    setGamblingMoney(adjustableActor.getValue());
                 }
                 else if (getDiceValue1() == getDiceValue2()) {
                     // does nothing
