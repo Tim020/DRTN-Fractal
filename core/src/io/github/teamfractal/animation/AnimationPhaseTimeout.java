@@ -85,11 +85,11 @@ public class AnimationPhaseTimeout implements IAnimation {
 			rect.end();
 		}
 
-		synchronized (font) {
+		synchronized (game.smallFontLight.font()) {
 			batch.begin();
-			glyphLayout.setText(font, countdown);
-			font.setColor(1,1,1, 1);
-			font.draw(batch, glyphLayout, 10, 20);
+			glyphLayout.setText(game.smallFontLight.font(), countdown);
+			game.smallFontLight.font().setColor(1, 1, 1, 1);
+			game.smallFontLight.font().draw(batch, glyphLayout, 10, 25);
 			batch.end();
 		}
 

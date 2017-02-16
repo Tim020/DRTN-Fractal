@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Timer;
 import io.github.teamfractal.animation.AnimationCustomHeader;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
@@ -42,6 +42,8 @@ public class RoboticonQuest extends Game {
     public Market market;
     public RoboticonMarketScreen roboticonMarket;
     public GenerationOverlay genOverlay;
+
+	public TextButton.TextButtonStyle buttonStyle;
 
 	private int turnNumber = 1;
 	private SpriteBatch batch;

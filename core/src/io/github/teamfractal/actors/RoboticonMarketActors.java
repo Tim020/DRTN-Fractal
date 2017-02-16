@@ -127,10 +127,10 @@ public class RoboticonMarketActors extends Table {
      * Constructs critical label objects that may change in appearance as the market is interacted with
      */
     private void constructLabels() {
-        roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount + "/" +  game.market.getResource(ResourceType.ROBOTICON), game.skin);
+        roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount + "/" +  game.market.getResource(ResourceType.ROBOTICON), new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
         roboticonPurchaseAmountLabel.setAlignment(Align.center);
 
-        selectedRoboticonIDLabel = new Label("", game.skin);
+        selectedRoboticonIDLabel = new Label("", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
         selectedRoboticonIDLabel.setAlignment(Align.center);
     }
 
