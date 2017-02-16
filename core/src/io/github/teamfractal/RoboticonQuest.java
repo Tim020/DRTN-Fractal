@@ -53,6 +53,13 @@ public class RoboticonQuest extends Game {
 	private int currentPlayerIndex;
     private Fonts fonts;
 
+	private AnimationCustomHeader playerHeader;
+	private AnimationCustomHeader phase1description;
+	private AnimationCustomHeader phase2description;
+	private AnimationCustomHeader phase3description;
+	private AnimationCustomHeader phase4description;
+	private AnimationCustomHeader phase5description;
+
 	private PlotEffectSource plotEffectSource;
 
 	public RoboticonQuest() {
@@ -100,6 +107,9 @@ public class RoboticonQuest extends Game {
 
 		//Setup tile and player effects for later application
 		setupEffects();
+
+		//Setup header animations to be played out at certain stages in the game
+		setupAnimations();
 
 		setScreen(mainMenuScreen);
 	}
@@ -175,10 +185,17 @@ public class RoboticonQuest extends Game {
 	 */
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+
+		playerHeader.stop();
+		playerHeader.play();
+
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
                 Gdx.input.setInputProcessor(roboticonMarket);
+
+				phase1description.stop();
+				phase2description.play();
 
                 AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -193,6 +210,9 @@ public class RoboticonQuest extends Game {
 			// Phase 3: Roboticon Customisation
 			case 3:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
+
+				phase2description.stop();
+				phase3description.play();
 
 				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -212,6 +232,9 @@ public class RoboticonQuest extends Game {
 			// Phase 4: Generate resources for player
 			case 4:
                 Gdx.input.setInputProcessor(genOverlay);
+
+				phase3description.stop();
+				phase4description.play();
 
                 this.getPlayer().generateResources();
 				this.market.generateRoboticon();
@@ -262,10 +285,8 @@ public class RoboticonQuest extends Game {
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
 
-                fonts.montserratRegular.setSize(24);
-                fonts.montserratLight.setSize(24);
-				gameScreen.addAnimation(new AnimationCustomHeader("PLAYER " + (currentPlayerIndex + 1), headerFontRegular.font(), 5));
-                gameScreen.addAnimation(new AnimationCustomHeader("\nPHASE 1: Claim a Tile", headerFontLight.font(), 5));
+				phase4description.stop();
+				phase1description.play();
 
 				clearEffects();
 				setEffects();
@@ -356,11 +377,9 @@ public class RoboticonQuest extends Game {
 	 * Changes the current player
 	 */
     private void nextPlayer() {
-        if (this.currentPlayerIndex == playerList.size() - 1) {
-            this.currentPlayerIndex = 0;
-        } else {
-            this.currentPlayerIndex++;
-        }
+        this.currentPlayerIndex = 1 - this.currentPlayerIndex;
+
+		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
     }
 
 	/**
@@ -397,6 +416,25 @@ public class RoboticonQuest extends Game {
 		for (PlotEffect PE : plotEffectSource) {
 			PE.revertAll();
 		}
+	}
+
+	/**
+	 * Prepares header animations to indicate when certain phases of the game have been reached
+	 */
+	private void setupAnimations() {
+		playerHeader = new AnimationCustomHeader("PLAYER 1", headerFontRegular.font(), 5);
+		phase1description = new AnimationCustomHeader("\nPHASE 1: Claim a Tile", headerFontLight.font(), 5);
+		phase2description = new AnimationCustomHeader("\nPHASE 2: Buy and Upgrade Roboticons", headerFontLight.font(), 5);
+		phase3description = new AnimationCustomHeader("\nPHASE 3: Deploy Roboticons", headerFontLight.font(), 5);
+		phase4description = new AnimationCustomHeader("\nPHASE 4: Generate Resources", headerFontLight.font(), 5);
+		phase5description = new AnimationCustomHeader("\nPHASE 5: Buy and Sell Resources", headerFontLight.font(), 5);
+
+		gameScreen.addAnimation(playerHeader);
+		gameScreen.addAnimation(phase1description);
+		gameScreen.addAnimation(phase2description);
+		gameScreen.addAnimation(phase3description);
+		gameScreen.addAnimation(phase4description);
+		gameScreen.addAnimation(phase5description);
 	}
 
 	/**

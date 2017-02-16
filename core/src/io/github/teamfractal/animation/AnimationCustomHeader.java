@@ -18,12 +18,17 @@ public class AnimationCustomHeader implements IAnimation {
 
     private BitmapFont font;
 
+    private boolean play;
+
     public AnimationCustomHeader(String text, BitmapFont font, int length) {
         this.text = text;
 
         this.font = font;
 
         this.length = length;
+
+        time = 0;
+        play = false;
     }
 
     private float calculateOpacity() {
@@ -36,26 +41,43 @@ public class AnimationCustomHeader implements IAnimation {
         }
     }
 
+    public void play() {
+        play = true;
+    }
+
+    public void stop() {
+        time = 0;
+        play = false;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     @Override
     public boolean tick(float delta, AbstractAnimationScreen screen, Batch batch) {
-        time += delta;
+        if (play == true) {
+            time += delta;
 
-        if (time > length) {
-            return true;
+            if (time > length) {
+                stop();
+                return false;
+            }
+
+            batch.begin();
+
+            font.setColor(1, 1, 1, calculateOpacity());
+            GlyphLayout GL = new GlyphLayout(font, text);
+
+            if (time < 1) {
+                font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 20 - (((float) Math.pow(time, 2)) * 30));
+            } else {
+                font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 50);
+            }
+
+            batch.end();
         }
 
-        batch.begin();
-
-        font.setColor(1, 1, 1, calculateOpacity());
-        GlyphLayout GL = new GlyphLayout(font, text);
-
-        if (time < 1) {
-            font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 20 - (((float) Math.pow(time, 2)) * 30));
-        } else {
-            font.draw(batch, GL, Gdx.graphics.getWidth() / 2 - GL.width / 2, Gdx.graphics.getHeight() - 50);
-        }
-
-        batch.end();
         return false;
     }
 
