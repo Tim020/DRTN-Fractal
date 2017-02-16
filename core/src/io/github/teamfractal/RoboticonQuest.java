@@ -193,6 +193,11 @@ public class RoboticonQuest extends Game {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 
 		playerHeader.stop();
+		if (phase == 4) {
+			playerHeader.setLength(3);
+		} else {
+			playerHeader.setLength(5);
+		}
 		playerHeader.play();
 
 		switch (phase) {
@@ -432,7 +437,7 @@ public class RoboticonQuest extends Game {
 		phase1description = new AnimationCustomHeader("\nPHASE 1: Claim a Tile", headerFontLight.font(), 5);
 		phase2description = new AnimationCustomHeader("\nPHASE 2: Buy and Upgrade Roboticons", headerFontLight.font(), 5);
 		phase3description = new AnimationCustomHeader("\nPHASE 3: Deploy Roboticons", headerFontLight.font(), 5);
-		phase4description = new AnimationCustomHeader("\nPHASE 4: Generate Resources", headerFontLight.font(), 5);
+		phase4description = new AnimationCustomHeader("\nPHASE 4: Generate Resources", headerFontLight.font(), 3);
 		phase5description = new AnimationCustomHeader("\nPHASE 5: Buy and Sell Resources", headerFontLight.font(), 5);
 
 		gameScreen.addAnimation(playerHeader);

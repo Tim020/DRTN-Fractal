@@ -54,6 +54,10 @@ public class AnimationCustomHeader implements IAnimation {
         this.text = text;
     }
 
+    public void setLength(float length) {
+        this.length = length;
+    }
+
     @Override
     public boolean tick(float delta, AbstractAnimationScreen screen, Batch batch) {
         if (play == true) {
