@@ -15,8 +15,11 @@ public class MiniGameScreen implements Screen {
     private final Table table;
     private final MinigameScreenActor actors;
 
-    public MiniGameScreen(final RoboticonQuest game) {
+    private final ResourceMarketScreen RMS;
+
+    public MiniGameScreen(final RoboticonQuest game, ResourceMarketScreen RMS) {
         this.game = game;
+        this.RMS = RMS;
         this.stage = new Stage(new ScreenViewport());
         this.table = new Table();
         table.setFillParent(true);
@@ -71,5 +74,9 @@ public class MiniGameScreen implements Screen {
 
     public Stage getStage() {
         return this.stage;
+    }
+
+    public ResourceMarketScreen getRMS() {
+        return RMS;
     }
 }
