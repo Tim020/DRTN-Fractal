@@ -9,13 +9,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
+import io.github.teamfractal.animation.AnimationCustomHeader;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
-import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
 import io.github.teamfractal.screens.*;
+import io.github.teamfractal.util.Fonts;
 import io.github.teamfractal.util.PlotEffectSource;
 import io.github.teamfractal.util.PlotManager;
+import io.github.teamfractal.util.TTFont;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,21 +28,38 @@ import java.util.Random;
  */
 public class RoboticonQuest extends Game {
     private static RoboticonQuest _instance;
-	public TiledMap tmx;
 	public Skin skin;
-	public GameScreen gameScreen;
-	public Market market;
     public PlotManager plotManager;
+
+    public TTFont headerFontRegular;
+    public TTFont headerFontLight;
+    public TTFont smallFontRegular;
+    public TTFont smallFontLight;
+	public TTFont tinyFontRegular;
+	public TTFont tinyFontLight;
+
+    public GameScreen gameScreen;
+    public Market market;
     public RoboticonMarketScreen roboticonMarket;
     public GenerationOverlay genOverlay;
-    private int trueTurnNumber = 1;
-    private SpriteBatch batch;
-    private MainMenuScreen mainMenuScreen;
+
+	private int turnNumber = 1;
+	private SpriteBatch batch;
+	private MainMenuScreen mainMenuScreen;
+
     private ArrayList<Player> playerList;
     private int phase;
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
+
+	private AnimationCustomHeader playerHeader;
+	private AnimationCustomHeader phase1description;
+	private AnimationCustomHeader phase2description;
+	private AnimationCustomHeader phase3description;
+	private AnimationCustomHeader phase4description;
+	private AnimationCustomHeader phase5description;
+
 	private PlotEffectSource plotEffectSource;
 
 	public RoboticonQuest() {
@@ -67,14 +86,36 @@ public class RoboticonQuest extends Game {
 		batch = new SpriteBatch();
 		setupSkin();
 
+        Fonts fonts = new Fonts();
+        fonts.montserratRegular.setSize(24);
+        fonts.montserratLight.setSize(24);
+        headerFontRegular = fonts.montserratRegular;
+        headerFontLight = fonts.montserratLight;
+
+        fonts = new Fonts();
+        fonts.montserratRegular.setSize(16);
+        fonts.montserratLight.setSize(16);
+        smallFontRegular = fonts.montserratRegular;
+        smallFontLight = fonts.montserratLight;
+
+		fonts = new Fonts();
+		fonts.montserratRegular.setSize(12);
+		fonts.montserratLight.setSize(12);
+		tinyFontRegular = fonts.montserratRegular;
+		tinyFontLight = fonts.montserratLight;
+        //Import TrueType fonts for use in drawing textual elements
+
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
         gameScreen = new GameScreen(this);
-        roboticonMarket = new RoboticonMarketScreen(this, Color.GRAY, Color.WHITE, 3);
+        roboticonMarket = new RoboticonMarketScreen(this);
         genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
 
 		//Setup tile and player effects for later application
 		setupEffects();
+
+		//Setup header animations to be played out at certain stages in the game
+		setupAnimations();
 
 		setScreen(mainMenuScreen);
 	}
@@ -126,7 +167,6 @@ public class RoboticonQuest extends Game {
 	 * @param AI A boolean describing whether an AI player is playing or not
 	 */
 	public void reset(boolean AI) {
-        this.currentPlayerIndex = 0;
         this.phase = 0;
         plotManager = new PlotManager();
         Player player1;
@@ -151,12 +191,24 @@ public class RoboticonQuest extends Game {
 	 */
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+
+		playerHeader.stop();
+		if (phase == 4) {
+			playerHeader.setLength(3);
+		} else {
+			playerHeader.setLength(5);
+		}
+		playerHeader.play();
+
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
                 Gdx.input.setInputProcessor(roboticonMarket);
 
-				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
+				phase1description.stop();
+				phase2description.play();
+
+                AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
 
 				roboticonMarket.actors().widgetUpdate();
@@ -169,6 +221,9 @@ public class RoboticonQuest extends Game {
 			// Phase 3: Roboticon Customisation
 			case 3:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
+
+				phase2description.stop();
+				phase3description.play();
 
 				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -188,6 +243,9 @@ public class RoboticonQuest extends Game {
 			// Phase 4: Generate resources for player
 			case 4:
                 Gdx.input.setInputProcessor(genOverlay);
+
+				phase3description.stop();
+				phase4description.play();
 
                 this.getPlayer().generateResources();
 				this.market.generateRoboticon();
@@ -225,7 +283,7 @@ public class RoboticonQuest extends Game {
 					break;
 				}
 
-                this.trueTurnNumber += 1;
+                this.turnNumber += 1;
                 this.nextPlayer();
 
 				// No "break;" here!
@@ -237,7 +295,9 @@ public class RoboticonQuest extends Game {
 
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
-				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
+
+				phase4description.stop();
+				phase1description.play();
 
 				clearEffects();
 				setEffects();
@@ -314,7 +374,6 @@ public class RoboticonQuest extends Game {
 	 * @return The current player
 	 */
 	public Player getPlayer(){
-
         return this.playerList.get(this.currentPlayerIndex);
     }
 	/**
@@ -329,15 +388,9 @@ public class RoboticonQuest extends Game {
 	 * Changes the current player
 	 */
     private void nextPlayer() {
+        this.currentPlayerIndex = 1 - this.currentPlayerIndex;
 
-
-        if (this.currentPlayerIndex == playerList.size() - 1) {
-            this.currentPlayerIndex = 0;
-        } else {
-            this.currentPlayerIndex++;
-        }
-
-
+		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
     }
 
 	/**
@@ -374,6 +427,25 @@ public class RoboticonQuest extends Game {
 		for (PlotEffect PE : plotEffectSource) {
 			PE.revertAll();
 		}
+	}
+
+	/**
+	 * Prepares header animations to indicate when certain phases of the game have been reached
+	 */
+	private void setupAnimations() {
+		playerHeader = new AnimationCustomHeader("PLAYER 1", headerFontRegular.font(), 5);
+		phase1description = new AnimationCustomHeader("\nPHASE 1: Claim a Tile", headerFontLight.font(), 5);
+		phase2description = new AnimationCustomHeader("\nPHASE 2: Buy and Upgrade Roboticons", headerFontLight.font(), 5);
+		phase3description = new AnimationCustomHeader("\nPHASE 3: Deploy Roboticons", headerFontLight.font(), 5);
+		phase4description = new AnimationCustomHeader("\nPHASE 4: Generate Resources", headerFontLight.font(), 3);
+		phase5description = new AnimationCustomHeader("\nPHASE 5: Buy and Sell Resources", headerFontLight.font(), 5);
+
+		gameScreen.addAnimation(playerHeader);
+		gameScreen.addAnimation(phase1description);
+		gameScreen.addAnimation(phase2description);
+		gameScreen.addAnimation(phase3description);
+		gameScreen.addAnimation(phase4description);
+		gameScreen.addAnimation(phase5description);
 	}
 
 	/**
@@ -418,7 +490,7 @@ public class RoboticonQuest extends Game {
 	}
 
     public int getTurnNumber() {
-        return (int) Math.ceil((double) trueTurnNumber / 2);
+        return (int) Math.ceil((double) turnNumber / 2);
     }
 }
 

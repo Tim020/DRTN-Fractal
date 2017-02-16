@@ -10,7 +10,7 @@ public class AnimationShowPlayer implements IAnimation {
 	private float time;
 	private static BitmapFont font = new BitmapFont();
 	private static GlyphLayout glyphLayout = new GlyphLayout();
-	private  int playerNumber;
+	private int playerNumber;
 
 	public AnimationShowPlayer (int playerNumber) {
 		this.playerNumber = playerNumber;
@@ -28,7 +28,6 @@ public class AnimationShowPlayer implements IAnimation {
 
 	/**
 	 * The quadratic function.
-	 * @param t      Time, between 0 and 1.
 	 * @return       If <code>t</code> is larger than <code>1</code>,
 	 *               then it will return <code>1</code>; otherwise
 	 *               the square of <code>t</code>.
@@ -68,8 +67,8 @@ public class AnimationShowPlayer implements IAnimation {
 
 		batch.begin();
 		font.setColor(1,1,1, fn_opacity());
-		glyphLayout.setText(font, "Player " + playerNumber);
-		font.draw(batch,  glyphLayout, size.Width / 2 - glyphLayout.width / 2, size.Height - 20 - fn_quad(time) * 30);
+		glyphLayout.setText(font, "PLAYER " + playerNumber);
+		font.draw(batch, glyphLayout, size.Width / 2 - glyphLayout.width / 2, size.Height - 20 - fn_quad(time) * 30);
 		batch.end();
 		return false;
 	}
