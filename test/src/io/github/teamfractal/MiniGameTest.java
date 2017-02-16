@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class MiniGameTest extends TesterFile {
@@ -21,7 +22,9 @@ public class MiniGameTest extends TesterFile {
 
 	@Test
 	public void minGameShouldShowBooleanIfWinningTheGame() {
-		// assertEquals(true, miniGame.WinGame(3));
-		assertEquals(0, miniGame.getPrice(false));
+		int value = miniGame.WinGame();
+		int min = 1;
+		int max = 6;
+		assertTrue("Generated number is out of range: " + value, min <= value && value <= max);
 	}
 }

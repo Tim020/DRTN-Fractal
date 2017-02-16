@@ -96,13 +96,18 @@ public class MinigameScreenActor extends Table {
         // Row: Player and Market Stats.
         add(playerStats);
         add();
-        //add(win);
         add().spaceRight(20);
         rowWithHeight(20);
+
+        // Row: Playing console
         add(play);
         rowWithHeight(20);
+
+        // Row: Dice value
         add(gamblingInfo);
         rowWithHeight(10);
+
+        // Row: winning/loosing info
         add(comment);
 
         bindEvents();
