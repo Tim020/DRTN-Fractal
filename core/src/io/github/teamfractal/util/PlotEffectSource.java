@@ -46,7 +46,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
             }
         });
 
-        spicy = new PlotEffect("It's getting spicy", "Some students got hold of some pepper seeds and all of your food " +
+        spicy = new PlotEffect("It's getting spicy", "Some students got hold of some hot pepper seeds and all of your food " +
                 "production \nhas been turned over to peppers. Increasing Food output by 200% However this spicy craze " +
                 "\nhas caused all other production values to drop to 0.", new Float[]{(float) 0, (float) 0, (float) 2}, new Runnable() {
             @Override
@@ -54,8 +54,6 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 if (engine.getPlayer().getLandList().size() == 0) {
                     return;
                 }
-
-                LandPlot foodProducer = engine.getPlayer().getLandList().get(0);
 
                 for (LandPlot plot : engine.getPlayer().getLandList()) {
                     spicy.impose(plot, 1);
