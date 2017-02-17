@@ -271,6 +271,7 @@ public class RoboticonQuest extends Game {
 			    phase5description.play();
 
 			    resourceMarket.actors().widgetUpdate();
+			    resourceMarket.gambleStatisticsReset();
 
 				gameScreen.getActors().setNextButtonVisibility(false);
 				this.getPlayer().takeTurn(5);

@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
@@ -16,6 +18,8 @@ import io.github.teamfractal.entity.enums.ResourceType;
  */
 public class ResourceMarketActors extends Table {
 
+    private Table marketTable;
+
     private final MarketAdjustableActor oreBuyAdjustable;
     private final MarketAdjustableActor oreSellAdjustable;
     private final MarketAdjustableActor energyBuyAdjustable;
@@ -23,12 +27,23 @@ public class ResourceMarketActors extends Table {
     private final MarketAdjustableActor foodBuyAdjustable;
     private final MarketAdjustableActor foodSellAdjustable;
 
+    private final TextField gambleField;
+    private Label gambleStatusLabel;
+    private Label gamblePlayerRoll;
+    private Label gambleRNGesusRoll;
+    private Label gambleMoneyWonLabel;
+    private Label gambleMoneyLostLabel;
+    private Label gambleWinLossLabel;
+
     private RoboticonQuest game;
 
     public ResourceMarketActors(final RoboticonQuest game) {
         final int spacing = 20;
 
         this.game = game;
+
+        marketTable = new Table();
+        Table gambleTable = new Table();
 
         oreBuyAdjustable = createAdjustable(ResourceType.ORE, true);
         oreSellAdjustable = createAdjustable(ResourceType.ORE, false);
@@ -38,25 +53,77 @@ public class ResourceMarketActors extends Table {
         foodSellAdjustable = createAdjustable(ResourceType.FOOD, false);
 
         // Row: Headers
-
-        add(new Label("BUY", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padRight(spacing).padBottom(5);
-        add(new Label("SELL", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padBottom(5);
+        marketTable.add(new Label("BUY", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padRight(spacing).padBottom(5);
+        marketTable.add(new Label("SELL", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padBottom(5);
         rowWithHeight(10);
 
         // Row: Ore buy/sell
-        add(oreBuyAdjustable).padRight(spacing);
-        add(oreSellAdjustable);
+        marketTable.add(oreBuyAdjustable).padRight(spacing);
+        marketTable.add(oreSellAdjustable);
         rowWithHeight(10);
 
         // Row: Energy buy/sell
-        add(energyBuyAdjustable).padRight(spacing);
-        add(energySellAdjustable);
+        marketTable.add(energyBuyAdjustable).padRight(spacing);
+        marketTable.add(energySellAdjustable);
         rowWithHeight(10);
 
         // Row: Food buy/sell
-        add(foodBuyAdjustable).padRight(spacing);
-        add(foodSellAdjustable);
+        marketTable.add(foodBuyAdjustable).padRight(spacing);
+        marketTable.add(foodSellAdjustable);
         rowWithHeight(20);
+
+        add(marketTable).padRight(spacing);
+
+        gambleTable.add(new Label("PUB", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padBottom(10).colspan(2);
+        gambleTable.row();
+
+        gambleField = new TextField("", game.skin);
+        gambleField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        gambleTable.add(gambleField).padBottom(3).colspan(2);
+        gambleTable.row();
+
+        TextButton gambleButton = new TextButton("Gamble Money", game.skin);
+        gambleButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.resourceMarket.gamble();
+                widgetUpdate();
+                game.gameScreen.getActors().textUpdate();
+            }
+        });
+        gambleButton.setWidth(150);
+        gambleTable.add(gambleButton).width(150).padBottom(10).colspan(2);
+        gambleTable.row();
+
+        gambleStatusLabel = new Label(" \n ", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE));
+        gambleStatusLabel.setAlignment(Align.center);
+        gambleTable.add(gambleStatusLabel).padBottom(10).colspan(2);
+        gambleTable.row();
+
+        gamblePlayerRoll = new Label("-", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+        gambleRNGesusRoll = new Label("-", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+        gambleTable.add(new Label("Your Roll", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).left().width(110);
+        gambleTable.add(gamblePlayerRoll).expandX().left();
+        gambleTable.row();
+        gambleTable.add(new Label("AI's Roll", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).left().width(110).padBottom(10);
+        gambleTable.add(gambleRNGesusRoll).expandX().left().padBottom(10);
+        gambleTable.row();
+
+        gambleMoneyWonLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+        gambleMoneyLostLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+        gambleWinLossLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+        gambleTable.add(new Label("Money Won", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).left().width(110);
+        gambleTable.add(gambleMoneyWonLabel).expandX().left();
+        gambleTable.row();
+        gambleTable.add(new Label("Money Lost", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).left().width(110);
+        gambleTable.add(gambleMoneyLostLabel).expandX().left();
+        gambleTable.row();
+        gambleTable.add(new Label("W/L", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).left().width(110);
+        gambleTable.add(gambleWinLossLabel).expandX().left();
+
+        add(gambleTable).top();
+
+        row();
 
         TextButton exitButton = new TextButton("EXIT MARKET", game.skin);
         exitButton.addListener(new ChangeListener() {
@@ -65,7 +132,7 @@ public class ResourceMarketActors extends Table {
                 game.nextPhase();
             }
         });
-        add(exitButton).colspan(2).expandX().width(320);
+        add(exitButton).colspan(2).expandX().width(490);
 
         widgetUpdate();
     }
@@ -189,6 +256,8 @@ public class ResourceMarketActors extends Table {
         }
 
         setButtonStates();
+
+
     }
 
     /**
@@ -196,9 +265,9 @@ public class ResourceMarketActors extends Table {
      * @param height  The y for that empty row.
      */
     private void rowWithHeight(int height) {
-        row();
-        add().spaceTop(height);
-        row();
+        marketTable.row();
+        marketTable.add().spaceTop(height);
+        marketTable.row();
     }
 
     public void setButtonStates() {
@@ -237,5 +306,30 @@ public class ResourceMarketActors extends Table {
         } else {
             foodSellAdjustable.setButtonState(Touchable.disabled);
         }
+    }
+
+    public String gambleFieldValue() {
+        return gambleField.getText();
+    }
+
+    public void setGambleStatusLabel(String status, Color color) {
+        gambleStatusLabel.setText(status);
+        gambleStatusLabel.setColor(color);
+    }
+
+    public void setGambleRollLabels(int playerRoll, int AIroll) {
+        gamblePlayerRoll.setText(String.valueOf(playerRoll));
+        gambleRNGesusRoll.setText(String.valueOf(AIroll));
+    }
+
+    public void setGambleRollLabels(String playerRoll, String AIroll) {
+        gamblePlayerRoll.setText(playerRoll);
+        gambleRNGesusRoll.setText(AIroll);
+    }
+
+    public void setGambleStatisticsLabels(int moneyWon, int moneyLost, int winLoss) {
+        gambleMoneyWonLabel.setText(String.valueOf(moneyWon));
+        gambleMoneyLostLabel.setText(String.valueOf(moneyLost));
+        gambleWinLossLabel.setText(String.valueOf(winLoss));
     }
 }

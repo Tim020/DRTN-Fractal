@@ -36,7 +36,7 @@ public class Player {
 	 * Set the amount of money player has
 	 * @param money The amount of new money
 	 */
-	synchronized void setMoney(int money){
+	public synchronized void setMoney(int money){
 		if (money < 0) {
 			this.money = 0;
 		} else {
