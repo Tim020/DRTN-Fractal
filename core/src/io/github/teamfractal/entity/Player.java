@@ -34,15 +34,14 @@ public class Player {
 
 	/**
 	 * Set the amount of money player has
-	 * @param money                      The amount of new money.
-	 * @throws IllegalArgumentException  If the new money if negative, this exception will be thrown.
+	 * @param money The amount of new money
 	 */
-	synchronized void setMoney(int money) throws IllegalArgumentException {
+	synchronized void setMoney(int money){
 		if (money < 0) {
-			throw new IllegalArgumentException("Error: Money can't be negative.");
+			this.money = 0;
+		} else {
+			this.money = money;
 		}
-
-		this.money = money;
 	}
 
 	public void setGamblingMoney(int money){
