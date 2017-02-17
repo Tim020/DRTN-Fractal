@@ -16,6 +16,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
     private PlotEffect duckRelatedDisaster;
     private PlotEffect earthquakeDisaster;
 
+    private PlotEffect spicy;
+
     public PlotEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
 
@@ -45,18 +47,34 @@ public class PlotEffectSource extends Array<PlotEffect> {
             }
         });
 
+
         earthquakeDisaster = new PlotEffect("Earthquake disaster", "Due to experiments committed in" +
                 " University's of York secret laboratory, a massive\n earthquake hit the surroundings of York." +
         " Ore mines were severely damaged therefore\n ore production has dropped by 90% for this turn.",
                 new Float[]{(float) 0.1, (float) 1, (float) 1}, new Runnable() {
             @Override
             public void run() {
-                if (engine.getPlayer().getLandList().size() == 0) {
+              if (engine.getPlayer().getLandList().size() == 0) {
                     return;
                 }
 
                 for (LandPlot plot : engine.getPlayer().getLandList()) {
                     earthquakeDisaster.impose(plot, 1);
+                }
+            });
+
+        spicy = new PlotEffect("It's getting spicy", "Some students got hold of some hot pepper seeds and all of your food " +
+                "production \nhas been turned over to peppers. Increasing Food output by 200% However this spicy craze " +
+                "\nhas caused all other production values to drop to 0.", new Float[]{(float) 0, (float) 0, (float) 2}, new Runnable() {
+            @Override
+            public void  run() {
+
+                if (engine.getPlayer().getLandList().size() == 0) {
+                    return;
+                }
+
+                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                    spicy.impose(plot, 1);
                 }
 
 
@@ -67,6 +85,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
     public void implementEffects() {
         add(duckRelatedDisaster);
         add(earthquakeDisaster);
+        add(spicy);
+
     }
 
 }
