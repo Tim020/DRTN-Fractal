@@ -4,21 +4,16 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Timer;
 import io.github.teamfractal.animation.AnimationCustomHeader;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
 import io.github.teamfractal.screens.*;
-import io.github.teamfractal.util.Fonts;
-import io.github.teamfractal.util.PlotEffectSource;
-import io.github.teamfractal.util.PlotManager;
-import io.github.teamfractal.util.TTFont;
+import io.github.teamfractal.util.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -62,6 +57,7 @@ public class RoboticonQuest extends Game {
 	private AnimationCustomHeader phase5description;
 
 	private PlotEffectSource plotEffectSource;
+	private PlayerEffectSource playerEffectSource;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -297,11 +293,11 @@ public class RoboticonQuest extends Game {
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
 
-				phase4description.stop();
-				phase1description.play();
-
 				clearEffects();
 				setEffects();
+
+				phase4description.stop();
+				phase1description.play();
 
                 System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + this.getTurnNumber());
 
@@ -399,12 +395,17 @@ public class RoboticonQuest extends Game {
 	 */
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
-		effectChance = (float) 0.05;
+		effectChance = (float) 1;
 
 		plotEffectSource = new PlotEffectSource(this);
+		playerEffectSource = new PlayerEffectSource(this);
 
-		for (PlotEffect PE : plotEffectSource) {
-			PE.constructOverlay(gameScreen);
+		for (PlotEffect PTE : plotEffectSource) {
+			PTE.constructOverlay(gameScreen);
+		}
+
+		for (PlayerEffect PLE : playerEffectSource) {
+			PLE.constructOverlay(gameScreen);
 		}
 	}
 	/**
@@ -413,11 +414,19 @@ public class RoboticonQuest extends Game {
 	private void setEffects() {
 		Random RNGesus = new Random();
 
-		for (PlotEffect PE : plotEffectSource) {
+		for (PlotEffect PTE : plotEffectSource) {
 			if (RNGesus.nextFloat() <= effectChance) {
-				PE.executeRunnable();
+				PTE.executeRunnable();
 
-				gameScreen.addOverlay(PE.overlay());
+				gameScreen.addOverlay(PTE.overlay());
+			}
+		}
+
+		for (PlayerEffect PLE : playerEffectSource) {
+			if (RNGesus.nextFloat() <= effectChance) {
+				PLE.impose(getPlayer());
+
+				gameScreen.addOverlay(PLE.overlay());
 			}
 		}
 	}
