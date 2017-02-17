@@ -46,7 +46,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
         });
 
         earthquakeDisaster = new PlotEffect("Earthquake disaster", "Due to experiments committed in" +
-                "University's of York seacret laborathory, a massive\n earthquake hit the surroundings of York." +
+                "University's of York secret laboratory, a massive\n earthquake hit the surroundings of York." +
         "Ore mines were severely damaged therefore\n ore production has dropped by 90% for this turn.",
                 new Float[]{(float) 0.1, (float) 1, (float) 1}, new Runnable() {
             @Override
