@@ -67,7 +67,6 @@ public class MarketTest extends TesterFile {
 	 */
 	@Test
 	public void marketShouldHaveCorrectPricesForResources() throws Exception {
-		//TODO Should these numbers be so low?
 		assertEquals(30, market.getBuyPrice(ResourceType.ORE));
 		assertEquals(6, market.getBuyPrice(ResourceType.ENERGY));
 		assertEquals(6, market.getBuyPrice(ResourceType.FOOD));

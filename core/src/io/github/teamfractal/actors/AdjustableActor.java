@@ -222,7 +222,5 @@ public class AdjustableActor extends Table {
 	@Override
 	protected void sizeChanged() {
 		super.sizeChanged();
-
-		// TODO: manipulate actor size?
 	}
 }
