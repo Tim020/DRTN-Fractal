@@ -54,15 +54,17 @@ public class Player {
 	
 	/**
 	 * Set the amount of ore player has
-	 * @param amount                     The new amount for ore.
-	 * @throws IllegalArgumentException  If the new ore amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for ore.
 	 */
 	synchronized void setOre(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Ore can't be negative.");
+			this.ore = 0;
+		} else {
+			this.ore = amount;
 		}
-
-		this.ore = amount;
 	}
 
 	public int getEnergy() {
@@ -71,16 +73,18 @@ public class Player {
 
 	/**
 	 * Set the amount of energy player has
-	 * @param amount                     The new amount for energy.
-	 * @throws IllegalArgumentException  If the new energy amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for energy.
 	 */
 
 	synchronized void setEnergy(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Energy can't be negative.");
+			this.energy = 0;
+		} else {
+			this.energy = amount;
 		}
-
-		this.energy = amount;
 	}
 
 	public int getFood() {
@@ -89,16 +93,17 @@ public class Player {
 
 	/**
 	 * Set the amount of food player has
-	 * @param amount                     The new amount for food.
-	 * @throws IllegalArgumentException  If the new food amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for food.
 	 */
-
 	synchronized void setFood(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Food can't be negative.");
+			this.food = 0;
+		} else {
+			this.food = amount;
 		}
-
-		this.food = amount;
 	}
 
 	/**

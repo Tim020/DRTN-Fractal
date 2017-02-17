@@ -13,6 +13,8 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
 
     private PlayerEffect partyHard;
 
+    private PlayerEffect uhOh;
+
     public PlayerEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
 
@@ -25,9 +27,13 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
                 "you're a capitalist and your money\nis worthless to you. Unfortunately, you got too drunk and " +
                 "attempted to use some your fat stacks as Cards\nAgainst Humanity by scrawling immature statements " +
                 "all over them with a permanent marker, thereby\nrendering them worthess.\n\n-30 Money", 0, 0, 0, -30, false);
+
+        uhOh = new PlayerEffect("Uh Oh!", "Someone left the lights on over night again. Who was it? \nI bet it was Darrell," +
+                " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy",0,-50,0,0, false);
     }
 
     public void implementEffects() {
         add(partyHard);
+        add(uhOh);
     }
 }
