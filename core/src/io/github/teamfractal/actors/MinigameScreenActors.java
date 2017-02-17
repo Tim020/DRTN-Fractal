@@ -13,11 +13,9 @@ import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.MiniGame;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Player;
-import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.MiniGameScreen;
-import io.github.teamfractal.screens.ResourceMarketScreen;
 
-public class MinigameScreenActor extends Table {
+public class MinigameScreenActors extends Table {
     private final AdjustableActor play;
     private RoboticonQuest game;
     private Label phaseInfo;
@@ -40,7 +38,7 @@ public class MinigameScreenActor extends Table {
      * @param game       The game object.
      * @param screen     The screen object.
      */
-    public MinigameScreenActor(final RoboticonQuest game, MiniGameScreen screen) { // need to be changed
+    public MinigameScreenActors(final RoboticonQuest game, MiniGameScreen screen) { // need to be changed
         center();
 
         Skin skin = game.skin;
@@ -269,7 +267,7 @@ public class MinigameScreenActor extends Table {
                     updateAdjustable(adjustableActor);
                 }
 
-                MinigameScreenActor.this.widgetUpdate();
+                MinigameScreenActors.this.widgetUpdate();
             }
         });
         return adjustableActor;

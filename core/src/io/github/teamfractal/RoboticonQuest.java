@@ -384,8 +384,8 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Changes the current player
 	 */
-    private void nextPlayer() {
-        this.currentPlayerIndex = 1 - this.currentPlayerIndex;
+	public void nextPlayer() {
+		this.currentPlayerIndex = 1 - this.currentPlayerIndex;
 
 		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
     }
