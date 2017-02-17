@@ -1,77 +1,24 @@
 package io.github.teamfractal.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
+import com.badlogic.gdx.graphics.Color;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.actors.ResourceMarketActors;
 
+/**
+ * Created by Joseph on 17/02/2017.
+ */
+public class ResourceMarketScreen extends Overlay {
 
-public class ResourceMarketScreen implements Screen {
-	final RoboticonQuest game;
-	final Stage stage;
-	final Table table;
-	private final ResourceMarketActors actors;
-	
-	
-	public ResourceMarketScreen(final RoboticonQuest game) {
-		this.game = game;
-		this.stage = new Stage(new ScreenViewport());
-		this.table = new Table();
-		table.setFillParent(true);
+    private ResourceMarketActors actors;
 
-		actors = new ResourceMarketActors(game, this); // generates actors for the screen
-		table.center().add(actors); // positions actors
+    public ResourceMarketScreen(RoboticonQuest game) {
+        super(Color.GRAY, Color.WHITE, 350, 395, 0, 45, 3);
 
-		stage.addActor(table);
-	}
+        actors = new ResourceMarketActors(game);
+        table().add(actors);
+    }
 
-	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		stage.act(delta);
-		stage.draw();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
-		actors.screenResize(width, height);
-	}
-
-	@Override
-	public void pause() {
-		
-	}
-
-	@Override
-	public void resume() {
-		
-		
-	}
-
-	@Override
-	public void hide() {
-		
-		
-	}
-
-	@Override
-	public void dispose() {
-		stage.dispose();
-		
-	}
-	public Stage getStage(){
-		return this.stage;
-	}
+    public ResourceMarketActors actors() {
+        return actors;
+    }
 }

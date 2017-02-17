@@ -1,139 +1,125 @@
 package io.github.teamfractal.actors;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.animation.AnimationPhaseTimeout;
-import io.github.teamfractal.entity.Player;
+import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.screens.MiniGameScreen;
-import io.github.teamfractal.screens.ResourceMarketScreen;
-import io.github.teamfractal.screens.RoboticonMarketScreen;
 
+/**
+ * Created by Joseph on 17/02/2017.
+ */
 public class ResourceMarketActors extends Table {
-	private final AdjustableActor oreBuy;
-	private final AdjustableActor oreSell;
-	private final AdjustableActor energyBuy;
-	private final AdjustableActor energySell;
-	private final AdjustableActor foodBuy;
-	private final AdjustableActor foodSell;
-	private RoboticonQuest game;
-	private Integer buyOreAmount;
-	private Integer sellOreAmount;
-	private Integer buyEnergyAmount;
-	private Integer sellEnergyAmount;
-	private Integer buyFoodAmount;
-	private Integer sellFoodAmount;
-	private Label phaseInfo;
-	private Label playerStats;
-	private ResourceMarketScreen screen;
-	private TextButton nextButton;
-	private Label marketStats;
-	private TextButton pubButton;
+
+    private final MarketAdjustableActor oreBuyAdjustable;
+    private final MarketAdjustableActor oreSellAdjustable;
+    private final MarketAdjustableActor energyBuyAdjustable;
+    private final MarketAdjustableActor energySellAdjustable;
+    private final MarketAdjustableActor foodBuyAdjustable;
+    private final MarketAdjustableActor foodSellAdjustable;
+
+    private RoboticonQuest game;
+
+    public ResourceMarketActors(final RoboticonQuest game) {
+        final int spacing = 20;
+
+        this.game = game;
+
+        oreBuyAdjustable = createAdjustable(ResourceType.ORE, true);
+        oreSellAdjustable = createAdjustable(ResourceType.ORE, false);
+        energyBuyAdjustable = createAdjustable(ResourceType.ENERGY, true);
+        energySellAdjustable = createAdjustable(ResourceType.ENERGY, false);
+        foodBuyAdjustable = createAdjustable(ResourceType.FOOD, true);
+        foodSellAdjustable = createAdjustable(ResourceType.FOOD, false);
+
+        // Row: Headers
+
+        add(new Label("BUY", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padRight(spacing).padBottom(5);
+        add(new Label("SELL", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).padBottom(5);
+        rowWithHeight(10);
+
+        // Row: Ore buy/sell
+        add(oreBuyAdjustable).padRight(spacing);
+        add(oreSellAdjustable);
+        rowWithHeight(10);
+
+        // Row: Energy buy/sell
+        add(energyBuyAdjustable).padRight(spacing);
+        add(energySellAdjustable);
+        rowWithHeight(10);
+
+        // Row: Food buy/sell
+        add(foodBuyAdjustable).padRight(spacing);
+        add(foodSellAdjustable);
+        rowWithHeight(20);
+
+        TextButton exitButton = new TextButton("EXIT MARKET", game.skin);
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.nextPhase();
+            }
+        });
+        add(exitButton).colspan(2).expandX().width(320);
+
+        widgetUpdate();
+    }
+
+    /**
+     * Generate an adjustable actor for sell/buy.
+     *
+     * @param resource The resource type.
+     * @param buy  <code>true</code> if is for buying,
+     *             or <code>false</code> if is for selling
+     * @return The adjustable actor generated.
+     */
+    private MarketAdjustableActor createAdjustable(final ResourceType resource, final boolean buy) {
+        final MarketAdjustableActor adjustableActor = new MarketAdjustableActor(game, game.skin, resource, buy);
+
+        adjustableActor.setActionEvent(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (buy) {
+                    // Buy from market
+                    if (game.getPlayer().purchaseResourceFromMarket(adjustableActor.getValue(), game.market, resource) == PurchaseStatus.Success) {
+                        game.gameScreen.getActors().textUpdate();
+                        widgetUpdate();
+                    }
+                } else {
+                    // Sell to market
+                    if (adjustableActor.getValue() <= game.getPlayer().getResource(resource)) {
+                        game.getPlayer().sellResourceToMarket(adjustableActor.getValue(), game.market, resource);
+                        game.gameScreen.getActors().textUpdate();
+                        widgetUpdate();
+                    }
+                }
 
 
-	/**
-	 * Initialise market actors.
-	 * @param game       The game object.
-	 * @param screen     The screen object.
-	 */
-	public ResourceMarketActors(final RoboticonQuest game, ResourceMarketScreen screen) {
-		center();
-
-		Skin skin = game.skin;
-		this.game = game;
-		this.screen = screen;
-		Stage stage = screen.getStage();
-
-
-		// Create UI Components
-		phaseInfo = new Label("", game.skin);
-		nextButton = new TextButton("Next ->", game.skin);
-		pubButton = new TextButton("Enter The Pub", game.skin);
-
-		playerStats = new Label("", game.skin);
-		marketStats = new Label("", game.skin);
-
-		//spaces added to provide a gap between buy and sell columns
-		Label buyLabel  = new Label("                   Buy                  ", skin);
-		Label sellLabel = new Label("                  Sell                  ", skin);
-
-		oreBuy = createAdjustable(ResourceType.ORE, false);
-		oreSell = createAdjustable(ResourceType.ORE, true);
-		energyBuy = createAdjustable(ResourceType.ENERGY, false);
-		energySell = createAdjustable(ResourceType.ENERGY, true);
-		foodBuy = createAdjustable(ResourceType.FOOD, false);
-		foodSell = createAdjustable(ResourceType.FOOD, true);
-
-		// Adjust properties.
-		bindEvents();
-
-		phaseInfo.setAlignment(Align.right);
-		marketStats.setAlignment(Align.right);
-
-		buyLabel.setAlignment(Align.center);
-		sellLabel.setAlignment(Align.center);
-
-
-		// Add UI components to screen.
-		stage.addActor(phaseInfo);
-		stage.addActor(nextButton);
-        stage.addActor(marketStats);
-        stage.addActor(playerStats);
-		stage.addActor(pubButton);
-
-		// Setup UI Layout.
-
-		// Row: Label of Sell and Buy
-		add(buyLabel);
-		add();
-		add(sellLabel);
-		rowWithHeight(10);
-
-		// Row: Ore buy/sell
-		add(oreBuy);
-		add();
-		add(oreSell);
-		rowWithHeight(10);
-
-		// Row: Energy buy/sell
-		add(energyBuy);
-		add();
-		add(energySell);
-		rowWithHeight(10);
-
-		// Row: Food buy/sell
-		add(foodBuy);
-		add();
-		add(foodSell);
-		rowWithHeight(10);
-
-		widgetUpdate();
-	}
+            }
+        });
+        return adjustableActor;
+    }
 
     /**
      * Get price in string format
      *
      * @param resource The resource type.
-     * @param bIsSell  <code>true</code> if is for sell,
-     *                 or <code>false</code> if is for buy in.
+     * @param buy  <code>true</code> if is for buying,
+     *             or <code>false</code> if is for selling
      * @return The formatted string for the resource.
      */
-    private String getPriceString(ResourceType resource, boolean bIsSell) {
+    private String getPriceString(ResourceType resource, boolean buy) {
         // getBuyPrice: market buy-in price (user sell price)
         // getSellPrice: market sell price (user buy price)
         return resource.toString() + ": "
-                + (bIsSell
-                ? game.market.getBuyPrice(resource)
-                : game.market.getSellPrice(resource))
+                + (buy
+                ? game.market.getSellPrice(resource)
+                : game.market.getBuyPrice(resource))
                 + " Gold";
     }
 
@@ -142,142 +128,114 @@ public class ResourceMarketActors extends Table {
      *
      * @param adjustableActor The adjustable to manipulate with.
      * @param resource        The resource type.
-     * @param bIsSell         <code>true</code> if the adjustable is for sell,
-     *                        <code>false</code> if is for buy.
+     * @param buy  <code>true</code> if is for buying,
+     *             or <code>false</code> if is for selling
      */
-    private void updateAdjustable(AdjustableActor adjustableActor, ResourceType resource,
-                                  boolean bIsSell) {
-        if (bIsSell) {
-            adjustableActor.setMax(game.getPlayer().getResource(resource));
-        } else {
+    private void updateAdjustable(MarketAdjustableActor adjustableActor, ResourceType resource,
+                                  boolean buy) {
+        if (buy) {
             adjustableActor.setMax(game.market.getResource(resource));
+        } else {
+            adjustableActor.setMax(game.getPlayer().getResource(resource));
         }
 
-        adjustableActor.setTitle(getPriceString(resource, bIsSell));
+        adjustableActor.setTitle(getPriceString(resource, buy));
     }
 
     /**
-     * Generate an adjustable actor for sell/buy.
-     *
-     * @param resource The resource type.
-     * @param bIsSell  <code>true</code> if is for sell,
-     *                 or <code>false</code> if is for buy in.
-     * @return The adjustable actor generated.
+     * Updates all widgets on screen
      */
-    private AdjustableActor createAdjustable(final ResourceType resource, final boolean bIsSell) {
-        final Player player = game.getPlayer();
-        final AdjustableActor adjustableActor = new AdjustableActor(game.skin, getPriceString(resource, bIsSell),
-                (bIsSell ? "Sell" : "Buy") + " " + resource.toString());
-        updateAdjustable(adjustableActor, resource, bIsSell);
-        adjustableActor.setActionEvent(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (bIsSell) {
-                    // Sell from player to market.
-                    player.sellResourceToMarket(adjustableActor.getValue(), game.market, resource);
-                } else {
-                    // Player buy from market.
-                    player.purchaseResourceFromMarket(adjustableActor.getValue(), game.market, resource);
-                }
+    public void widgetUpdate() {
+        updateAdjustable(oreBuyAdjustable, ResourceType.ORE, true);
+        if (game.market.getResource(ResourceType.ORE) == 0) {
+            oreBuyAdjustable.setValue(0);
+        } else {
+            oreBuyAdjustable.setValue(1);
+        }
 
-                ResourceMarketActors.this.widgetUpdate();
-            }
-        });
-        return adjustableActor;
+        updateAdjustable(oreSellAdjustable, ResourceType.ORE, false);
+        if (game.getPlayer().getResource(ResourceType.ORE) == 0) {
+            oreSellAdjustable.setValue(0);
+        } else {
+            oreSellAdjustable.setValue(1);
+        }
+
+        updateAdjustable(energyBuyAdjustable, ResourceType.ENERGY, true);
+        if (game.market.getResource(ResourceType.ENERGY) == 0) {
+            energyBuyAdjustable.setValue(0);
+        } else {
+            energyBuyAdjustable.setValue(1);
+        }
+
+        updateAdjustable(energySellAdjustable, ResourceType.ENERGY, false);
+        if (game.getPlayer().getResource(ResourceType.ENERGY) == 0) {
+            energySellAdjustable.setValue(0);
+        } else {
+            energySellAdjustable.setValue(1);
+        }
+
+        updateAdjustable(foodBuyAdjustable, ResourceType.FOOD, true);
+        if (game.market.getResource(ResourceType.FOOD) == 0) {
+            foodBuyAdjustable.setValue(0);
+        } else {
+            foodBuyAdjustable.setValue(1);
+        }
+
+        updateAdjustable(foodSellAdjustable, ResourceType.FOOD, false);
+        if (game.getPlayer().getResource(ResourceType.FOOD) == 0) {
+            foodSellAdjustable.setValue(0);
+        } else {
+            foodSellAdjustable.setValue(1);
+        }
+
+        setButtonStates();
     }
 
-	/**
-	 * Bind button events.
-	 */
-	private void bindEvents() {
-		nextButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.nextPhase();
-			}
-		});
-
-		pubButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-					game.setScreen(new MiniGameScreen(game, screen));
-			}
-		});
-	}
-
-	/**
-	 * Add an empty row to current table.
+    /**
+     * Add an empty row to current table.
      * @param height  The y for that empty row.
      */
     private void rowWithHeight(int height) {
-		row();
-		add().spaceTop(height);
-		row();
-	}
+        row();
+        add().spaceTop(height);
+        row();
+    }
 
-	/**
-	 * Updates all widgets on screen
-	 */
-    private void widgetUpdate() {
-        // update player stats, phase text, and the market stats.
-		String phaseText =
-				"Player " + (game.getPlayerInt() + 1) + "; " +
-				"Phase " + game.getPhase() + " - " + game.getPhaseString();
+    public void setButtonStates() {
+        if (game.market.getResource(ResourceType.ORE) == 0 || (oreBuyAdjustable.getValue() * game.market.getSellPrice(ResourceType.ORE) > game.getPlayer().getMoney())) {
+            oreBuyAdjustable.setButtonState(Touchable.disabled);
+        } else {
+            oreBuyAdjustable.setButtonState(Touchable.enabled);
+        }
 
-		String statText =
-				"Player Resources\n\n" +
-				"Ore: "    + game.getPlayer().getOre()    + "\n\n" +
-				"Energy: " + game.getPlayer().getEnergy() + "\n\n" +
-				"Food: "   + game.getPlayer().getFood()   + "\n\n" +
-				"Money: "  + game.getPlayer().getMoney();
+        if (game.getPlayer().getResource(ResourceType.ORE) > 0) {
+            oreSellAdjustable.setButtonState(Touchable.enabled);
+        } else {
+            oreSellAdjustable.setButtonState(Touchable.disabled);
+        }
 
-		String marketStatText =
-                "Market Resources\n\n" +
-				"Ore: " +    game.market.getResource(ResourceType.ORE   ) + "\n\n" +
-				"Energy: " + game.market.getResource(ResourceType.ENERGY) + "\n\n" +
-				"Food: " +   game.market.getResource(ResourceType.FOOD  ) + "\n\n";
+        if (game.market.getResource(ResourceType.ENERGY) == 0 || (energyBuyAdjustable.getValue() * game.market.getSellPrice(ResourceType.ENERGY) > game.getPlayer().getMoney())) {
+            energyBuyAdjustable.setButtonState(Touchable.disabled);
+        } else {
+            energyBuyAdjustable.setButtonState(Touchable.enabled);
+        }
 
+        if (game.getPlayer().getResource(ResourceType.ENERGY) > 0) {
+            energySellAdjustable.setButtonState(Touchable.enabled);
+        } else {
+            energySellAdjustable.setButtonState(Touchable.disabled);
+        }
 
+        if (game.market.getResource(ResourceType.FOOD) == 0 || (foodBuyAdjustable.getValue() * game.market.getSellPrice(ResourceType.FOOD) > game.getPlayer().getMoney())) {
+            foodBuyAdjustable.setButtonState(Touchable.disabled);
+        } else {
+            foodBuyAdjustable.setButtonState(Touchable.enabled);
+        }
 
-		phaseInfo.setText(phaseText);
-		playerStats.setText(statText);
-		marketStats.setText(marketStatText);
-
-		updateAdjustable(oreBuy, ResourceType.ORE, false);
-		updateAdjustable(oreSell, ResourceType.ORE, true);
-
-		updateAdjustable(energyBuy, ResourceType.ENERGY, false);
-		updateAdjustable(energySell, ResourceType.ENERGY, true);
-
-		updateAdjustable(foodBuy, ResourceType.FOOD, false);
-		updateAdjustable(foodSell, ResourceType.FOOD, true);
-	}
-
-	/**
-	 * Respond to the screen resize event, updates widgets position
-     * accordingly.
-     * @param width    The new x.
-     * @param height   The new Height.
-     */
-	public void screenResize(float width, float height) {
-		// Bottom Left
-		phaseInfo.setPosition(0, height - 20);
-		phaseInfo.setWidth(width - 10);
-
-		// Bottom Right
-		nextButton.setPosition(width - nextButton.getWidth() - 10, 10);
-
-		//Middle Right
-        playerStats.setPosition(width - 250, 300 );
-
-        //Middle Left
-        marketStats.setPosition(250, 300 );
-		setWidth(width);
-
-		//Top Left
-		pubButton.setPosition(10, height - pubButton.getHeight() - 10);
-
-	}
+        if (game.getPlayer().getResource(ResourceType.FOOD) > 0) {
+            foodSellAdjustable.setButtonState(Touchable.enabled);
+        } else {
+            foodSellAdjustable.setButtonState(Touchable.disabled);
+        }
+    }
 }
-
-
