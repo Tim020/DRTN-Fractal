@@ -64,7 +64,7 @@ public class PlotEffect extends Array<Float[]> {
         this.plotRegister = new Array<LandPlot>();
         //Establish the separate LandPlot stack to track affected tiles
 
-        this.overlay = new Overlay(Color.GRAY, Color.WHITE, 3);
+        this.overlay = new Overlay(Color.GOLDENROD, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
     }
 

@@ -65,7 +65,7 @@ public class PlayerEffect {
 
         this.runnable = runnable;
 
-        this.overlay = new Overlay(Color.GRAY, Color.WHITE, 3);
+        this.overlay = new Overlay(Color.OLIVE, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
     }
 
