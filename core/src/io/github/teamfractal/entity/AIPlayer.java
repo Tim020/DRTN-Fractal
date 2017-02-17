@@ -22,8 +22,6 @@ public class AIPlayer extends Player {
      *
      */
     public void takeTurn(int phase) {
-        //TODO get gamephase being used
-        int gamephase = game.getPhase();
         switch (phase) {
             case 1:
                 //"Buy Land Plot
@@ -51,6 +49,11 @@ public class AIPlayer extends Player {
         }
     }
 
+    /**
+     * Utility function to return a random number between 0 and max.
+     * @param max an integer value representing the largest number requested
+     * @return integer random value between 0 and max.
+     */
     private int random(int max) {
         Random rand = new Random();
         return rand.nextInt(max);
@@ -58,7 +61,6 @@ public class AIPlayer extends Player {
 
     /**
      * Function simulating the Player interaction during Phase 1.
-     * <p>
      * <p>
      * Plots cost 10 money.
      * Only one plot can be purchased.

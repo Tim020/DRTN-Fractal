@@ -15,6 +15,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
     private PlotEffect duckRelatedDisaster;
 
+    private PlotEffect spicy;
+
     public PlotEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
 
@@ -43,9 +45,27 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 duckRelatedDisaster.impose(foodProducer, 1);
             }
         });
+
+        spicy = new PlotEffect("It's getting spicy", "Some students got hold of some hot pepper seeds and all of your food " +
+                "production \nhas been turned over to peppers. Increasing Food output by 200% However this spicy craze " +
+                "\nhas caused all other production values to drop to 0.", new Float[]{(float) 0, (float) 0, (float) 2}, new Runnable() {
+            @Override
+            public void  run() {
+                if (engine.getPlayer().getLandList().size() == 0) {
+                    return;
+                }
+
+                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                    spicy.impose(plot, 1);
+                }
+
+
+            }
+        });
     }
 
     public void implementEffects() {
         add(duckRelatedDisaster);
+        add(spicy);
     }
 }
