@@ -27,7 +27,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
                 "attempted to use some your fat stacks as Cards\nAgainst Humanity by scrawling immature statements " +
                 "all over them with a permanent marker, thereby\nrendering them worthess.\n\n-30 Money", 0, 0, 0, -30, false);
 
-        vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a group of intergalactical Vikings." +
+        vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings." +
                 "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", 0, 0, 0, -10, false);
     }
 
