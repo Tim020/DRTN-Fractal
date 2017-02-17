@@ -7,12 +7,41 @@ import io.github.teamfractal.exception.NotCommonResourceException;
 import io.github.teamfractal.util.PlotManager;
 
 public class LandPlot {
-	private TiledMapTileLayer.Cell mapTile;
+    private final int IndexOre = 0;
+    private final int IndexEnergy = 1;
+    private final int IndexFood = 2;
+    int x, y;
+    /**
+     * Saved modifiers for LandPlot.
+     * [ Ore, Energy, Food ]
+     */
+    float[] productionModifiers = {0, 0, 0};
+    private TiledMapTileLayer.Cell mapTile;
 	private TiledMapTileLayer.Cell playerTile;
 	private TiledMapTileLayer.Cell roboticonTile;
 	private Player owner;
-	int x, y;
+    /**
+     * The base production amounts.
+     * [ Ore, Energy, Food ]
+     */
+    private int[] productionAmounts;
+    private boolean owned;
+    private Roboticon installedRoboticon;
+    private boolean hasRoboticon;
 
+    /**
+     * Initialise LandPlot with specific base amount of resources.
+     *
+     * @param ore    Amount of ore
+     * @param energy Amount of energy
+     * @param food   Amount of food
+     */
+    public LandPlot(int ore, int energy, int food) {
+        this.productionAmounts = new int[]{ore, energy, food};
+        this.owned = false;
+    }
+
+    //</editor-fold>
 
 	//<editor-fold desc="Class getters">
 	public TiledMapTileLayer.Cell getMapTile() {
@@ -38,8 +67,11 @@ public class LandPlot {
 	public int getY() {
 		return y;
 	}
-
-
+	/**
+	 * Sets the owner of the land plot to the specified player
+	 * @param player The player to be set as owner
+	 * @return Returns true if the land plot didn't already have an owner, false if it did
+	 */
 	public boolean setOwner(Player player) {
 		if (hasOwner()) {
 			return false;
@@ -49,51 +81,28 @@ public class LandPlot {
 		player.addLandPlot(this);
 		return true;
 	}
-
+	/**
+	 * Returns the state of the land plots ownership
+	 * @return True if owned, false otherwise
+	 */
 	public boolean hasOwner() {
 		return getOwner() != null;
 	}
-
+	/**
+	 * Removes the owner of the tile
+	 */
 	public void removeOwner() {
 		if (!hasOwner())
 			return ;
 
 		owner.removeLandPlot(this);
 	}
-	
-	//</editor-fold>
-
-	private final int IndexOre = 0;
-	private final int IndexEnergy = 1;
-	private final int IndexFood = 2;
-
 	/**
-	 * Saved modifiers for LandPlot.
-	 * [ Ore, Energy, Food ]
+	 * Retrieves the overlays for the specific tile
+	 * @param plotManager The plotmanager storing the images of the current mao
+	 * @param x The x coordinate of the tile
+	 * @param y The y coordinate if the tile
 	 */
-	int[] productionModifiers = {0, 0, 0};
-
-	/**
-	 * The base production amounts.
-	 * [ Ore, Energy, Food ]
-	 */
-	private int[] productionAmounts;
-	private boolean owned;
-	private Roboticon installedRoboticon;
-	private boolean hasRoboticon;
-
-	/**
-	 * Initialise LandPlot with specific base amount of resources.
-	 *
-	 * @param ore     Amount of ore
-	 * @param energy  Amount of energy
-	 * @param food    Amount of food
-	 */
-	public LandPlot(int ore, int energy, int food) {
-		this.productionAmounts = new int[]{ore, energy, food};
-		this.owned = false;
-	}
-
 	public void setupTile (PlotManager plotManager, int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -152,11 +161,11 @@ public class LandPlot {
 	 *
 	 * @return The amount of resources to be produced in an 2D array.
 	 */
-	public int[] produceResources() {
-		int[] produced = new int[3];
-		for (int i = 0; i < 2; i++) {
-			produced[i] = productionAmounts[i] * productionModifiers[i];
-		}
+    public int[] produceResources() {
+        int[] produced = new int[3];
+        for (int i = 0; i < 2; i++) {
+            produced[i] = (int) ((float) productionAmounts[i] * productionModifiers[i]);
+        }
 		return produced;
 	}
 
@@ -168,21 +177,31 @@ public class LandPlot {
 	public int produceResource(ResourceType resource) {
 		if (this.hasRoboticon){
 			int resIndex = resourceTypeToIndex(resource);
-			return productionAmounts[resIndex] * productionModifiers[resIndex];
+			return (int) ((float) productionAmounts[resIndex] * productionModifiers[resIndex]);
 		}
 		else return 0;
 		
 	}
-
+	/**
+	 * Gets the index of the specific resource
+	 * @param resource The resource selected
+	 * @return The index of the resource
+	 */
 	public int getResource(ResourceType resource) {
 		int resIndex = resourceTypeToIndex(resource);
 		return productionAmounts[resIndex];
 	}
-	
+	/**
+	 * Checks if the tile contains a roboticon
+	 * @return True if the tile contains a roboticon, false otherwise
+	 */
 	public boolean hasRoboticon(){
 		return this.hasRoboticon;
 	}
-	
+	/**
+	 * Setter for hasRoboticon
+	 * @param roboticonInstalled The boolean that hasRoboticon is to be changed to
+	 */
 	public void setHasRoboticon(boolean roboticonInstalled){
 		this.hasRoboticon = roboticonInstalled;
 	}

@@ -4,17 +4,18 @@ import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
-import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.LandPlot;
 
+import java.util.Random;
+
 public class PlotManager {
-	private LandPlot[][] plots;
+    public int x;
+    public int y;
+    private LandPlot[][] plots;
 	private TiledMapTileSets tiles;
 	private TiledMapTileLayer mapLayer;
 	private TiledMapTileLayer playerOverlay;
 	private TiledMapTileLayer roboticonOverlay;
-	private int width;
-	private int height;
 	private TiledMapTile cityTile;
 	private TiledMapTile waterTile;
 	private TiledMapTile forestTile;
@@ -46,10 +47,13 @@ public class PlotManager {
 		this.hillTile3 = tiles.getTile(6);
 		this.hillTile4 = tiles.getTile(7);
 
-		width = mapLayer.getWidth();
-		height = mapLayer.getHeight();
-		plots = new LandPlot[width][height];
-	}
+        this.x = mapLayer.getWidth();
+
+        this.y = mapLayer.getHeight();
+
+        this.plots = new LandPlot[x][y];
+
+    }
 
 	/**
 	 * Get {@link LandPlot} at specific position.
@@ -58,19 +62,33 @@ public class PlotManager {
 	 * @return    The corresponding {@link LandPlot} object.
 	 */
 	public LandPlot getPlot(int x, int y) {
-		if (x < 0 || x >= width || y < 0 || y >= height)
-			return null;
+        if (x < 0 || x >= this.x || y < 0 || y >= this.y)
+            return null;
 
 		// Lazy load
-		LandPlot p = plots[x][y];
+		LandPlot p = this.plots[x][y];
 		if (p == null) {
 			p = createLandPlot(x, y);
 		}
 
 		return p;
 	}
-	/**
-	 * Creates a landplot from a tile tile on the tiled map
+
+    /**
+     * Function to return a random number in range
+     *
+     * @return random int value between min and max
+     */
+    private int randomResourceVal() {
+        Random rand = new Random();
+        int max = 6;
+        int min = 0;
+        return rand.nextInt(max) + min;
+
+    }
+
+    /**
+     * Creates a landplot from a tile tile on the tiled map
 	 * @param x - x coordinate on tiled map
 	 * @param y - y coordinate on tiled map
 	 * @return new Landplot with statistics determined by tile on tiled map
@@ -79,36 +97,32 @@ public class PlotManager {
 		int ore, energy, food;
 		TiledMapTile tile = mapLayer.getCell(x, y).getTile();
 
-		if (tile == cityTile){
-			ore = 1;
-			energy = 2;
-			food = 3;
-		}
-		else if (tile == forestTile){
-			ore = 2;
-			energy = 3;
-			food = 1;
-		}
-		else if (tile == waterTile){
-			ore = 3;
-			energy = 1;
-			food = 2;
-		}
-		else if (tile == hillTile1 || tile == hillTile2 ||tile == hillTile3 || tile == hillTile4 ){
-			ore = 3;
-			energy = 2;
-			food = 1;
-		}
-		else{
-			ore = 2;
-			energy = 2;
-			food = 2;
-		}
+        if (tile == cityTile) {
+            ore = 1 + this.randomResourceVal();
+            energy = 2 + this.randomResourceVal();
+            food = 3 + this.randomResourceVal();
+        } else if (tile == forestTile) {
+            ore = 2 + this.randomResourceVal();
+            energy = 3 + this.randomResourceVal();
+            food = 1 + this.randomResourceVal();
+        } else if (tile == waterTile) {
+            ore = 3 + this.randomResourceVal();
+            energy = 1 + this.randomResourceVal();
+            food = 2 + this.randomResourceVal();
+        } else if (tile == hillTile1 || tile == hillTile2 || tile == hillTile3 || tile == hillTile4) {
+            ore = 3 + this.randomResourceVal();
+            energy = 2 + this.randomResourceVal();
+            food = 1 + this.randomResourceVal();
+        } else {
+            ore = 2 + this.randomResourceVal();
+            energy = 2 + this.randomResourceVal();
+            food = 2 + this.randomResourceVal();
+        }
 
 
 		LandPlot p = new LandPlot(ore, energy, food);
 		p.setupTile(this, x, y);
-		plots[x][y] = p;
+		this.plots[x][y] = p;
 		return p;
 	}
 
@@ -123,4 +137,9 @@ public class PlotManager {
 	public TiledMapTileLayer getRoboticonOverlay() {
 		return roboticonOverlay;
 	}
+
+	public LandPlot[][] getLandPlots(){
+		return this.plots;
+	}
+
 }

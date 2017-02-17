@@ -1,6 +1,8 @@
 package io.github.teamfractal.entity;
 
+import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
+import io.github.teamfractal.TesterFile;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.NotEnoughResourceException;
 import org.junit.Before;
@@ -8,14 +10,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static org.junit.Assert.assertEquals;
 
-public class PlayerTest {
+public class PlayerTest extends TesterFile {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 

@@ -1,14 +1,18 @@
 package io.github.teamfractal.entity;
 
+import io.github.teamfractal.TesterFile;
 import io.github.teamfractal.entity.enums.ResourceType;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class MarketTest {
+public class MarketTest extends TesterFile {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
@@ -63,10 +67,11 @@ public class MarketTest {
 	 */
 	@Test
 	public void marketShouldHaveCorrectPricesForResources() throws Exception {
-		assertEquals(9, market.getBuyPrice(ResourceType.ORE));
-		assertEquals(18, market.getBuyPrice(ResourceType.ENERGY));
-		assertEquals(27, market.getBuyPrice(ResourceType.FOOD));
-		assertEquals(36, market.getBuyPrice(ResourceType.ROBOTICON));
+		//TODO Should these numbers be so low?
+		assertEquals(30, market.getBuyPrice(ResourceType.ORE));
+		assertEquals(6, market.getBuyPrice(ResourceType.ENERGY));
+		assertEquals(6, market.getBuyPrice(ResourceType.FOOD));
+		assertEquals(6, market.getBuyPrice(ResourceType.ROBOTICON));
 	}
 
 
@@ -99,10 +104,10 @@ public class MarketTest {
 		market.setFood(valueToTest1);
 		market.setRoboticon(valueToTest1);
 
-		assertEquals(30,market.getSellPrice(ResourceType.FOOD));
+		assertEquals(10,market.getSellPrice(ResourceType.FOOD));
 		assertEquals(10,market.getSellPrice(ResourceType.ORE));
-		assertEquals(40,market.getSellPrice(ResourceType.ROBOTICON));
-		assertEquals(20,market.getSellPrice(ResourceType.ENERGY));
+		assertEquals(10,market.getSellPrice(ResourceType.ROBOTICON));
+		assertEquals(10,market.getSellPrice(ResourceType.ENERGY));
 	}
 
 	@Test

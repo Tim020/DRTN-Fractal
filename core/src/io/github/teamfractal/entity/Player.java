@@ -1,95 +1,109 @@
 package io.github.teamfractal.entity;
 
+import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.animation.AnimationAddResources;
-import io.github.teamfractal.animation.IAnimation;
-import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.NotCommonResourceException;
 import io.github.teamfractal.exception.NotEnoughResourceException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
-import com.badlogic.gdx.utils.Array;
 
 public class Player {
-	//<editor-fold desc="Resource getter and setter">
-	private int money = 100;
-	private int ore = 0;
-	private int energy = 0;
-	private int food = 0;
-	ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
+	public RoboticonQuest game;
 	Array<Roboticon> roboticonList;
-	private RoboticonQuest game;
+    ArrayList<LandPlot> landList = new ArrayList<LandPlot>();
+    //<editor-fold desc="Resource getter and setter">
+    private int money = 100;
+    private int ore = 0;
+    private int energy = 0;
+    private int food = 0;
 
-	public int getMoney() { return money; }
-	public int getOre() { return ore; }
-	public int getEnergy() { return energy; }
-	public int getFood() { return food; }
-	
+
 	public Player(RoboticonQuest game){
 		this.game = game;
-		this.roboticonList = new Array<Roboticon>();
+        this.roboticonList = new Array<Roboticon>();
 
-		
 	}
+
+	public int getMoney() {
+		return money;
+	}
+
 	/**
 	 * Set the amount of money player has
-	 * @param money                      The amount of new money.
-	 * @throws IllegalArgumentException  If the new money if negative, this exception will be thrown.
+	 * @param money The amount of new money
 	 */
-	synchronized void setMoney(int money) throws IllegalArgumentException {
+	synchronized void setMoney(int money){
 		if (money < 0) {
-			throw new IllegalArgumentException("Error: Money can't be negative.");
+			this.money = 0;
+		} else {
+			this.money = money;
 		}
-
-		this.money = money;
 	}
 
+	public void setGamblingMoney(int money){
+		setMoney(money);
+	}
+
+	public int getOre() {
+		return ore;
+	}
+	
 	/**
 	 * Set the amount of ore player has
-	 * @param amount                     The new amount for ore.
-	 * @throws IllegalArgumentException  If the new ore amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for ore.
 	 */
 	synchronized void setOre(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Ore can't be negative.");
+			this.ore = 0;
+		} else {
+			this.ore = amount;
 		}
+	}
 
-		this.ore = amount;
+	public int getEnergy() {
+		return energy;
 	}
 
 	/**
 	 * Set the amount of energy player has
-	 * @param amount                     The new amount for energy.
-	 * @throws IllegalArgumentException  If the new energy amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for energy.
 	 */
 
 	synchronized void setEnergy(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Energy can't be negative.");
+			this.energy = 0;
+		} else {
+			this.energy = amount;
 		}
+	}
 
-		this.energy = amount;
+	public int getFood() {
+		return food;
 	}
 
 	/**
 	 * Set the amount of food player has
-	 * @param amount                     The new amount for food.
-	 * @throws IllegalArgumentException  If the new food amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for food.
 	 */
-
 	synchronized void setFood(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Food can't be negative.");
+			this.food = 0;
+		} else {
+			this.food = amount;
 		}
-
-		this.food = amount;
 	}
 
 	/**
@@ -140,9 +154,9 @@ public class Player {
 
 	/**
 	 * Purchase roboticon from the market.
-	 * @param amount
-	 * @param market
-	 * @return
+	 * @param amount number of roboticons requested
+	 * @param market the market being purchased from
+	 * @return returns purchase status
 	 */
 	public PurchaseStatus purchaseRoboticonsFromMarket(int amount, Market market) {
 		Random random = new Random();
@@ -181,7 +195,7 @@ public class Player {
 			return PurchaseStatus.FailMarketNotEnoughResource;
 		}
 
-		int cost = 1 * market.getSellPrice(ResourceType.CUSTOMISATION);
+		int cost = market.getSellPrice(ResourceType.CUSTOMISATION);
 		int money = getMoney();
 		if (cost > money) {
 			return PurchaseStatus.FailPlayerNotEnoughMoney;
@@ -241,20 +255,11 @@ public class Player {
 	}
 
 	/**
-	 * Check if the player have enough money for the {@link LandPlot}.
-	 * @param plot           The landplot to purchase
-	 * @return  true if the player have enough money for that plot.
-	 */
-	public synchronized boolean haveEnoughMoney(LandPlot plot) {
-		return getMoney() >= 10;
-	}
-
-	/**
 	 * Player add a landplot to their inventory for gold
 	 * @param plot           The landplot to purchase
 	 */
 	public synchronized boolean purchaseLandPlot(LandPlot plot){
-		if (plot.hasOwner() || !haveEnoughMoney(plot)) {
+		if (plot.hasOwner() || money < 10) {
 			return false;
 		}
 
@@ -264,6 +269,7 @@ public class Player {
 		game.landPurchasedThisTurn();
 		return true;
 	}
+	
 	/**
 	 * Get a landplot to produce resources
 	 */
@@ -271,15 +277,18 @@ public class Player {
 		for (LandPlot plot : landList) {
 			energy += plot.produceResource(ResourceType.ENERGY);
 			ore += plot.produceResource(ResourceType.ORE);
+
+			food += plot.produceResource(ResourceType.FOOD);
 		}
 	}
+
 	/**
 	 * Apply roboticon customisation
 	 * @param roboticon  The roboticon to be customised
 	 * @param type       The roboticon customisation type.
 	 * @return           The roboticon
 	 */
-	public Roboticon customiseRoboticon(Roboticon roboticon, ResourceType type) {
+	Roboticon customiseRoboticon(Roboticon roboticon, ResourceType type) {
 		roboticon.setCustomisation(type);
 		return roboticon;
 	}
@@ -290,7 +299,7 @@ public class Player {
 	 * @param landPlot  LandPlot to be bind to the user.
 	 *                  <code>LandPlot.setOwner(this_user)</code> first.
 	 */
-	public void addLandPlot(LandPlot landPlot) {
+	void addLandPlot(LandPlot landPlot) {
 		if (landPlot != null && !landList.contains(landPlot) && landPlot.getOwner() == this) {
 			landList.add(landPlot);
 		}
@@ -302,7 +311,7 @@ public class Player {
 	 * @param landPlot  LandPlot to be removed from the user.
 	 *                  <code>this_user</code> must be the current owner first.
 	 */
-	public void removeLandPlot(LandPlot landPlot) {
+	void removeLandPlot(LandPlot landPlot) {
 		if (landPlot != null && landList.contains(landPlot) && landPlot.getOwner() == this) {
 			landList.add(landPlot);
 		}
@@ -317,17 +326,21 @@ public class Player {
 	public Array<String> getRoboticonAmountList() {
 		int ore = 0;
 		int energy = 0;
+		int food = 0;
 		int uncustomised = 0;
-		Array<String> roboticonAmountList = new Array<String>();
+        Array<String> roboticonAmountList = new Array<String>();
 
-		for (Roboticon r : roboticonList) {
-			if (!r.isInstalled()) {
+        for (Roboticon r : roboticonList) {
+            if (!r.isInstalled()) {
 				switch (r.getCustomisation()) {
 					case ORE:
 						ore += 1;
 						break;
 					case ENERGY:
 						energy += 1;
+						break;
+					case FOOD:
+						food += 1;
 						break;
 					default:
 						uncustomised += 1;
@@ -338,6 +351,7 @@ public class Player {
 
 		roboticonAmountList.add("Ore Specific x "    + ore);
 		roboticonAmountList.add("Energy Specific x " + energy);
+		roboticonAmountList.add("Food Specific x " + food);
 		roboticonAmountList.add("Uncustomised x "    + uncustomised);
 		return roboticonAmountList;
 	}
@@ -356,21 +370,38 @@ public class Player {
 		for (LandPlot land : landList) {
 			energy += land.produceResource(ResourceType.ENERGY);
 			ore += land.produceResource(ResourceType.ORE);
+			food += land.produceResource(ResourceType.FOOD);
 		}
 
 		setEnergy(getEnergy() + energy);
 		setFood(getFood() + food);
 		setOre(getOre() + ore);
 
-		IAnimation animation = new AnimationAddResources(this, energy, food, ore);
-		animation.setAnimationFinish(new IAnimationFinish() {
-			@Override
-			public void OnAnimationFinish() {
-				if (game.getPlayer() == Player.this){
-					game.nextPhase();
-				}
-			}
-		});
-		game.gameScreen.addAnimation(animation);
+		game.genOverlay.updateYieldLabels(energy, ore, food);
 	}
+
+	/**
+	 * Returns the array of plots owned by this player
+	 * @return ArrayList<LandPlot> The array of plots owned by this player
+	 */
+	public ArrayList<LandPlot> getLandList() {
+		return landList;
+	}
+
+    /**
+     * Returns the score of the player which is a combination of ore, energy and food.
+     * @return The score of the player.
+     */
+	public int calculateScore(){
+        return ore + energy + food;
+    }
+
+    /**
+     * Method to be overloaded by AI inheritance
+     */
+    public void takeTurn(int phase) {
+        //Overload in AIPlayer
+        System.out.println("Human turn");
+    }
+
 }
