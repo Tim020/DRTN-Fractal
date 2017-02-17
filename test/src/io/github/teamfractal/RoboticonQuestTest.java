@@ -1,13 +1,17 @@
 package io.github.teamfractal;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 
-public class RoboticonQuestTest extends GdxInitializer {
+public class RoboticonQuestTest extends TesterFile {
 	private RoboticonQuest game;
 	//TODO: Find a different way to test
-	/*@Before
+	@Before
 	public void setUp(){
 		game = new RoboticonQuest();
-		game.create();
+		game.reset(true);
+		
 	}
 	@Test
 	public void phaseTest(){
@@ -27,6 +31,6 @@ public class RoboticonQuestTest extends GdxInitializer {
 		assert(game.getPlayerInt() == 1);
 		game.nextPlayer();
 		assert(game.getPlayerInt() == 0); //Test game changes players correctly
-	}*/
+	}
 
 }
