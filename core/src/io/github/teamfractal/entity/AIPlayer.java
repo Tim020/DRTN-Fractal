@@ -170,8 +170,50 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 5.
      */
     private void phase5() {
+        if (game.getTurnNumber() % 2 == 0) {
+            if (this.getEnergy() > 0) {
+                sellResources(ResourceType.ENERGY, this.getEnergy() / 2);
+            }
+            if (this.getFood() > 0) {
+                sellResources(ResourceType.FOOD, this.getFood() / 2);
+            }
+            if (this.getOre() > 0) {
+                sellResources(ResourceType.ORE, this.getOre() / 2);
+            }
+        } else {
+            if (game.market.getEnergy() > 5) {
+                buyResources(ResourceType.ENERGY);
+            }
+            if (game.market.getOre() > 5) {
+                buyResources(ResourceType.ORE);
+            }
+            if (game.market.getFood() > 5) {
+                buyResources(ResourceType.FOOD);
+            }
+        }
+
 
         game.nextPhase();
+    }
+
+    /***
+     * Utility function for AI to sell resources to market
+     * @param type The resource to sell
+     * @param amount The amount of resources to be sold
+     */
+    private void sellResources(ResourceType type, int amount) {
+        this.sellResourceToMarket(amount, game.market, type);
+        System.out.println("Selling: " + amount + " " + type);
+    }
+
+    /**
+     * Utility function for AI to buy resources from market
+     *
+     * @param type The resource to buy
+     */
+    private void buyResources(ResourceType type) {
+        this.purchaseResourceFromMarket(5, game.market, type);
+        System.out.println("Buying: 5 " + type);
     }
 
 }

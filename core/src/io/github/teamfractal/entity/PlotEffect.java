@@ -43,16 +43,6 @@ public class PlotEffect extends Array<Float[]> {
     private Overlay overlay;
 
     /**
-     * Variable that holds true if and when the effect's associated overlay is visible
-     */
-    private boolean overlayActive;
-
-    /**
-     * Button created to close the effect's associated overlay
-     */
-    private TextButton closeButton;
-
-    /**
      * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
      *
      * @param name The name of the effect
@@ -76,9 +66,6 @@ public class PlotEffect extends Array<Float[]> {
 
         this.overlay = new Overlay(Color.GRAY, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
-
-        this.overlayActive = false;
-        //Note that the effect's overlay is not active at the current time
     }
 
     /**
@@ -117,36 +104,27 @@ public class PlotEffect extends Array<Float[]> {
      * Method that populates the effect's associated overlay
      */
     public void constructOverlay(final GameScreen gameScreen) {
-        /**
-         * Object that automatically converts .TTF files into BitmapFonts that can then be rendered to the screen
-         */
-        TTFont montserratRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"));
-        TTFont montserratLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"));
-        montserratRegular.setSize(24);
-        montserratLight.setSize(24);
-
         TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        overlayButtonStyle.font = montserratRegular.font();
+        overlayButtonStyle.font = gameScreen.getGame().headerFontRegular.font();
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
 
-        Label headerLabel = new Label("EFFECT IMPOSED", new Label.LabelStyle(montserratRegular.font(), Color.YELLOW));
-        Label titleLabel = new Label(name, new Label.LabelStyle(montserratLight.font(), Color.WHITE));
-        montserratLight.setSize(16);
-        Label descriptionLabel = new Label(description, new Label.LabelStyle(montserratLight.font(), Color.WHITE));
+        Label headerLabel = new Label("PLOT EFFECT IMPOSED", new Label.LabelStyle(gameScreen.getGame().headerFontRegular.font(), Color.YELLOW));
+        Label titleLabel = new Label(name, new Label.LabelStyle(gameScreen.getGame().headerFontLight.font(), Color.WHITE));
+        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameScreen.getGame().smallFontLight.font(), Color.WHITE));
 
         headerLabel.setAlignment(Align.left);
         titleLabel.setAlignment(Align.right);
         descriptionLabel.setAlignment(Align.left);
 
-        overlay.table().add(headerLabel).width(220);
-        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 220);
+        overlay.table().add(headerLabel).width(300).left();
+        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 300).right();
         overlay.table().row();
         overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
 
         overlay.table().row().colspan(2);
-        closeButton = new TextButton("CLOSE", overlayButtonStyle);
+        TextButton closeButton = new TextButton("CLOSE", overlayButtonStyle);
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -244,18 +222,12 @@ public class PlotEffect extends Array<Float[]> {
     }
 
     /**
-     * If the size of the effect's plot-register is greater than 0 at any given time, then at least 1 tile is still
-     * being affected by this object
-     */
-    public boolean active() {
-        return (plotRegister.size > 0);
-    }
-    /**
      * Executes the runnable
      */
     public void executeRunnable() {
         runnable.run();
     }
+
     /**
      * Getter for the runnable
      * @return The runnable
@@ -272,6 +244,7 @@ public class PlotEffect extends Array<Float[]> {
     public void setRunnable(Runnable runnable) {
         this.runnable = runnable;
     }
+
     /**
      * Getter for the name of the effect
      * @return The name of the effect
@@ -279,6 +252,7 @@ public class PlotEffect extends Array<Float[]> {
     public String name() {
         return name;
     }
+
     /**
      * Getter for the description if the effect
      * @return The description of the effect
@@ -286,23 +260,10 @@ public class PlotEffect extends Array<Float[]> {
     public String description() {
         return description;
     }
+
     /**
      * Getter for the overlay
      * @return The overlay of the effect
      */
     public Overlay overlay() { return overlay; }
-    /**
-     * Getter for the overlayActive boolean
-     * @return The overlayActive boolean
-     */
-    public boolean getOverlayActive() {
-        return overlayActive;
-    }
-    /**
-     * Sets the overActive boolean to the specific value
-     * @param overlayActive The state of overlayActive true/false
-     */
-    public void setOverlayActive(boolean overlayActive) {
-        this.overlayActive = overlayActive;
-    }
 }
