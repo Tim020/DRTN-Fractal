@@ -282,11 +282,6 @@ public class RoboticonMarketActors extends Table {
      */
     public void purchaseRoboticonFunction() {
         if (game.getPlayer().purchaseRoboticonsFromMarket(roboticonPurchaseAmount, game.market) == PurchaseStatus.Success) {
-            if (game.market.getResource(ResourceType.ROBOTICON) == 0) {
-                roboticonPurchaseAmount = 0;
-            } else {
-                roboticonPurchaseAmount = 1;
-            }
             roboticonPurchaseAmount = 1;
             refreshRoboticonShop();
             widgetUpdate();

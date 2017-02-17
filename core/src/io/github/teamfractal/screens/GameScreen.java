@@ -291,9 +291,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 				game.genOverlay.act(delta);
 				game.genOverlay.draw();
 				break;
-			case (5):
-				game.resourceMarket.act(delta);
-				game.resourceMarket.draw();
 		}
 	}
 
