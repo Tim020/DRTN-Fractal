@@ -21,6 +21,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
     private PlotEffect tornado;
 
+    private PlotEffect strike;
+
     public PlotEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
 
@@ -102,6 +104,23 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
             }
         });
+
+        strike = new PlotEffect("Roboticon Strike","Some of your roboticons have decided to go on strike." +
+                "\nAll resource production has depleted by 30%",
+                new Float[]{(float) 0.7, (float) 0.7, (float) 0.7}, new Runnable(){
+            @Override
+            public void run() {
+                if (engine.getPlayer().getLandList().size() == 0) {
+                    return;
+                }
+
+                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                    tornado.impose(plot, 1);
+                }
+
+
+            }
+        });
     }
 
     public void implementEffects() {
@@ -109,5 +128,6 @@ public class PlotEffectSource extends Array<PlotEffect> {
         add(spicy);
         add(earthquakeDisaster);
         add(tornado);
+        add(strike);
     }
 }

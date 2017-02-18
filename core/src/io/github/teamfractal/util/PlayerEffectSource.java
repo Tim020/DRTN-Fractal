@@ -16,6 +16,9 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
 
     private PlayerEffect freshersFair;
 
+    private PlayerEffect brexit;
+
+
     public PlayerEffectSource(final RoboticonQuest game) {
         this.game = game;
 
@@ -35,13 +38,13 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         });
 
         uhOh = new PlayerEffect("Uh Oh!", "Someone left the lights on over night again. Who was it? \nI bet it was Darrell," +
-                " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy",0,-50,0,0, false, new Runnable() {
+                " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy", 0, -50, 0, 0, false, new Runnable() {
             @Override
             public void run() {
                 uhOh.impose(game.getPlayer());
             }
         });
-        
+
         vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings." +
                 "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", 0, 0, 0, -10, false, new Runnable() {
             @Override
@@ -50,11 +53,20 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             }
         });
 
-        freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing."+
-        " Free stuff!\nYou receive 10 of each resource!", 10, 10, 10, 10, false, new Runnable() {
+        freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing." +
+                " Free stuff!\nYou receive 10 of each resource!", 10, 10, 10, 10, false, new Runnable() {
             @Override
             public void run() {
                 freshersFair.impose(game.getPlayer());
+            }
+        });
+
+        brexit = new PlayerEffect("Brexit", "Oh no, it looks like Britain finally pulled out of the European Union. " +
+                "It only took a few centuries!\nNo need to pay for that membership fee anymore but there are more tariffs on food items." +
+                "\n\n +30 Money  -20 Food", 0, 0, -20, 30, false, new Runnable() {
+            @Override
+            public void run() {
+                brexit.impose(game.getPlayer());
             }
         });
     }
@@ -64,5 +76,6 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         add(uhOh);
         add(vikingRaid);
         add(freshersFair);
+        add(brexit);
     }
 }
