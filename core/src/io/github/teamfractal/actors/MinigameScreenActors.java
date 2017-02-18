@@ -154,7 +154,7 @@ public class MinigameScreenActors extends Table {
 
         String result1 = "Draw!";
 
-        String result2 = "You loose " + gamblingMoney + " !";
+        String result2 = "You lose " + gamblingMoney + " !";
 
         String result3 = "You win " + gamblingMoney + " !";
 
