@@ -17,10 +17,11 @@ public class AIPlayerTest extends TesterFile {
     public final ExpectedException exception = ExpectedException.none();
 
     private Player player;
+    private RoboticonQuest game = new RoboticonQuest();
 
     @Before
     public void setUp() {
-        RoboticonQuest game = new RoboticonQuest();
+        game.create();
         player = new AIPlayer(game);
     }
 
@@ -160,8 +161,16 @@ public class AIPlayerTest extends TesterFile {
     }
 
 
+    /**
+     * First of the True AI tests
+     * <p>
+     * This test ensures that the AI executes correctly at each phase.
+     * </p>
+     */
     @Test
     public void testTakeTurn() {
 
+
+        player.takeTurn(1);
     }
 }
