@@ -8,6 +8,7 @@ import io.github.teamfractal.screens.EndGameScreen;
 /**
  * Created by Jack on 04/02/2017.
  */
+
 public class EndGameActors extends Table {
     private RoboticonQuest game;
     private EndGameScreen screen;
@@ -17,7 +18,11 @@ public class EndGameActors extends Table {
     private Label title;
     private Label space;
 
-
+    /**
+     -     * Creates the labels that are to appear in the end game screen
+     -     * @param game The current game
+     -     * @param screen The screen the actors are to be placed on
+     -     */
     public EndGameActors(final RoboticonQuest game, EndGameScreen screen){
         this.game = game;
         this.screen = screen;

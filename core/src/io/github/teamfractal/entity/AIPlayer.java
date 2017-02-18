@@ -3,7 +3,6 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 
-
 import java.util.Random;
 
 /**
@@ -23,8 +22,6 @@ public class AIPlayer extends Player {
      *
      */
     public void takeTurn(int phase) {
-        //TODO get gamephase being used
-        int gamephase = game.getPhase();
         switch (phase) {
             case 1:
                 //"Buy Land Plot
@@ -52,6 +49,11 @@ public class AIPlayer extends Player {
         }
     }
 
+    /**
+     * Utility function to return a random number between 0 and max.
+     * @param max an integer value representing the largest number requested
+     * @return integer random value between 0 and max.
+     */
     private int random(int max) {
         Random rand = new Random();
         return rand.nextInt(max);
@@ -59,7 +61,6 @@ public class AIPlayer extends Player {
 
     /**
      * Function simulating the Player interaction during Phase 1.
-     * <p>
      * <p>
      * Plots cost 10 money.
      * Only one plot can be purchased.
@@ -88,46 +89,64 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 2.
      */
     private void phase2() {
+        boolean purchased = false;
+        int robotIndex = 0;
 
-        for (LandPlot aLandList : this.landList) {
-            if (!aLandList.hasRoboticon()) {
-                int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
-                int max = 0;
-                int max_index = -1; //Initialise to index not used to not return false positives
-                for (int j = 0; j < resources.length; j++) {
-                    if (resources[j] > max) {
-                        max = resources[j];
-                        max_index = j;
+        try {
+            for (LandPlot aLandList : this.landList) {
+                if (!aLandList.hasRoboticon()) {
+                    int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
+                    int max = 0;
+                    int max_index = -1; //Initialise to index not used to not return false positives
+                    for (int j = 0; j < resources.length; j++) {
+                        if (resources[j] > max) {
+                            max = resources[j];
+                            max_index = j;
+                        }
                     }
-                }
-                System.out.println(max_index);
-                switch (max_index) {
-                    case 0:
-                        //ORE
+                    System.out.println(max_index);
+                    switch (max_index) {
 
-                        game.roboticonMarket.actors().addRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, game.roboticonMarket.actors().selectedRoboticonIndex());
-                        break;
+                        case 0:
+                            //ORE
+                            game.roboticonMarket.actors().purchaseRoboticonFunction();
+                            try {
+                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, robotIndex);
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
+                            break;
                         case 1:
-                        //FOOD
-                        game.roboticonMarket.actors().addRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD,  game.roboticonMarket.actors().selectedRoboticonIndex());
-                        break;
-                    case 2:
-                        //ENERGY
-                        game.roboticonMarket.actors().addRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseRoboticonFunction();
-                        game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY,  game.roboticonMarket.actors().selectedRoboticonIndex());
-                        break;
+                            //FOOD
+                            game.roboticonMarket.actors().purchaseRoboticonFunction();
+                            try {
+                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD, robotIndex);
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
+                            break;
+                        case 2:
+                            //ENERGY
+                            game.roboticonMarket.actors().purchaseRoboticonFunction();
+                            try {
+                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY, robotIndex);
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
+                            break;
                         default:
-                        //Uh oh! You friccin moron. You just got BEANED!!! Tag your friends to totally BEAN! them
-                }
 
+                    }
+
+                }
             }
             game.nextPhase();
+
+        } finally {
+            game.nextPhase();
         }
+
+
     }
 
     /**
@@ -153,8 +172,50 @@ public class AIPlayer extends Player {
      * Function simulating the Player interaction during Phase 5.
      */
     private void phase5() {
+        if (game.getTurnNumber() % 2 == 0) {
+            if (this.getEnergy() > 0) {
+                sellResources(ResourceType.ENERGY, this.getEnergy() / 2);
+            }
+            if (this.getFood() > 0) {
+                sellResources(ResourceType.FOOD, this.getFood() / 2);
+            }
+            if (this.getOre() > 0) {
+                sellResources(ResourceType.ORE, this.getOre() / 2);
+            }
+        } else {
+            if (game.market.getEnergy() > 5) {
+                buyResources(ResourceType.ENERGY);
+            }
+            if (game.market.getOre() > 5) {
+                buyResources(ResourceType.ORE);
+            }
+            if (game.market.getFood() > 5) {
+                buyResources(ResourceType.FOOD);
+            }
+        }
+
 
         game.nextPhase();
+    }
+
+    /***
+     * Utility function for AI to sell resources to market
+     * @param type The resource to sell
+     * @param amount The amount of resources to be sold
+     */
+    private void sellResources(ResourceType type, int amount) {
+        this.sellResourceToMarket(amount, game.market, type);
+        System.out.println("Selling: " + amount + " " + type);
+    }
+
+    /**
+     * Utility function for AI to buy resources from market
+     *
+     * @param type The resource to buy
+     */
+    private void buyResources(ResourceType type) {
+        this.purchaseResourceFromMarket(5, game.market, type);
+        System.out.println("Buying: 5 " + type);
     }
 
 }

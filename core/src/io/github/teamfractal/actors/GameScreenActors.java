@@ -1,5 +1,7 @@
 package io.github.teamfractal.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,13 +24,27 @@ public class GameScreenActors {
 	private final Stage stage;
 	private RoboticonQuest game;
 	private GameScreen screen;
-	private Label phaseInfo;
-	private Label playerStats;
+
+	private Table phaseInfo;
+	private Label playerLabel;
+	private Label phaseLabel;
+	private Label phaseDescriptionLabel;
+
+	private Table playerStats;
+	private Label playerOreLabel;
+	private Label playerEnergyLabel;
+	private Label playerFoodLabel;
+	private Label playerMoneyLabel;
+
+	private Table plotStatsTable;
+	private Label plotOreLabel;
+	private Label plotEnergyLabel;
+	private Label plotFoodLabel;
+
 	private TextButton buyLandPlotBtn;
 	private TextButton installRoboticonBtn;
 	private TextButton installRoboticonBtnCancel;
 	private SelectBox<String> installRoboticonSelect;
-	private Label plotStats;
 	private TextButton nextButton;
 	private boolean listUpdated;
 
@@ -46,22 +62,68 @@ public class GameScreenActors {
 	/**
 	 * Setup buttons.
 	 */
-	public void initialiseButtons() {
+	public void constructElements() {
+
 		// Create UI components
-		phaseInfo = new Label("", game.skin);
-		plotStats = new Label("", game.skin);
-		playerStats = new Label("", game.skin);
-		nextButton = new TextButton("Next ->", game.skin);
-		buyLandPlotBtn = new TextButton("Buy LandPlot", game.skin);
+		nextButton = new TextButton("Next Phase", game.skin);
+		buyLandPlotBtn = new TextButton("Buy Plot", game.skin);
 		createRoboticonInstallMenu();
+
+		// Create player stats table
+		playerStats = new Table();
+		playerStats.align(Align.left);
+		playerOreLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerFoodLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerEnergyLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerMoneyLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerStats.add(new Label("Ore", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerOreLabel).width(50);
+		playerStats.row();
+		playerStats.add(new Label("Food", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerFoodLabel).width(50);
+		playerStats.row();
+		playerStats.add(new Label("Energy", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerEnergyLabel).width(50);
+		playerStats.row();
+		playerStats.add(new Label("Money", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		playerStats.add(playerMoneyLabel).width(50);
+
+		// Create phase info table;
+		phaseInfo = new Table();
+		phaseInfo.align(Align.right);
+		playerLabel = new Label("PLAYER 1", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE));
+		phaseLabel = new Label("PHASE 1", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		phaseDescriptionLabel = new Label("Claim a Tile", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		playerLabel.setAlignment(Align.right);
+		phaseLabel.setAlignment(Align.right);
+		phaseDescriptionLabel.setAlignment(Align.right);
+		phaseInfo.add(playerLabel).width(300);
+		phaseInfo.row();
+		phaseInfo.add(phaseLabel).width(300);
+		phaseInfo.row();
+		phaseInfo.add(phaseDescriptionLabel).width(300);
+
+		// Create plot stats table
+		plotStatsTable = new Table();
+		plotStatsTable.align(Align.left);
+		plotStatsTable.setVisible(false);
+		plotOreLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		plotFoodLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		plotEnergyLabel = new Label("0", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
+		plotStatsTable.add(new Label("Ore", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		plotStatsTable.add(plotOreLabel).width(50);
+		plotStatsTable.row();
+		plotStatsTable.add(new Label("Food", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		plotStatsTable.add(plotFoodLabel).width(50);
+		plotStatsTable.row();
+		plotStatsTable.add(new Label("Energy", new Label.LabelStyle(game.smallFontRegular.font(), Color.WHITE))).width(70);
+		plotStatsTable.add(plotEnergyLabel).width(50);
 
 		// Adjust properties.
 		listUpdated = false;
 		hideInstallRoboticon();
 		buyLandPlotBtn.setVisible(false);
 		buyLandPlotBtn.pad(2, 10, 2, 10);
-		phaseInfo.setAlignment(Align.right);
-		plotStats.setAlignment(Align.topLeft);
 		installRoboticonSelect.setSelected(null);
 
 		// Bind events
@@ -72,12 +134,16 @@ public class GameScreenActors {
 		stage.addActor(buyLandPlotBtn);
 		stage.addActor(installRoboticonTable);
 		stage.addActor(phaseInfo);
-		stage.addActor(plotStats);
+		stage.addActor(plotStatsTable);
 		stage.addActor(playerStats);
 
 		// Update UI positions.
 		AbstractAnimationScreen.Size size = screen.getScreenSize();
-		resizeScreen(size.Width, size.Height);
+		//resizeScreen(size.Width, size.Height);
+
+		playerStats.setPosition(8, Gdx.graphics.getHeight() - 50);
+		phaseInfo.setPosition(Gdx.graphics.getWidth() - 8, Gdx.graphics.getHeight() - 39);
+		nextButton.setPosition(size.Width - nextButton.getWidth() - 10, 10);
 	}
 
 	private Table installRoboticonTable;
@@ -92,7 +158,7 @@ public class GameScreenActors {
 		installRoboticonSelect = new SelectBox<String>(game.skin);
 		installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
 
-		Label installRoboticonLabel = new Label("Install Roboticon: ", game.skin);
+		Label installRoboticonLabel = new Label("Install Roboticon", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
 		installRoboticonBtn = new TextButton("Confirm", game.skin);
 		installRoboticonBtnCancel = new TextButton("Cancel", game.skin);
 
@@ -165,7 +231,7 @@ public class GameScreenActors {
 				} else {
 					buyLandPlotBtn.setDisabled(true);
 				}
-				showPlotStats(plot, x + 10, y);
+				showPlotStats(plot, x + 10, y - 35);
 
 				buyLandPlotBtn.setVisible(true);
 				break;
@@ -204,15 +270,31 @@ public class GameScreenActors {
 	 * Updates the UI display.
 	 */
 	public void textUpdate() {
-		String phaseText = "Player " + (game.getPlayerInt() + 1) + "; Phase " + game.getPhase() + " - " + game.getPhaseString();
-		phaseInfo.setText(phaseText);
+		playerLabel.setText("PLAYER " + (game.getPlayerInt() + 1));
+		phaseLabel.setText("PHASE " + String.valueOf(game.getPhase()));
 
-		String statText = "Ore: " + game.getPlayer().getOre()
-				+ " Energy: " + game.getPlayer().getEnergy()
-				+ " Food: " + game.getPlayer().getFood()
-				+ " Money: " + game.getPlayer().getMoney();
+		switch (game.getPhase()) {
+			case (1):
+				phaseDescriptionLabel.setText("Claim a Tile");
+				break;
+			case (2):
+				phaseDescriptionLabel.setText("Buy and Upgrade Roboticons");
+				break;
+			case (3):
+				phaseDescriptionLabel.setText("Deploy Roboticons");
+				break;
+			case (4):
+				phaseDescriptionLabel.setText("Generate Resources");
+				break;
+			case (5):
+				phaseDescriptionLabel.setText("Buy and Sell Resources");
+				break;
+		}
 
-		playerStats.setText(statText);
+		playerOreLabel.setText(String.valueOf(game.getPlayer().getOre()));
+		playerEnergyLabel.setText(String.valueOf(game.getPlayer().getEnergy()));
+		playerFoodLabel.setText(String.valueOf(game.getPlayer().getFood()));
+		playerMoneyLabel.setText(String.valueOf(game.getPlayer().getMoney()));
 	}
 
 	/**
@@ -222,14 +304,16 @@ public class GameScreenActors {
 	 * @param width    The new Width.
 	 * @param height   The new Height.
 	 */
+	/*
 	public void resizeScreen(float width, float height) {
 		float topBarY = height - 20;
 		phaseInfo.setWidth(width - 10);
 		phaseInfo.setPosition(0, topBarY);
 
-		playerStats.setPosition(10, topBarY);
+		playerStats.setPosition(10, height - playerStats.getHeight());
 		nextButton.setPosition(width - nextButton.getWidth() - 10, 10);
 	}
+	*/
 
 	/**
 	 * Show plot information about current selected stats.
@@ -238,13 +322,12 @@ public class GameScreenActors {
 	 * @param y              The <i>y</i> position to display the information.
 	 */
 	private void showPlotStats(LandPlot plot, float x, float y) {
-		String plotStatText = "Ore: " + plot.getResource(ResourceType.ORE) + "\n"
-				+ "Energy: " + plot.getResource(ResourceType.ENERGY) + "\n"
-				+ "Food: " + plot.getResource(ResourceType.FOOD);
+		plotOreLabel.setText(String.valueOf(plot.getResource(ResourceType.ORE)));
+		plotEnergyLabel.setText(String.valueOf(plot.getResource(ResourceType.ENERGY)));
+		plotFoodLabel.setText(String.valueOf(plot.getResource(ResourceType.FOOD)));
 
-		plotStats.setText(plotStatText);
-		plotStats.setPosition(x, y);
-		plotStats.setVisible(true);
+		plotStatsTable.setPosition(x, y);
+		plotStatsTable.setVisible(true);
 	}
 
 	public void updateRoboticonSelection() {
@@ -256,7 +339,7 @@ public class GameScreenActors {
 	 */
 	public void hideBuyLand() {
 		buyLandPlotBtn.setVisible(false);
-		plotStats.setVisible(false);
+		plotStatsTable.setVisible(false);
 	}
 
 	/**
@@ -274,6 +357,9 @@ public class GameScreenActors {
 		return installRoboticonTable.isVisible();
 	}
 
+	/**
+	 * Purchases the landplot that the player has clicked on if it is not already owned.
+	 */
 	public void buyLandPlotFunction(){
 		hideBuyLand();
 		if (buyLandPlotBtn.isDisabled()) {
@@ -294,21 +380,26 @@ public class GameScreenActors {
 			nextButton.setVisible(true);
 		}
 	}
-
+	/**
+	 * The function that advances the phase of the game when the next button is clicked
+	 */
 	public void nextButtonFunction(){
 		if (nextButton.isDisabled()) {
 			return ;
 		}
 		if(game.canPurchaseLandThisTurn() == false){
 			buyLandPlotBtn.setVisible(false);
-			plotStats.setVisible(false);
+			plotStatsTable.setVisible(false);
 			hideInstallRoboticon();
 			game.nextPhase();
 			installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
 			textUpdate();
 		}
 	}
-
+	/**
+	 * Presents the user with a list of roboticons that they can install on the land plot that they have clicked on. Once they have selected
+	 * a roboticon to install, a function is called that will install the roboticon.
+	 */
 	private void installRoboticonFunction(){
 		if (installRoboticonBtn.isDisabled()) {
 			return ;
@@ -354,7 +445,11 @@ public class GameScreenActors {
 			} else listUpdated = false;
 		}
 	}
-
+	/**
+	 * Installs the specified roboticon on the specified land plot.
+	 * @param selectedPlot The plot that has been selected
+	 * @param roboticon The roboticon that is to be installed
+	 */
 	public void installRoboticonFunction(LandPlot selectedPlot, Roboticon roboticon){
         selectedPlot.installRoboticon(roboticon);
         TiledMapTileLayer.Cell roboticonTile = selectedPlot.getRoboticonTile();

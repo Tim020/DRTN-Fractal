@@ -43,16 +43,6 @@ public class PlotEffect extends Array<Float[]> {
     private Overlay overlay;
 
     /**
-     * Variable that holds true if and when the effect's associated overlay is visible
-     */
-    private boolean overlayActive;
-
-    /**
-     * Button created to close the effect's associated overlay
-     */
-    private TextButton closeButton;
-
-    /**
      * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
      *
      * @param name The name of the effect
@@ -74,11 +64,8 @@ public class PlotEffect extends Array<Float[]> {
         this.plotRegister = new Array<LandPlot>();
         //Establish the separate LandPlot stack to track affected tiles
 
-        this.overlay = new Overlay(Color.GRAY, Color.WHITE, 3);
+        this.overlay = new Overlay(Color.GOLDENROD, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
-
-        this.overlayActive = false;
-        //Note that the effect's overlay is not active at the current time
     }
 
     /**
@@ -92,23 +79,7 @@ public class PlotEffect extends Array<Float[]> {
         this(name, description, modifiers, new Runnable() {
             @Override
             public void run() {
-                //This is meant to be empty, so enjoy a serving of copypasta to make up for the lack of stuff here.
-
-                //"I'd just like to interject for moment. What you're refering to as Linux, is in fact, GNU/Linux, or as
-                // I've recently taken to calling it, GNU plus Linux. Linux is not an operating system unto itself, but
-                // rather another free component of a fully functioning GNU system made useful by the GNU corelibs,
-                // shell utilities and vital system components comprising a full OS as defined by POSIX. Many computer
-                // users run a modified version of the GNU system every day, without realizing it. Through a peculiar
-                // turn of events, the version of GNU which is widely used today is often called Linux, and many of its
-                // users are not aware that it is basically the GNU system, developed by the GNU Project.
-
-                // There really is a Linux, and these people are using it, but it is just a part of the system they use.
-                // Linux is the kernel: the program in the system that allocates the machine's resources to the other
-                // programs that you run. The kernel is an essential part of an operating system, but useless by itself;
-                // it can only function in the context of a complete operating system. Linux is normally used in
-                // combination with the GNU operating system: the whole system is basically GNU with Linux added, or
-                // GNU/Linux. All the so-called Linux distributions are really distributions of GNU/Linux!"
-                //      - [Refactoring of quotes credited to] Richard Stallman, software freedom activist
+                //This is meant to be empty
             }
         });
     }
@@ -117,36 +88,27 @@ public class PlotEffect extends Array<Float[]> {
      * Method that populates the effect's associated overlay
      */
     public void constructOverlay(final GameScreen gameScreen) {
-        /**
-         * Object that automatically converts .TTF files into BitmapFonts that can then be rendered to the screen
-         */
-        TTFont montserratRegular = new TTFont(Gdx.files.internal("font/MontserratRegular.ttf"));
-        TTFont montserratLight = new TTFont(Gdx.files.internal("font/MontserratLight.ttf"));
-        montserratRegular.setSize(24);
-        montserratLight.setSize(24);
-
         TextButton.TextButtonStyle overlayButtonStyle = new TextButton.TextButtonStyle();
-        overlayButtonStyle.font = montserratRegular.font();
+        overlayButtonStyle.font = gameScreen.getGame().headerFontRegular.font();
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
 
-        Label headerLabel = new Label("EFFECT IMPOSED", new Label.LabelStyle(montserratRegular.font(), Color.YELLOW));
-        Label titleLabel = new Label(name, new Label.LabelStyle(montserratLight.font(), Color.WHITE));
-        montserratLight.setSize(16);
-        Label descriptionLabel = new Label(description, new Label.LabelStyle(montserratLight.font(), Color.WHITE));
+        Label headerLabel = new Label("PLOT EFFECT IMPOSED", new Label.LabelStyle(gameScreen.getGame().headerFontRegular.font(), Color.YELLOW));
+        Label titleLabel = new Label(name, new Label.LabelStyle(gameScreen.getGame().headerFontLight.font(), Color.WHITE));
+        Label descriptionLabel = new Label(description, new Label.LabelStyle(gameScreen.getGame().smallFontLight.font(), Color.WHITE));
 
         headerLabel.setAlignment(Align.left);
         titleLabel.setAlignment(Align.right);
         descriptionLabel.setAlignment(Align.left);
 
-        overlay.table().add(headerLabel).width(220);
-        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 220);
+        overlay.table().add(headerLabel).width(300).left();
+        overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 300).right();
         overlay.table().row();
         overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
 
         overlay.table().row().colspan(2);
-        closeButton = new TextButton("CLOSE", overlayButtonStyle);
+        TextButton closeButton = new TextButton("CLOSE", overlayButtonStyle);
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -204,7 +166,9 @@ public class PlotEffect extends Array<Float[]> {
         //Push the plot that's about to be modified on to the appropriate registration stack
     }
 
-
+    /**
+     * Reverts the modifiers of the land plot to their values before the effect was applied
+     */
     public void revert() {
         if (plotRegister.size > 0) {
             Float[] originalModifiers;
@@ -220,13 +184,17 @@ public class PlotEffect extends Array<Float[]> {
             }
         }
     }
-
+    /**
+     * Reverts all tiles that have been affected back to their original state
+     */
     public void revertAll() {
         while (plotRegister.size > 0) {
             revert();
         }
     }
-
+    /**
+     * Swaps the postions of the top two values within the internal stack
+     */
     private void swapTop() {
         if (super.size > 1) {
             Float[] i = super.pop();
@@ -238,17 +206,16 @@ public class PlotEffect extends Array<Float[]> {
     }
 
     /**
-     * If the size of the effect's plot-register is greater than 0 at any given time, then at least 1 tile is still
-     * being affected by this object
+     * Executes the runnable
      */
-    public boolean active() {
-        return (plotRegister.size > 0);
-    }
-
     public void executeRunnable() {
         runnable.run();
     }
 
+    /**
+     * Getter for the runnable
+     * @return The runnable
+     */
     public Runnable getRunnable() {
         return runnable;
     }
@@ -262,21 +229,25 @@ public class PlotEffect extends Array<Float[]> {
         this.runnable = runnable;
     }
 
+    /**
+     * Getter for the name of the effect
+     * @return The name of the effect
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * Getter for the description if the effect
+     * @return The description of the effect
+     */
     public String description() {
         return description;
     }
 
+    /**
+     * Getter for the overlay
+     * @return The overlay of the effect
+     */
     public Overlay overlay() { return overlay; }
-
-    public boolean getOverlayActive() {
-        return overlayActive;
-    }
-
-    public void setOverlayActive(boolean overlayActive) {
-        this.overlayActive = overlayActive;
-    }
 }

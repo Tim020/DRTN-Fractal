@@ -24,7 +24,7 @@ public class Player {
 
 	public Player(RoboticonQuest game){
 		this.game = game;
-		this.roboticonList = new Array<Roboticon>();
+        this.roboticonList = new Array<Roboticon>();
 
 	}
 
@@ -34,15 +34,18 @@ public class Player {
 
 	/**
 	 * Set the amount of money player has
-	 * @param money                      The amount of new money.
-	 * @throws IllegalArgumentException  If the new money if negative, this exception will be thrown.
+	 * @param money The amount of new money
 	 */
-	synchronized void setMoney(int money) throws IllegalArgumentException {
+	public synchronized void setMoney(int money){
 		if (money < 0) {
-			throw new IllegalArgumentException("Error: Money can't be negative.");
+			this.money = 0;
+		} else {
+			this.money = money;
 		}
+	}
 
-		this.money = money;
+	public void setGamblingMoney(int money){
+		setMoney(money);
 	}
 
 	public int getOre() {
@@ -51,15 +54,17 @@ public class Player {
 	
 	/**
 	 * Set the amount of ore player has
-	 * @param amount                     The new amount for ore.
-	 * @throws IllegalArgumentException  If the new ore amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for ore.
 	 */
 	synchronized void setOre(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Ore can't be negative.");
+			this.ore = 0;
+		} else {
+			this.ore = amount;
 		}
-
-		this.ore = amount;
 	}
 
 	public int getEnergy() {
@@ -68,16 +73,18 @@ public class Player {
 
 	/**
 	 * Set the amount of energy player has
-	 * @param amount                     The new amount for energy.
-	 * @throws IllegalArgumentException  If the new energy amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for energy.
 	 */
 
 	synchronized void setEnergy(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Energy can't be negative.");
+			this.energy = 0;
+		} else {
+			this.energy = amount;
 		}
-
-		this.energy = amount;
 	}
 
 	public int getFood() {
@@ -86,16 +93,17 @@ public class Player {
 
 	/**
 	 * Set the amount of food player has
-	 * @param amount                     The new amount for food.
-	 * @throws IllegalArgumentException  If the new food amount if negative, this exception will be thrown.
+	 * <p>
+	 *     if amount < 0 then the amount is set to 0.
+	 * </p>
+	 * @param amount The new amount for food.
 	 */
-
 	synchronized void setFood(int amount) {
 		if (amount < 0) {
-			throw new IllegalArgumentException("Error: Food can't be negative.");
+			this.food = 0;
+		} else {
+			this.food = amount;
 		}
-
-		this.food = amount;
 	}
 
 	/**
@@ -320,7 +328,7 @@ public class Player {
 		int energy = 0;
 		int food = 0;
 		int uncustomised = 0;
-		Array<String> roboticonAmountList = new Array<String>();
+        Array<String> roboticonAmountList = new Array<String>();
 
         for (Roboticon r : roboticonList) {
             if (!r.isInstalled()) {
@@ -393,6 +401,7 @@ public class Player {
      */
     public void takeTurn(int phase) {
         //Overload in AIPlayer
+        System.out.println("Human turn");
     }
 
 }

@@ -12,6 +12,7 @@ hs_err_pid*
 !.idea/runConfigurations/Tests.xml
 !.idea/runConfigurations/Desktop.xml
 !.idea/runConfigurations/GradleRunDesktop.xml
+!.idea/runConfigurations/GradleRunTests.xml
 !.idea/runConfigurations/JARCompile.xml
 !.idea/runConfigurations/Run.xml
 

@@ -7,21 +7,24 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.actors.MinigameScreenActor;
+import io.github.teamfractal.actors.MinigameScreenActors;
 
 public class MiniGameScreen implements Screen {
     private final RoboticonQuest game;
     private final Stage stage;
     private final Table table;
-    private final MinigameScreenActor actors;
+    private final MinigameScreenActors actors;
 
-    public MiniGameScreen(final RoboticonQuest game) {
+    private final ResourceMarketScreen RMS;
+
+    public MiniGameScreen(final RoboticonQuest game, ResourceMarketScreen RMS) {
         this.game = game;
+        this.RMS = RMS;
         this.stage = new Stage(new ScreenViewport());
         this.table = new Table();
         table.setFillParent(true);
 
-        actors = new MinigameScreenActor(game, this);
+        actors = new MinigameScreenActors(game, this);
         table.center().add(actors); // positions actors
 
         stage.addActor(table);
@@ -71,5 +74,9 @@ public class MiniGameScreen implements Screen {
 
     public Stage getStage() {
         return this.stage;
+    }
+
+    public ResourceMarketScreen getRMS() {
+        return RMS;
     }
 }

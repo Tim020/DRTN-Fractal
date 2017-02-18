@@ -6,47 +6,58 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
+import io.github.teamfractal.animation.AnimationCustomHeader;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
-import io.github.teamfractal.animation.AnimationShowPlayer;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
-import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.*;
-import io.github.teamfractal.util.PlotEffectSource;
-import io.github.teamfractal.util.PlotManager;
+import io.github.teamfractal.util.*;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * This is the main game boot up class.
+ * This is the main game start up class.
  * It will set up all the necessary classes.
  */
 public class RoboticonQuest extends Game {
     private static RoboticonQuest _instance;
-	public TiledMap tmx;
 	public Skin skin;
-	public GameScreen gameScreen;
-	public Market market;
     public PlotManager plotManager;
 
-    private int turnNumber = 1;
+    public TTFont headerFontRegular;
+    public TTFont headerFontLight;
+    public TTFont smallFontRegular;
+    public TTFont smallFontLight;
+	public TTFont tinyFontRegular;
+	public TTFont tinyFontLight;
+
+    public GameScreen gameScreen;
+    public Market market;
+    public RoboticonMarketScreen roboticonMarket;
+    public GenerationOverlay genOverlay;
+
+	private int turnNumber = 1;
 	private SpriteBatch batch;
 	private MainMenuScreen mainMenuScreen;
+
     private ArrayList<Player> playerList;
     private int phase;
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
 
+	private AnimationCustomHeader playerHeader;
+	private AnimationCustomHeader phase1description;
+	private AnimationCustomHeader phase2description;
+	private AnimationCustomHeader phase3description;
+	private AnimationCustomHeader phase4description;
+	private AnimationCustomHeader phase5description;
+
 	private PlotEffectSource plotEffectSource;
-
-    public RoboticonMarketScreen roboticonMarket;
-
-    public GenerationOverlay genOverlay;
+	private PlayerEffectSource playerEffectSource;
 
 	public RoboticonQuest() {
 		_instance = this;
@@ -57,7 +68,11 @@ public class RoboticonQuest extends Game {
 		return _instance;
 	}
 
-
+	/**
+	 * Getter for the index of the current Player
+	 * @param player The player that the index is being retrieved for
+	 * @return The index of the specified player
+	 */
 	public int getPlayerIndex (Player player) {
 
 		return playerList.indexOf(player);
@@ -66,20 +81,46 @@ public class RoboticonQuest extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+
+        Fonts fonts = new Fonts();
+        fonts.montserratRegular.setSize(24);
+        fonts.montserratLight.setSize(24);
+        headerFontRegular = fonts.montserratRegular;
+        headerFontLight = fonts.montserratLight;
+
+        fonts = new Fonts();
+        fonts.montserratRegular.setSize(16);
+        fonts.montserratLight.setSize(16);
+        smallFontRegular = fonts.montserratRegular;
+        smallFontLight = fonts.montserratLight;
+
+		fonts = new Fonts();
+		fonts.montserratRegular.setSize(12);
+		fonts.montserratLight.setSize(12);
+		tinyFontRegular = fonts.montserratRegular;
+		tinyFontLight = fonts.montserratLight;
+        //Import TrueType fonts for use in drawing textual elements
+
 		setupSkin();
 
 		// Setup other screens.
 		mainMenuScreen = new MainMenuScreen(this);
         gameScreen = new GameScreen(this);
-        roboticonMarket = new RoboticonMarketScreen(this, Color.GRAY, Color.WHITE, 3);
+        roboticonMarket = new RoboticonMarketScreen(this);
         genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
 
 		//Setup tile and player effects for later application
 		setupEffects();
 
+		//Setup header animations to be played out at certain stages in the game
+		setupAnimations();
+
 		setScreen(mainMenuScreen);
 	}
-
+	/**
+	 * Getter for the batch
+	 * @return The batch of the game
+	 */
 	public Batch getBatch() {
 		return batch;
 	}
@@ -88,10 +129,10 @@ public class RoboticonQuest extends Game {
 	 * Setup the default skin for GUI components.
 	 */
 	private void setupSkin() {
-		skin = new Skin(
-			Gdx.files.internal("skin/skin.json"),
-			new TextureAtlas(Gdx.files.internal("skin/skin.atlas"))
-		);
+		skin = new Skin();
+		skin.add("default", smallFontLight.font());
+		skin.addRegions(new TextureAtlas(Gdx.files.internal("skin/skin.atlas")));
+		skin.load(Gdx.files.internal("skin/skin.json"));
 	}
 
 	/**
@@ -101,21 +142,28 @@ public class RoboticonQuest extends Game {
 	public void dispose () {
 		mainMenuScreen.dispose();
 		gameScreen.dispose();
-		skin.dispose();
 		batch.dispose();
 	}
-	
+	/**
+	 * Getter for the current phase
+	 * @return The current phase of the game
+	 */
 	public int getPhase(){
 		return this.phase;
 	}
-
+	/**
+	 * Setter for the current phase
+	 * @param phase The phase that the current phase is to be set to
+	 */
 	public void setPhase(int phase) {
 		this.phase = phase;
 		implementPhase();
 	}
-
+	/**
+	 * Resets the statistics of all the game's entities
+	 * @param AI A boolean describing whether an AI player is playing or not
+	 */
 	public void reset(boolean AI) {
-        this.currentPlayerIndex = 0;
         this.phase = 0;
         plotManager = new PlotManager();
         Player player1;
@@ -135,15 +183,29 @@ public class RoboticonQuest extends Game {
         this.market = new Market();
 
     }
-
+	/**
+	 * Implements the functionality of the current phase
+	 */
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
+
+		playerHeader.stop();
+		if (phase == 4) {
+			playerHeader.setLength(3);
+		} else {
+			playerHeader.setLength(5);
+		}
+		playerHeader.play();
+
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
                 Gdx.input.setInputProcessor(roboticonMarket);
 
-				AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
+				phase1description.stop();
+				phase2description.play();
+
+                AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
 
 				roboticonMarket.actors().widgetUpdate();
@@ -156,6 +218,9 @@ public class RoboticonQuest extends Game {
 			// Phase 3: Roboticon Customisation
 			case 3:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
+
+				phase2description.stop();
+				phase3description.play();
 
 				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -171,12 +236,17 @@ public class RoboticonQuest extends Game {
 				this.getPlayer().takeTurn(3);
                 break;
 
+
 			// Phase 4: Generate resources for player
 			case 4:
                 Gdx.input.setInputProcessor(genOverlay);
 
-                this.getPlayer().generateResources();
+				phase3description.stop();
+				phase4description.play();
 
+                this.getPlayer().generateResources();
+				this.market.generateRoboticon();
+				this.roboticonMarket.actors().refreshRoboticonShop();
                 Timer timer = new Timer();
                 timer.scheduleTask(new Timer.Task() {
                     @Override
@@ -190,13 +260,18 @@ public class RoboticonQuest extends Game {
 				gameScreen.getActors().switchNextButton();
                 break;
 
-			// Phase 5: Purchase resources
+			// Phase 5: Open the market
+
 			case 5:
 			    ResourceMarketScreen RMS = new ResourceMarketScreen(this);
-				setScreen(RMS);
+				  setScreen(RMS);
 
-                Gdx.input.setInputProcessor(RMS.getStage());
+          Gdx.input.setInputProcessor(RMS.getStage());
 
+			    resourceMarket.actors().widgetUpdate();
+			    resourceMarket.gambleStatisticsReset();
+
+				gameScreen.getActors().setNextButtonVisibility(false);
 				this.getPlayer().takeTurn(5);
 				break;
 
@@ -209,8 +284,8 @@ public class RoboticonQuest extends Game {
 					break;
 				}
 
-				this.turnNumber += 1;
-				this.nextPlayer();
+                this.turnNumber += 1;
+                this.nextPlayer();
 
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
@@ -221,12 +296,14 @@ public class RoboticonQuest extends Game {
 
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
-				gameScreen.addAnimation(new AnimationShowPlayer(getPlayerInt() + 1));
 
 				clearEffects();
 				setEffects();
 
-				System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + Math.ceil((double) this.turnNumber / 2));
+				phase4description.stop();
+				phase1description.play();
+
+                System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + this.getTurnNumber());
 
 				if (getPlayer().getMoney() < 10) {
 					gameScreen.getActors().setNextButtonVisibility(true);
@@ -241,10 +318,15 @@ public class RoboticonQuest extends Game {
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();
 	}
-
+	/**
+	 * Advances the current phase
+	 */
 	public void nextPhase() {
-		phase += 1;
-		implementPhase();
+        if ((phase == 1) && (landBoughtThisTurn == 0) && (this.getPlayer().getMoney() >= 10)) {
+            return;
+        }
+        phase += 1;
+        implementPhase();
 	}
 
 	/**
@@ -253,11 +335,17 @@ public class RoboticonQuest extends Game {
 	public void landPurchasedThisTurn() {
 		landBoughtThisTurn ++;
 	}
-
+	/**
+	 * Getter for landBoughtThisTurn
+	 -	 * @return Returns true if land hasn't been purchased this turn, false otherwise
+	 -	 */
 	public boolean canPurchaseLandThisTurn () {
 		return (landBoughtThisTurn < 1 && getPlayer().getMoney() >= 10);
 	}
-
+	/**
+	 * Returns a string describing the current phase
+	 * @return A string with the description of the current phase
+	 */
 	public String getPhaseString () {
 		int phase = getPhase();
 
@@ -282,54 +370,96 @@ public class RoboticonQuest extends Game {
 		}
 
 	}
-
+	/**
+	 * Getter for the current player
+	 * @return The current player
+	 */
 	public Player getPlayer(){
-
         return this.playerList.get(this.currentPlayerIndex);
     }
-
+	/**
+	 * Getter for the index of the current player
+	 * @return The index of the current player
+	 */
     public int getPlayerInt() {
         return this.currentPlayerIndex;
     }
 
-    void nextPlayer() {
-        if (this.currentPlayerIndex == playerList.size() - 1) {
-            this.currentPlayerIndex = 0;
-        } else {
-            this.currentPlayerIndex++;
-        }
+	/**
+	 * Changes the current player
+	 */
+	public void nextPlayer() {
+		this.currentPlayerIndex = 1 - this.currentPlayerIndex;
 
-
+		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
     }
 
-	
+	/**
+	 * Creates and initialises all of the effects
+	 */
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
-		effectChance = (float) 0.05;
+		effectChance = (float) 1;
 
 		plotEffectSource = new PlotEffectSource(this);
+		playerEffectSource = new PlayerEffectSource(this);
 
-		for (PlotEffect PE : plotEffectSource) {
-			PE.constructOverlay(gameScreen);
+		for (PlotEffect PTE : plotEffectSource) {
+			PTE.constructOverlay(gameScreen);
+		}
+
+		for (PlayerEffect PLE : playerEffectSource) {
+			PLE.constructOverlay(gameScreen);
 		}
 	}
-
+	/**
+	 * Randomly applies the effects
+	 */
 	private void setEffects() {
 		Random RNGesus = new Random();
 
-		for (PlotEffect PE : plotEffectSource) {
+		for (PlotEffect PTE : plotEffectSource) {
 			if (RNGesus.nextFloat() <= effectChance) {
-				PE.executeRunnable();
+				PTE.executeRunnable();
 
-				gameScreen.addOverlay(PE.overlay());
+				gameScreen.addOverlay(PTE.overlay());
+			}
+		}
+
+		for (PlayerEffect PLE : playerEffectSource) {
+			if (RNGesus.nextFloat() <= effectChance) {
+				PLE.impose(getPlayer());
+
+				gameScreen.addOverlay(PLE.overlay());
 			}
 		}
 	}
-
+	/**
+	 * Clears the effects of all the effects
+	 */
 	private void clearEffects() {
 		for (PlotEffect PE : plotEffectSource) {
 			PE.revertAll();
 		}
+	}
+
+	/**
+	 * Prepares header animations to indicate when certain phases of the game have been reached
+	 */
+	private void setupAnimations() {
+		playerHeader = new AnimationCustomHeader("PLAYER 1", headerFontRegular.font(), 5);
+		phase1description = new AnimationCustomHeader("\nPHASE 1: Claim a Tile", headerFontLight.font(), 5);
+		phase2description = new AnimationCustomHeader("\nPHASE 2: Buy and Upgrade Roboticons", headerFontLight.font(), 5);
+		phase3description = new AnimationCustomHeader("\nPHASE 3: Deploy Roboticons", headerFontLight.font(), 5);
+		phase4description = new AnimationCustomHeader("\nPHASE 4: Generate Resources", headerFontLight.font(), 3);
+		phase5description = new AnimationCustomHeader("\nPHASE 5: Buy and Sell Resources", headerFontLight.font(), 5);
+
+		gameScreen.addAnimation(playerHeader);
+		gameScreen.addAnimation(phase1description);
+		gameScreen.addAnimation(phase2description);
+		gameScreen.addAnimation(phase3description);
+		gameScreen.addAnimation(phase4description);
+		gameScreen.addAnimation(phase5description);
 	}
 
 	/**
@@ -372,4 +502,10 @@ public class RoboticonQuest extends Game {
 	public ArrayList<Player> getPlayerList(){
 		return this.playerList;
 	}
+
+    public int getTurnNumber() {
+        return (int) Math.ceil((double) turnNumber / 2);
+    }
 }
+
+

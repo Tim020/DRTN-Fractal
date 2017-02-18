@@ -15,8 +15,6 @@ import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import io.github.teamfractal.util.Fonts;
-import io.github.teamfractal.util.TTFont;
 
 import java.util.ArrayList;
 
@@ -65,7 +63,6 @@ public class RoboticonMarketActors extends Table {
 
     private TextButton exitButton;
 
-    private Fonts fonts;
     /**
      * Constructor class that connects the roboticon market to the internal engine and builds its visual interface
      * @param game The engine driving the game forward
@@ -74,10 +71,6 @@ public class RoboticonMarketActors extends Table {
         this.game = game;
 
         this.roboticonImage = new Image();
-
-        fonts = new Fonts();
-        fonts.montserratRegular.setSize(24);
-        fonts.montserratLight.setSize(12);
 
         constructInterface();
     }
@@ -95,23 +88,23 @@ public class RoboticonMarketActors extends Table {
         constructLabels();
         constructButtons();
 
-        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(fonts.montserratRegular.font(), Color.WHITE))).colspan(4);
+        purchaseTable.add(new Label("PURCHASE ROBOTICONS", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).colspan(4);
 
         purchaseTable.row();
         purchaseTable.add(roboticonSubButton).width(25);
         purchaseTable.add(roboticonPurchaseAmountLabel).width(50).expandX();
         purchaseTable.add(roboticonAddButton).width(25);
-        purchaseTable.add(roboticonPurchaseButton).align(Align.right).width(200).padLeft(15);
+        purchaseTable.add(roboticonPurchaseButton).align(Align.right).width(268).padLeft(14);
 
         add(purchaseTable).padBottom(35);
         row();
 
-        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(fonts.montserratRegular.font(), Color.WHITE))).colspan(3);
+        selectionTable.add(new Label("CUSTOMISE ROBOTICONS", new Label.LabelStyle(game.headerFontRegular.font(), Color.WHITE))).colspan(3);
 
         selectionTable.row();
-        selectionTable.add(moveLeftInventoryButton).width(25);
+        selectionTable.add(moveLeftInventoryButton).width(50);
         selectionTable.add(roboticonImage).expandX();
-        selectionTable.add(moveRightInventoryButton).width(25);
+        selectionTable.add(moveRightInventoryButton).width(50);
 
         selectionTable.row();
         selectionTable.add(selectedRoboticonIDLabel).colspan(3);
@@ -121,23 +114,23 @@ public class RoboticonMarketActors extends Table {
 
         customisationDropDown = new SelectBox<String>(game.skin);
         customisationDropDown.setItems(new String[]{"Energy Generation", "Ore Mining", "Food Farming"});
-        upgradeTable.add(customisationDropDown).expandX().padRight(15);
-        upgradeTable.add(customisationPurchaseButton).width(164);
+        upgradeTable.add(customisationDropDown).expandX().padRight(14);
+        upgradeTable.add(customisationPurchaseButton).width(196);
 
         add(upgradeTable).padBottom(35);
         row();
 
-        add(exitButton).expandX().width(320);
+        add(exitButton).expandX().width(382);
     }
 
     /**
      * Constructs critical label objects that may change in appearance as the market is interacted with
      */
     private void constructLabels() {
-        roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount + "/" +  game.market.getResource(ResourceType.ROBOTICON), game.skin);
+        roboticonPurchaseAmountLabel = new Label(roboticonPurchaseAmount + "/" +  game.market.getResource(ResourceType.ROBOTICON), new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
         roboticonPurchaseAmountLabel.setAlignment(Align.center);
 
-        selectedRoboticonIDLabel = new Label("", game.skin);
+        selectedRoboticonIDLabel = new Label("", new Label.LabelStyle(game.smallFontLight.font(), Color.WHITE));
         selectedRoboticonIDLabel.setAlignment(Align.center);
     }
 
@@ -370,7 +363,12 @@ public class RoboticonMarketActors extends Table {
 
         roboticonImage.setDrawable(new TextureRegionDrawable(new TextureRegion(roboticonTexture)));
     }
-
+    /**
+     * Generates a string of a number followed by a certain amount of zeros
+     * @param number The number that the string starts with
+     * @param length The number of zeros that the number is followed by
+     * @return The string that has been generated
+     */
 
     public String padZero(int number, int length) {
         String s = "" + number;
@@ -380,6 +378,10 @@ public class RoboticonMarketActors extends Table {
         return s;
     }
 
+    /**
+     * Getter for the index of the selected Roboticon
+     * @return The index of the selected Roboticon
+     */
     public int selectedRoboticonIndex() {
         return selectedRoboticonIndex;
     }

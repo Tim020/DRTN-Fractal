@@ -1,77 +1,82 @@
 package io.github.teamfractal.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
+import com.badlogic.gdx.graphics.Color;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.actors.ResourceMarketActors;
 
+import java.util.Random;
 
-public class ResourceMarketScreen implements Screen {
-	final RoboticonQuest game;
-	final Stage stage;
-	final Table table;
-	private final ResourceMarketActors actors;
-	
-	
-	public ResourceMarketScreen(final RoboticonQuest game) {
-		this.game = game;
-		this.stage = new Stage(new ScreenViewport());
-		this.table = new Table();
-		table.setFillParent(true);
+/**
+ * Created by Joseph on 17/02/2017.
+ */
+public class ResourceMarketScreen extends Overlay {
 
-		actors = new ResourceMarketActors(game, this); // generates actors for the screen
-		table.center().add(actors); // positions actors
+    private RoboticonQuest game;
 
-		stage.addActor(table);
-	}
+    private ResourceMarketActors actors;
 
-	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
-	}
+    private int gambleMoneyWonCounter;
+    private int gambleMoneyLostCounter;
+    private int gambleWinLossCounter;
 
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    public ResourceMarketScreen(RoboticonQuest game) {
+        super(Color.GRAY, Color.WHITE, 520, 395, 0, 45, 3);
 
-		stage.act(delta);
-		stage.draw();
-	}
+        this.game = game;
 
-	@Override
-	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
-		actors.screenResize(width, height);
-	}
+        actors = new ResourceMarketActors(game);
+        table().add(actors);
 
-	@Override
-	public void pause() {
-		
-	}
+        gambleStatisticsReset();
+    }
 
-	@Override
-	public void resume() {
-		
-		
-	}
+    public ResourceMarketActors actors() {
+        return actors;
+    }
 
-	@Override
-	public void hide() {
-		
-		
-	}
+    public void gamble() {
+        int playerRoll;
+        int AIRoll;
 
-	@Override
-	public void dispose() {
-		stage.dispose();
-		
-	}
-	public Stage getStage(){
-		return this.stage;
-	}
+        if (actors.gambleFieldValue().isEmpty()) {
+            actors.setGambleStatusLabel("NO VALUE\nGIVEN", Color.RED);
+        } else if (Integer.parseInt(actors.gambleFieldValue()) < 1) {
+            actors.setGambleStatusLabel("INVALID VALUE\nGIVEN", Color.RED);
+        } else if (Integer.parseInt(actors.gambleFieldValue()) > game.getPlayer().getMoney()) {
+            actors.setGambleStatusLabel("CANNOT AFFORD\nGAMBLE", Color.RED);
+        } else {
+            Random RNGesus = new Random();
+
+            playerRoll = RNGesus.nextInt(6) + 1;
+            AIRoll = RNGesus.nextInt(6) + 1;
+
+            if (playerRoll == AIRoll) {
+                actors.setGambleStatusLabel("YOU\nDREW", Color.YELLOW);
+            } else if (playerRoll > AIRoll) {
+                actors.setGambleStatusLabel("YOU\nWON", Color.GREEN);
+                game.getPlayer().setMoney(game.getPlayer().getMoney() + Integer.parseInt(actors.gambleFieldValue()));
+                gambleMoneyWonCounter += Integer.parseInt(actors.gambleFieldValue());
+                gambleWinLossCounter += 1;
+            } else {
+                actors.setGambleStatusLabel("YOU\nLOST", Color.RED);
+                game.getPlayer().setMoney(game.getPlayer().getMoney() - Integer.parseInt(actors.gambleFieldValue()));
+                gambleMoneyLostCounter += Integer.parseInt(actors.gambleFieldValue());
+                gambleWinLossCounter -= 1;
+            }
+
+            actors.setGambleRollLabels(playerRoll, AIRoll);
+
+            actors.setGambleStatisticsLabels(gambleMoneyWonCounter, gambleMoneyLostCounter, gambleWinLossCounter);
+        }
+    }
+
+    public void gambleStatisticsReset() {
+        gambleMoneyWonCounter = 0;
+        gambleMoneyLostCounter = 0;
+        gambleWinLossCounter = 0;
+
+        actors.setGambleStatusLabel( "\n ", Color.WHITE);
+        actors.setGambleRollLabels("-", "-");
+        actors.setGambleStatisticsLabels(0, 0, 0);
+    }
 }
