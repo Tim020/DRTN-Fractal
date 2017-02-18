@@ -58,7 +58,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		this.game = game;
 
-		// TODO: Add some HUD gui stuff (buttons, mini-map etc...)
 		this.stage = new Stage(new ScreenViewport());
 		this.actors = new GameScreenActors(game, this);
 		actors.constructElements();
@@ -171,8 +170,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 				int tileIndexY = -(int)(ty - tx);
 
 
-				// TODO: Remove those magic numbers and fix it properly
-				// Those magic numbers based on observation of number patterns
 				tileIndexX -= 1;
 				if (tileIndexY % 2 == 0) {
 					tileIndexX --;
@@ -291,9 +288,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 				game.genOverlay.act(delta);
 				game.genOverlay.draw();
 				break;
-			case (5):
-				game.resourceMarket.act(delta);
-				game.resourceMarket.draw();
 		}
 	}
 

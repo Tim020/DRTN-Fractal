@@ -27,7 +27,7 @@ public class MainMenuScreen implements Screen {
 		stage.addActor(table);
 
 		/*
-		MarketAdjustableActor actor1 = new MarketAdjustableActor(game.skin, 0, 0, 100, "Ore: 10 Gold","Action");
+		AdjustableActor actor1 = new AdjustableActor(game.skin, 0, 0, 100, "Ore: 10 Gold","Action");
 		actor1.setActionEvent(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {

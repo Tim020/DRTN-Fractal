@@ -1,33 +1,28 @@
 package io.github.teamfractal.actors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.entity.enums.ResourceType;
 
-public class MarketAdjustableActor extends Table {
-
-	private RoboticonQuest game;
-
+public class AdjustableActor extends Table {
+	//<editor-fold desc="UI Components">
 	private final TextButton subButton;
 	private final TextButton addButton;
 	private final TextButton actButton;
 	private final Label valueLabel;
 	private final Label titleLabel;
+	//</editor-fold>
 
-	private int value;
-	private int min;
-	private int max;
+	//<editor-fold desc="Getter / Setter">
+	private int value = 0;
+	private int min   = 0;
+	private int max   = 9;
 	private ChangeListener actionEvent;
-
-	private boolean buy;
-	private ResourceType resourceType;
 
 	/**
 	 * Get current title string.
@@ -59,14 +54,7 @@ public class MarketAdjustableActor extends Table {
 	 */
 	public void setValue(int value) {
 		this.value = value;
-
-		if (value > max) {
-			value = max;
-		} else if (value < min) {
-			value = min;
-		}
-
-		updateInterface();
+		ensureValueInRange();
 	}
 
 	/**
@@ -83,12 +71,7 @@ public class MarketAdjustableActor extends Table {
 	 */
 	public void setMin(int min) {
 		this.min = min;
-
-		if (value < min) {
-			value = min;
-		}
-
-		updateInterface();
+		ensureValueInRange();
 	}
 
 	/**
@@ -105,12 +88,7 @@ public class MarketAdjustableActor extends Table {
 	 */
 	public void setMax(int max) {
 		this.max = max;
-
-		if (value > max) {
-			value = max;
-		}
-
-		updateInterface();
+		ensureValueInRange();
 	}
 
 	/**
@@ -123,35 +101,40 @@ public class MarketAdjustableActor extends Table {
 	//</editor-fold>
 
 	/**
-	 * The adjustable actor
-	 * For an easy way to adjust values in a step of 1 / -1
-	 *
-	 * @param skin    The skin file for the UI.
+	 * Ensure that the value is in the range of min and max.
 	 */
-	public MarketAdjustableActor(RoboticonQuest game, Skin skin, ResourceType resourceType, boolean buy) {
-		this.game = game;
-
-		this.value = 1;
-		this.min = 1;
-
-		this.buy = buy;
-		this.resourceType = resourceType;
-
-		this.max = game.market.getResource(resourceType);
-
-		subButton = new TextButton("<", skin);
-		addButton = new TextButton(">", skin);
-		actButton = new TextButton("", skin);
-		valueLabel = new Label("", skin);
-
-		if (buy == true) {
-			titleLabel = new Label(resourceType.toString() + " - Price: " + game.market.getSellPrice(resourceType), skin);
-		} else {
-			titleLabel = new Label(resourceType.toString() + " - Price: " + game.market.getBuyPrice(resourceType), skin);
+	private void ensureValueInRange() {
+		if (min > max) {
+			// Swap min and max range.
+			int temp_min = min;
+			min = max;
+			max = temp_min;
 		}
 
+		if (value < min) {
+			value = min;
+		} else if (value > max) {
+			value = max;
+		}
+
+		updateValueDisplay();
+	}
+
+	/**
+	 * The adjustable actor
+	 * For an easy way of adjust values in a step of 1 / -1.
+	 *
+	 * @param skin    The skin file for the UI.
+	 * @param title   The adjustable title.
+	 * @param action  The action button text.
+	 */
+	public AdjustableActor(Skin skin, String title, String action) {
+		subButton = new TextButton("<", skin);
+		addButton = new TextButton(">", skin);
+		actButton = new TextButton(action, skin);
+		valueLabel = new Label("0", skin);
+		titleLabel = new Label(title, skin);
 		bindButtonEvents();
-		updateInterface();
 
 		/*
 		 *   +---------------+
@@ -173,12 +156,31 @@ public class MarketAdjustableActor extends Table {
 		row();
 
 		add(subButton).align(Align.left);
-		add(valueLabel).fillX().width(100);
+		add(valueLabel).fillX();
 		add(addButton).align(Align.right);
 		row();
 
-		add(actButton).colspan(3).fillX().spaceTop(10).width(150);
+		add(actButton).colspan(3).fillX().spaceTop(10);
 		row();
+	}
+
+	/**
+	 * The adjustable actor
+	 * For an easy way of adjust values in a step of 1 / -1.
+	 *
+	 * @param skin    The skin file for the UI.
+	 * @param value   The default value.
+	 * @param min     The minimum value.
+	 * @param max     The maximum value.
+	 * @param title   The adjustable title.
+	 * @param action  The action button text.
+	 */
+	public AdjustableActor(Skin skin, int value, int min, int max, String title, String action) {
+		this(skin, title, action);
+
+		setMax(max);
+		setMin(min);
+		setValue(value);
 	}
 
 	/**
@@ -196,22 +198,16 @@ public class MarketAdjustableActor extends Table {
 		subButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (value > min) {
-					value--;
-					updateInterface();
-					game.resourceMarket.actors().setButtonStates();
-				}
+				value --;
+				ensureValueInRange();
 			}
 		});
 
 		addButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (value < max) {
-					value++;
-					updateInterface();
-					game.resourceMarket.actors().setButtonStates();
-				}
+				value ++;
+				ensureValueInRange();
 			}
 		});
 	}
@@ -219,25 +215,12 @@ public class MarketAdjustableActor extends Table {
 	/**
 	 * Update label text to current value.
 	 */
-	private void updateInterface() {
-		valueLabel.setText(value + "/" + max);
-
-		if (buy == true) {
-			actButton.setText("[PRICE: " + (value * game.market.getSellPrice(resourceType)) + "] Buy");
-		} else {
-			actButton.setText("[PRICE: " + (value * game.market.getBuyPrice(resourceType)) + "] Sell");
-		}
+	private void updateValueDisplay() {
+		valueLabel.setText(String.valueOf(value));
 	}
 
 	@Override
 	protected void sizeChanged() {
 		super.sizeChanged();
-
-		// TODO: manipulate actor size?
-	}
-
-
-	public void setButtonState (Touchable state) {
-		actButton.setTouchable(state);
 	}
 }
