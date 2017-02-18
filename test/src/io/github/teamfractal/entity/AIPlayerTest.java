@@ -21,7 +21,7 @@ public class AIPlayerTest extends TesterFile {
 
     @Before
     public void setUp() {
-        game.create();
+        //game.create();
         player = new AIPlayer(game);
     }
 
@@ -170,7 +170,5 @@ public class AIPlayerTest extends TesterFile {
     @Test
     public void testTakeTurn() {
 
-
-        player.takeTurn(1);
     }
 }
