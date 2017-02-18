@@ -4,9 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.PlayerEffect;
 
-/**
- * Created by Joseph on 16/02/2017.
- */
 public class PlayerEffectSource extends Array<PlayerEffect> {
 
     /**
@@ -28,6 +25,8 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
 
     private PlayerEffect freshersFair;
 
+    private PlayerEffect brexit;
+
     /**
      * Constructor that prepares a variety of PlayerEffects and adds them all to the internal array structure for
      * later access and use by the game's engine
@@ -45,7 +44,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
     /**
      * Subroutine that instantiates each effect declared above
      */
-    public void configureEffects() {
+    private void configureEffects() {
         partyHard = new PlayerEffect("Party Hard", "You decided to throw a party on your newfound acquisition because " +
                 "you're a capitalist and your money\nis worthless to you. Unfortunately, you got too drunk and " +
                 "attempted to use some your fat stacks as Cards\nAgainst Humanity by scrawling immature statements " +
@@ -72,11 +71,20 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
             }
         });
 
-        freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing."+
-        " Free stuff!\nYou receive 10 of each resource!", 10, 10, 10, 10, false, new Runnable() {
+        freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing." +
+                " Free stuff!\nYou receive 10 of each resource!", 10, 10, 10, 10, false, new Runnable() {
             @Override
             public void run() {
                 freshersFair.impose(game.getPlayer());
+            }
+        });
+
+        brexit = new PlayerEffect("Brexit", "Oh no, it looks like Britain finally pulled out of the European Union. " +
+                "It only took a few centuries!\nNo need to pay for that membership fee anymore but there are more tariffs on food items." +
+                "\n\n +30 Money  -20 Food", 0, 0, -20, 30, false, new Runnable() {
+            @Override
+            public void run() {
+                brexit.impose(game.getPlayer());
             }
         });
     }
@@ -84,10 +92,11 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
     /**
      * Subroutine that adds the effects instantiated above to the internal array structure for future access
      */
-    public void implementEffects() {
+    private void implementEffects() {
         add(partyHard);
         add(uhOh);
         add(vikingRaid);
         add(freshersFair);
+        add(brexit);
     }
 }

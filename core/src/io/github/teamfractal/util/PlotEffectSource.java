@@ -30,6 +30,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
     private PlotEffect tornado;
 
+    private PlotEffect strike;
+
     /**
      * Constructor that prepares a variety of PlotEffects and adds them all to the internal array structure for
      * later access and use by the game's engine
@@ -121,6 +123,24 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
             }
         });
+
+        strike = new PlotEffect("Roboticon Strike","Some of your roboticons have decided to go on strike." +
+                "\nThey are bored of standing in the same place doing the same thing all the time."+
+                "\nAll resource production has depleted by 30%",
+                new Float[]{(float) 0.7, (float) 0.7, (float) 0.7}, new Runnable(){
+            @Override
+            public void run() {
+                if (game.getPlayer().getLandList().size() == 0) {
+                    return;
+                }
+
+                for (LandPlot plot : game.getPlayer().getLandList()) {
+                    strike.impose(plot, 1);
+                }
+
+
+            }
+        });
     }
 
     /**
@@ -131,5 +151,6 @@ public class PlotEffectSource extends Array<PlotEffect> {
         add(spicy);
         add(earthquakeDisaster);
         add(tornado);
+        add(strike);
     }
 }
