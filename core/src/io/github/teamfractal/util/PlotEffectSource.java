@@ -19,6 +19,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
     
     private PlotEffect earthquakeDisaster;
 
+    private PlotEffect tornado;
+
     public PlotEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
 
@@ -82,11 +84,30 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
             }
         });
+
+        tornado = new PlotEffect("Tornado","Looks like a tornado has struck the campus!" +
+        "\nThe gale force winds have blown some of your crops away, reducing food production by 50%. "+
+        "\nHowever the winds have increased the output of your wind farms, increasing energy production by 60%",
+         new Float[]{(float) 1, (float) 0.5, (float) 1.6}, new Runnable(){
+            @Override
+            public void run() {
+                if (engine.getPlayer().getLandList().size() == 0) {
+                    return;
+                }
+
+                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                    tornado.impose(plot, 1);
+                }
+
+
+            }
+        });
     }
 
     public void implementEffects() {
         add(duckRelatedDisaster);
         add(spicy);
         add(earthquakeDisaster);
+        add(tornado);
     }
 }

@@ -17,6 +17,8 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
     
     private PlayerEffect vikingRaid;
 
+    private PlayerEffect freshersFair;
+
     public PlayerEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
 
@@ -35,11 +37,15 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         
         vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings." +
                 "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", 0, 0, 0, -10, false);
+
+        freshersFair = new PlayerEffect("Freshers Fair", "It's the University of York freshers fair! That means only one thing."+
+        " Free stuff!\nYou receive 10 of each resource!",10,10,10,10,false);
     }
 
     public void implementEffects() {
         add(partyHard);
         add(uhOh);
         add(vikingRaid);
+        add(freshersFair);
     }
 }
