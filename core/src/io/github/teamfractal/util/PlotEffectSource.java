@@ -106,6 +106,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
         });
 
         strike = new PlotEffect("Roboticon Strike","Some of your roboticons have decided to go on strike." +
+                "\nThey are bored of standing in the same place doing the same thing all the time."+
                 "\nAll resource production has depleted by 30%",
                 new Float[]{(float) 0.7, (float) 0.7, (float) 0.7}, new Runnable(){
             @Override
