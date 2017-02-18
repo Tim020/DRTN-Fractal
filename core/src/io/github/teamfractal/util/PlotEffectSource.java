@@ -16,6 +16,8 @@ public class PlotEffectSource extends Array<PlotEffect> {
     private PlotEffect duckRelatedDisaster;
 
     private PlotEffect spicy;
+    
+    private PlotEffect earthquakeDisaster;
 
     public PlotEffectSource(final RoboticonQuest engine) {
         this.engine = engine;
@@ -62,10 +64,29 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
             }
         });
+        
+        earthquakeDisaster = new PlotEffect("Earthquake disaster", "Due to experiments committed in" +
+                "University's of York secret laboratory, a massive\n earthquake hit the surroundings of York." +
+        "Ore mines were severely damaged therefore\n ore production has dropped by 90% for this turn.",
+                new Float[]{(float) 0.1, (float) 1, (float) 1}, new Runnable() {
+            @Override
+            public void run() {
+                if (engine.getPlayer().getLandList().size() == 0) {
+                    return;
+                }
+
+                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                    earthquakeDisaster.impose(plot, 1);
+                }
+
+
+            }
+        });
     }
 
     public void implementEffects() {
         add(duckRelatedDisaster);
         add(spicy);
+        add(earthquakeDisaster);
     }
 }
