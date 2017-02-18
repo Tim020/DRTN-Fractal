@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.TesterFile;
 import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.exception.NotEnoughResourceException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -104,24 +104,32 @@ public class PlayerTest extends TesterFile {
 	}
 
 	@Test
-	public void testPlayerCannotSellMoreEnergyThanAllowed() throws Exception {
-		Market market = new Market();
+    public void testPlayerCannotSellMoreEnergyThanAllowed() {
+        Market market = new Market();
 
 		player.setEnergy(15);
-
-		exception.expect(NotEnoughResourceException.class);
 		player.sellResourceToMarket(20, market, ResourceType.ENERGY);
+        Assert.assertEquals(15, player.getEnergy());
+
 	}
 
 	@Test
-	public void testPlayerCannotSellMoreOreThanAllowed() throws Exception {
-		Market market = new Market();
+    public void testPlayerCannotSellMoreOreThanAllowed() {
+        Market market = new Market();
 
 		player.setOre(15);
-
-		exception.expect(NotEnoughResourceException.class);
 		player.sellResourceToMarket(20, market, ResourceType.ORE);
-	}
+        Assert.assertEquals(15, player.getOre());
+    }
+
+    @Test
+    public void testPlayerCannotSellMoreFoodThanAllowed() {
+        Market market = new Market();
+
+        player.setFood(15);
+        player.sellResourceToMarket(20, market, ResourceType.FOOD);
+        Assert.assertEquals(15, player.getFood());
+    }
 
 	@Test
 	public void testPlayerCanCustomiseRoboticon() {

@@ -36,7 +36,7 @@ public class Player {
 	 * Set the amount of money player has
 	 * @param money The amount of new money
 	 */
-	synchronized void setMoney(int money){
+	public synchronized void setMoney(int money){
 		if (money < 0) {
 			this.money = 0;
 		} else {
@@ -249,8 +249,6 @@ public class Player {
 			market.buyResource(resource, amount);
 			setResource(resource, getResource(resource) - amount);
 			setMoney(getMoney() + amount * resourcePrice);
-		} else {
-			throw new NotEnoughResourceException("Player.sellResourceToMarket", resource, amount, getResource(resource));
 		}
 	}
 
