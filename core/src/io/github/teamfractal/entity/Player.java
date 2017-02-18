@@ -249,8 +249,6 @@ public class Player {
 			market.buyResource(resource, amount);
 			setResource(resource, getResource(resource) - amount);
 			setMoney(getMoney() + amount * resourcePrice);
-		} else {
-			throw new NotEnoughResourceException("Player.sellResourceToMarket", resource, amount, getResource(resource));
 		}
 	}
 

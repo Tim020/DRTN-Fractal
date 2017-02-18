@@ -41,11 +41,16 @@ public class PlayerEffect {
     private boolean multiply;
 
     /**
+     * Object containing a method that the effect can automatically trigger if and when it is run
+     */
+    private Runnable runnable;
+
+    /**
      * Overlay to provide a visual indication of the effect's applications and influences
      */
     private Overlay overlay;
 
-    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply) {
+    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply, Runnable runnable) {
         this.name = name;
         this.description = description;
         //Stores the effect's name and description for future reference
@@ -62,6 +67,19 @@ public class PlayerEffect {
 
         this.overlay = new Overlay(Color.OLIVE, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
+    }
+
+    /**
+     * Overloaded constructor that assigns a name, a description and variably-applicable modifiers to the effect
+     *
+     */
+    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply) {
+        this(name, description, oreModifier, energyModifier, foodModifier, moneyModifier, multiply, new Runnable() {
+            @Override
+            public void run() {
+                //I'm still cooking this copypasta, so you should probably check back around teatime
+            }
+        });
     }
 
     /**
@@ -141,4 +159,28 @@ public class PlayerEffect {
      * @return The overlay of the effect
      */
     public Overlay overlay() { return overlay; }
+
+    /**
+     * Executes the runnable
+     */
+    public void executeRunnable() {
+        runnable.run();
+    }
+
+    /**
+     * Getter for the runnable
+     * @return The runnable
+     */
+    public Runnable getRunnable() {
+        return runnable;
+    }
+
+    /**
+     * Sets the method that the effect will run when it's imposed on a given tile
+     *
+     * @param runnable The method to be executed when this effect is invoked
+     */
+    public void setRunnable(Runnable runnable) {
+        this.runnable = runnable;
+    }
 }
