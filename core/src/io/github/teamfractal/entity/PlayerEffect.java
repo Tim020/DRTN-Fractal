@@ -50,36 +50,41 @@ public class PlayerEffect {
      */
     private Overlay overlay;
 
+    /**
+     * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
+     *
+     * @param name The name of the effect
+     * @param description A description of the effect
+     * @param oreModifier The ore-count modifier that the effect can impose
+     * @param energyModifier The energy-count modifier that the effect can impose
+     * @param foodModifier The food-count modifier that the effect can impose
+     * @param moneyModifier The money-count modifier that the effect can impose
+     * @param multiply Determines whether the effect's parameters are to be additive or multiplicative when applied to
+     *                 a player's resource-counts
+     * @param runnable The code to be executed when the effect is imposed through natural means
+     */
     public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply, Runnable runnable) {
         this.name = name;
         this.description = description;
-        //Stores the effect's name and description for future reference
+        //Store the effect's name and description for future reference
 
         this.modifiers = new float[5];
         this.modifiers[0] = oreModifier;
         this.modifiers[1] = energyModifier;
         this.modifiers[2] = foodModifier;
         this.modifiers[3] = moneyModifier;
+        //Import the effect's modifiers
 
         this.multiply = multiply;
+        //Import the boolean setting to determine whether the aforementioned modifiers are to be added to (or
+        //subtracted from) players' existing resource counts, or whether they are to be taken as multiplicative
+        //factors instead
 
         this.runnable = runnable;
+        //Import the code to be run whenever the effect is imposed (if any is provided at all)
 
         this.overlay = new Overlay(Color.OLIVE, Color.WHITE, 3);
         //Construct a visual interface through which the effect can be identified
-    }
-
-    /**
-     * Overloaded constructor that assigns a name, a description and variably-applicable modifiers to the effect
-     *
-     */
-    public PlayerEffect(String name, String description, float oreModifier, float energyModifier, float foodModifier, float moneyModifier, boolean multiply) {
-        this(name, description, oreModifier, energyModifier, foodModifier, moneyModifier, multiply, new Runnable() {
-            @Override
-            public void run() {
-                //I'm still cooking this copypasta, so you should probably check back around teatime
-            }
-        });
     }
 
     /**
@@ -91,19 +96,23 @@ public class PlayerEffect {
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
+        //Set the visual parameters for the [CLOSE] button on the overlay
 
         Label headerLabel = new Label("PLAYER EFFECT IMPOSED", new Label.LabelStyle(gameScreen.getGame().headerFontRegular.font(), Color.CHARTREUSE));
         Label titleLabel = new Label(name, new Label.LabelStyle(gameScreen.getGame().headerFontLight.font(), Color.WHITE));
         Label descriptionLabel = new Label(description, new Label.LabelStyle(gameScreen.getGame().smallFontLight.font(), Color.WHITE));
+        //Construct labels to state the type, name and description of this effect
 
         headerLabel.setAlignment(Align.left);
         titleLabel.setAlignment(Align.right);
         descriptionLabel.setAlignment(Align.left);
+        //Align the aforementioned labels against the edges of the overlay's internal table
 
         overlay.table().add(headerLabel).width(330).left();
         overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 330).right();
         overlay.table().row();
         overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
+        //...and then add them to it
 
         overlay.table().row().colspan(2);
         TextButton closeButton = new TextButton("CLOSE", overlayButtonStyle);
@@ -115,14 +124,17 @@ public class PlayerEffect {
         });
 
         overlay.table().add(closeButton);
+        //Set up and add a [CLOSE] button to the overlay
 
         overlay.resize(descriptionLabel.getWidth() + 20, headerLabel.getHeight() + descriptionLabel.getHeight() + closeButton.getHeight() + 35);
+        //Resize the overlay to fit around the sizes of the labels that were added to it
     }
 
     /**
-     * Imposes the effect on the player by changing the resources that they have. Their resources can either be
-     * multiplied or divided
-     * @param player The player that is to be effected
+     * Imposes the effect on the player by changing the resources that they have
+     * Their resources can be added to, subtracted from, multiplied or divided
+     *
+     * @param player The player that is to be affected
      */
     public void impose(Player player) {
         if (multiply == true) {
@@ -139,22 +151,6 @@ public class PlayerEffect {
     }
 
     /**
-     * Getter for the name of the effect
-     * @return The name of the effect
-     */
-    public String name() {
-        return name;
-    }
-
-    /**
-     * Getter for the description of the effect
-     * @return The description of the effect
-     */
-    public String description() {
-        return description;
-    }
-
-    /**
      * Getter for the overlay
      * @return The overlay of the effect
      */
@@ -165,22 +161,5 @@ public class PlayerEffect {
      */
     public void executeRunnable() {
         runnable.run();
-    }
-
-    /**
-     * Getter for the runnable
-     * @return The runnable
-     */
-    public Runnable getRunnable() {
-        return runnable;
-    }
-
-    /**
-     * Sets the method that the effect will run when it's imposed on a given tile
-     *
-     * @param runnable The method to be executed when this effect is invoked
-     */
-    public void setRunnable(Runnable runnable) {
-        this.runnable = runnable;
     }
 }
