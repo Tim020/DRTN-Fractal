@@ -1,7 +1,6 @@
 package io.github.teamfractal.actors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
-public class AdjustableActor extends Table {
+public class MarketAdjustableActor extends Table {
 	//<editor-fold desc="UI Components">
 	private final TextButton subButton;
 	private final TextButton addButton;
@@ -128,7 +127,7 @@ public class AdjustableActor extends Table {
 	 * @param title   The adjustable title.
 	 * @param action  The action button text.
 	 */
-	public AdjustableActor(Skin skin, String title, String action) {
+	public MarketAdjustableActor(Skin skin, String title, String action) {
 		subButton = new TextButton("<", skin);
 		addButton = new TextButton(">", skin);
 		actButton = new TextButton(action, skin);
@@ -175,7 +174,7 @@ public class AdjustableActor extends Table {
 	 * @param title   The adjustable title.
 	 * @param action  The action button text.
 	 */
-	public AdjustableActor(Skin skin, int value, int min, int max, String title, String action) {
+	public MarketAdjustableActor(Skin skin, int value, int min, int max, String title, String action) {
 		this(skin, title, action);
 
 		setMax(max);
