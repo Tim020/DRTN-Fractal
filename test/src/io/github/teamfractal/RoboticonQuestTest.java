@@ -1,7 +1,7 @@
 package io.github.teamfractal;
 
 
-public class RoboticonQuestTest extends GdxInitializer {
+public class RoboticonQuestTest extends TesterFile {
 	private RoboticonQuest game;
 	//TODO: Find a different way to test
 	/*@Before
