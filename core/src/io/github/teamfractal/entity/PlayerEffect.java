@@ -1,6 +1,5 @@
 package io.github.teamfractal.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.GameScreen;
 import io.github.teamfractal.screens.Overlay;
-import io.github.teamfractal.util.TTFont;
 
 /**
  * Created by Joseph on 01/02/2017.
@@ -68,7 +66,7 @@ public class PlayerEffect {
         this.description = description;
         //Store the effect's name and description for future reference
 
-        this.modifiers = new float[5];
+        this.modifiers = new float[4];
         this.modifiers[0] = oreModifier;
         this.modifiers[1] = energyModifier;
         this.modifiers[2] = foodModifier;

@@ -11,7 +11,16 @@ import io.github.teamfractal.entity.enums.ResourceType;
  */
 public class PlotEffectSource extends Array<PlotEffect> {
 
-    private RoboticonQuest engine;
+    /**
+     * This class exists to declare and instantiate the different PlotEffects that can be randomly applied to different
+     * plots at various stages in the game, thereby providing an interface through which the core game can access
+     * them
+     */
+
+    /**
+     * The game's engine
+     */
+    private RoboticonQuest game;
 
     private PlotEffect duckRelatedDisaster;
 
@@ -21,26 +30,36 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
     private PlotEffect tornado;
 
-    public PlotEffectSource(final RoboticonQuest engine) {
-        this.engine = engine;
+    /**
+     * Constructor that prepares a variety of PlotEffects and adds them all to the internal array structure for
+     * later access and use by the game's engine
+     *
+     * @param game The game's engine
+     */
+    public PlotEffectSource(final RoboticonQuest game) {
+        this.game = game;
+        //Import the game's engine for use by the effects
 
         configureEffects();
         implementEffects();
     }
 
+    /**
+     * Subroutine that instantiates each effect declared above
+     */
     public void configureEffects() {
         duckRelatedDisaster = new PlotEffect("Duck-Related Disaster", "A horde of ducks pillage your most " +
                 "food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
                 "80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
             @Override
             public void run() {
-                if (engine.getPlayer().getLandList().size() == 0) {
+                if (game.getPlayer().getLandList().size() == 0) {
                     return;
                 }
 
-                LandPlot foodProducer = engine.getPlayer().getLandList().get(0);
+                LandPlot foodProducer = game.getPlayer().getLandList().get(0);
 
-                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                for (LandPlot plot : game.getPlayer().getLandList()) {
                     if (plot.getResource(ResourceType.FOOD) > foodProducer.getResource(ResourceType.FOOD)) {
                         foodProducer = plot;
                     }
@@ -55,11 +74,11 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 "\nhas caused all other production values to drop to 0.", new Float[]{(float) 0, (float) 0, (float) 2}, new Runnable() {
             @Override
             public void  run() {
-                if (engine.getPlayer().getLandList().size() == 0) {
+                if (game.getPlayer().getLandList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                for (LandPlot plot : game.getPlayer().getLandList()) {
                     spicy.impose(plot, 1);
                 }
 
@@ -73,11 +92,11 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 new Float[]{(float) 0.1, (float) 1, (float) 1}, new Runnable() {
             @Override
             public void run() {
-                if (engine.getPlayer().getLandList().size() == 0) {
+                if (game.getPlayer().getLandList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                for (LandPlot plot : game.getPlayer().getLandList()) {
                     earthquakeDisaster.impose(plot, 1);
                 }
 
@@ -91,11 +110,11 @@ public class PlotEffectSource extends Array<PlotEffect> {
          new Float[]{(float) 1, (float) 0.5, (float) 1.6}, new Runnable(){
             @Override
             public void run() {
-                if (engine.getPlayer().getLandList().size() == 0) {
+                if (game.getPlayer().getLandList().size() == 0) {
                     return;
                 }
 
-                for (LandPlot plot : engine.getPlayer().getLandList()) {
+                for (LandPlot plot : game.getPlayer().getLandList()) {
                     tornado.impose(plot, 1);
                 }
 
@@ -104,6 +123,9 @@ public class PlotEffectSource extends Array<PlotEffect> {
         });
     }
 
+    /**
+     * Subroutine that adds the effects instantiated above to the internal array structure for future access
+     */
     public void implementEffects() {
         add(duckRelatedDisaster);
         add(spicy);

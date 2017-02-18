@@ -435,9 +435,11 @@ public class RoboticonQuest extends Game {
 				gameScreen.addOverlay(PLE.overlay());
 			}
 		}
+
+		gameScreen.getActors().textUpdate();
 	}
 	/**
-	 * Clears the effects of all the effects
+	 * Clears all imposed PlotEffects
 	 */
 	private void clearEffects() {
 		for (PlotEffect PE : plotEffectSource) {

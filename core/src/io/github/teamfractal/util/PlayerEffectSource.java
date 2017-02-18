@@ -9,6 +9,15 @@ import io.github.teamfractal.entity.PlayerEffect;
  */
 public class PlayerEffectSource extends Array<PlayerEffect> {
 
+    /**
+     * This class exists to declare and instantiate the different PlayerEffects that can be randomly applied to
+     * players at various stages in the game, thereby providing an interface through which the core game can access
+     * them
+     */
+
+    /**
+     * The game's engine
+     */
     private RoboticonQuest game;
 
     private PlayerEffect partyHard;
@@ -19,13 +28,23 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
 
     private PlayerEffect freshersFair;
 
+    /**
+     * Constructor that prepares a variety of PlayerEffects and adds them all to the internal array structure for
+     * later access and use by the game's engine
+     *
+     * @param game The game's engine
+     */
     public PlayerEffectSource(final RoboticonQuest game) {
         this.game = game;
+        //Import the game's engine for use by the effects
 
         configureEffects();
         implementEffects();
     }
 
+    /**
+     * Subroutine that instantiates each effect declared above
+     */
     public void configureEffects() {
         partyHard = new PlayerEffect("Party Hard", "You decided to throw a party on your newfound acquisition because " +
                 "you're a capitalist and your money\nis worthless to you. Unfortunately, you got too drunk and " +
@@ -38,15 +57,15 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         });
 
         uhOh = new PlayerEffect("Uh Oh!", "Someone left the lights on over night again. Who was it? \nI bet it was Darrell," +
-                " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy",0,-50,0,0, false, new Runnable() {
+                " it's always Darrell. Either way, \nlooks like it used a lot of your energy. \n\n -50 Energy", 0, -50, 0, 0, false, new Runnable() {
             @Override
             public void run() {
                 uhOh.impose(game.getPlayer());
             }
         });
         
-        vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings." +
-                "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", 0, 0, 0, -10, false, new Runnable() {
+        vikingRaid = new PlayerEffect("Viking Raid", "You have been raided by a band of intergalactic Vikings. " +
+                "They took:\n\n-10 Ore -10 Energy -10 Food and -10 Money", -10, -10, -10, -10, false, new Runnable() {
             @Override
             public void run() {
                 vikingRaid.impose(game.getPlayer());
@@ -62,6 +81,9 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         });
     }
 
+    /**
+     * Subroutine that adds the effects instantiated above to the internal array structure for future access
+     */
     public void implementEffects() {
         add(partyHard);
         add(uhOh);
