@@ -116,7 +116,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
                 }
 
                 for (LandPlot plot : engine.getPlayer().getLandList()) {
-                    tornado.impose(plot, 1);
+                    strike.impose(plot, 1);
                 }
 
 
