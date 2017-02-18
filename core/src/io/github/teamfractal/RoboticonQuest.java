@@ -38,6 +38,7 @@ public class RoboticonQuest extends Game {
     public Market market;
     public RoboticonMarketScreen roboticonMarket;
     public GenerationOverlay genOverlay;
+    public ResourceMarketScreen resourceMarket;
 
 	private int turnNumber = 1;
 	private SpriteBatch batch;
@@ -108,6 +109,7 @@ public class RoboticonQuest extends Game {
         gameScreen = new GameScreen(this);
         roboticonMarket = new RoboticonMarketScreen(this);
         genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
+        resourceMarket = new ResourceMarketScreen(this);
 
 		//Setup tile and player effects for later application
 		setupEffects();
@@ -263,11 +265,15 @@ public class RoboticonQuest extends Game {
 			// Phase 5: Open the market
 
 			case 5:
-			    ResourceMarketScreen RMS = new ResourceMarketScreen(this);
-				setScreen(RMS);
+			    Gdx.input.setInputProcessor(resourceMarket);
 
-                Gdx.input.setInputProcessor(RMS.getStage());
+			    phase4description.stop();
+			    phase5description.play();
 
+			    resourceMarket.actors().widgetUpdate();
+			    resourceMarket.gambleStatisticsReset();
+
+				gameScreen.getActors().setNextButtonVisibility(false);
 				this.getPlayer().takeTurn(5);
 				break;
 
@@ -424,7 +430,7 @@ public class RoboticonQuest extends Game {
 
 		for (PlayerEffect PLE : playerEffectSource) {
 			if (RNGesus.nextFloat() <= effectChance) {
-				PLE.impose(getPlayer());
+				PLE.executeRunnable();
 
 				gameScreen.addOverlay(PLE.overlay());
 			}
