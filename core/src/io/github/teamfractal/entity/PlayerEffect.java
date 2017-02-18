@@ -1,6 +1,5 @@
 package io.github.teamfractal.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,11 +9,8 @@ import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.screens.GameScreen;
 import io.github.teamfractal.screens.Overlay;
-import io.github.teamfractal.util.TTFont;
 
-/**
- * Created by Joseph on 01/02/2017.
- */
+
 public class PlayerEffect {
 
     /**
@@ -137,7 +133,7 @@ public class PlayerEffect {
      * @param player The player that is to be affected
      */
     public void impose(Player player) {
-        if (multiply == true) {
+        if (multiply) {
             player.setResource(ResourceType.ORE, (int) ((float) player.getOre() * modifiers[0]));
             player.setResource(ResourceType.ENERGY, (int) ((float) player.getEnergy() * modifiers[1]));
             player.setResource(ResourceType.FOOD, (int) ((float) player.getFood() * modifiers[2]));

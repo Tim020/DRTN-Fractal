@@ -4,9 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.PlayerEffect;
 
-/**
- * Created by Joseph on 16/02/2017.
- */
 public class PlayerEffectSource extends Array<PlayerEffect> {
 
     private RoboticonQuest game;
@@ -26,7 +23,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         implementEffects();
     }
 
-    public void configureEffects() {
+    private void configureEffects() {
         partyHard = new PlayerEffect("Party Hard", "You decided to throw a party on your newfound acquisition because " +
                 "you're a capitalist and your money\nis worthless to you. Unfortunately, you got too drunk and " +
                 "attempted to use some your fat stacks as Cards\nAgainst Humanity by scrawling immature statements " +
@@ -62,7 +59,7 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
         });
     }
 
-    public void implementEffects() {
+    private void implementEffects() {
         add(partyHard);
         add(uhOh);
         add(vikingRaid);

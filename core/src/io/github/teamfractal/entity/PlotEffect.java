@@ -1,6 +1,5 @@
 package io.github.teamfractal.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,11 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.screens.GameScreen;
 import io.github.teamfractal.screens.Overlay;
-import io.github.teamfractal.util.TTFont;
 
-/**
- * Created by Joseph on 31/01/2017.
- */
 public class PlotEffect extends Array<Float[]> {
 
     /**
@@ -82,44 +77,7 @@ public class PlotEffect extends Array<Float[]> {
             @Override
             public void run() {
                 /*
-                "I'm not lawful, make this pussy stop talking
-                You're not one of the gods, you're one of the god awful
-                We're all gawking when looking at your Fox, bitch
-                Take to Smash 4 and lose in it by four stocks
-                I ain't a fan your style; you ain't standing your ground
-                Get wins while kicking a man when he's down
-                Like, "I beat mango, I'm the favorite if he chokes!
-                As far as Armada goes, I'll just wait 'til he's a host!"
-                Ain't no telling how foolish you'll be looking
-                Evidence dot zip can't contain the ass whooping
-                Right when we realize the money match is over
-                That'll be your cue to throw your controller...
-
-                Expose you as a fraud, yeah; I'll be blowing you up
-                Who said you were a God? I know it wasn't Plup
-                Been here ten years and you know I'm showing up
-                For a man of many words, I think you've said enough
-
-                *crickets*
-
-                But, the only way to make you hush
-                First, I'll body bag your Fox, then dot zip it shut
-                I'mma put you in your place, kid, you're a disgrace
-                Get killed quick, like that missile hit you in the face
-                After all this, you'll be watching your mouth
-                Ain't no telling who'll be calling you out
-                Salty Suite goes down, you'd better come correct
-                Until you win a major, show your elders some respect!
-
-                P.S. Leffen: I ain't done yet
-                I'm the underdog, so place your bets
-                Whoever wanna see Leffen looking dumb?
-                Throw your money on the line cause I'm making some
-                Gotta say bro, you looking awfully weak
-                Wait and see what happens in the Salty Suite
-                Vanilla Fox don't suit you, go find another
-                Teach you a lesson, and take back my color"
-                    - Chillindude829, January 2015, on the subject of Leffen
+                Intentionally empty.
                 */
             }
         });
@@ -223,7 +181,7 @@ public class PlotEffect extends Array<Float[]> {
     /**
      * Reverts the changes made by the effect to the last plot that it was assigned to
      */
-    public void revert() {
+    private void revert() {
         if (plotRegister.size > 0) {
             Float[] originalModifiers;
             LandPlot lastPlot;

@@ -14,6 +14,10 @@ public class AIPlayer extends Player {
 
     public AIPlayer(RoboticonQuest game) {
         super(game);
+        /*
+        Money set to a value higher than ever necessary to allow the AI to make visible progress every turn.
+        Also accounts for the AI's bold market moves and allows it to keep the market changing.
+         */
         this.setMoney(20000);
     }
 
