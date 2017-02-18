@@ -1,10 +1,7 @@
 package io.github.teamfractal.actors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-<<<<<<< HEAD:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
-=======
 import com.badlogic.gdx.scenes.scene2d.Touchable;
->>>>>>> origin/UIDevRemastered:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -18,11 +15,6 @@ public class MarketAdjustableActor extends Table {
 
 	private RoboticonQuest game;
 
-<<<<<<< HEAD:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
-public class MarketAdjustableActor extends Table {
-	//<editor-fold desc="UI Components">
-=======
->>>>>>> origin/UIDevRemastered:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
 	private final TextButton subButton;
 	private final TextButton addButton;
 	private final TextButton actButton;
@@ -136,9 +128,6 @@ public class MarketAdjustableActor extends Table {
 	 *
 	 * @param skin    The skin file for the UI.
 	 */
-<<<<<<< HEAD:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
-	public MarketAdjustableActor(Skin skin, String title, String action) {
-=======
 	public MarketAdjustableActor(RoboticonQuest game, Skin skin, ResourceType resourceType, boolean buy) {
 		this.game = game;
 
@@ -150,7 +139,6 @@ public class MarketAdjustableActor extends Table {
 
 		this.max = game.market.getResource(resourceType);
 
->>>>>>> origin/UIDevRemastered:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
 		subButton = new TextButton("<", skin);
 		addButton = new TextButton(">", skin);
 		actButton = new TextButton("", skin);
@@ -194,28 +182,6 @@ public class MarketAdjustableActor extends Table {
 	}
 
 	/**
-<<<<<<< HEAD:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
-	 * The adjustable actor
-	 * For an easy way of adjust values in a step of 1 / -1.
-	 *
-	 * @param skin    The skin file for the UI.
-	 * @param value   The default value.
-	 * @param min     The minimum value.
-	 * @param max     The maximum value.
-	 * @param title   The adjustable title.
-	 * @param action  The action button text.
-	 */
-	public MarketAdjustableActor(Skin skin, int value, int min, int max, String title, String action) {
-		this(skin, title, action);
-
-		setMax(max);
-		setMin(min);
-		setValue(value);
-	}
-
-	/**
-=======
->>>>>>> origin/UIDevRemastered:core/src/io/github/teamfractal/actors/MarketAdjustableActor.java
 	 * Binds events to buttons.
 	 */
 	private void bindButtonEvents() {
