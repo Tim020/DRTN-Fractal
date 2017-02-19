@@ -127,5 +127,27 @@ public class MarketTest extends TesterFile {
 		assertEquals(5, market.getRoboticon() );
 
 	}
+	@Test
+	public void marketShouldUseOreToCreateRoboticons(){
+		market.setRoboticon(10);
+		market.setOre(10);
+		market.generateRoboticon();
 
+		int roboticons = market.getRoboticon();
+
+		switch(roboticons){
+			case 10:
+				assertEquals(10, market.getOre());
+				break;
+			case 11:
+				assertEquals(8, market.getOre());
+				break;
+			case 12:
+				assertEquals(6, market.getOre());
+				break;
+			case 13:
+				assertEquals(4, market.getOre());
+				break;
+		}
+	}
 }
