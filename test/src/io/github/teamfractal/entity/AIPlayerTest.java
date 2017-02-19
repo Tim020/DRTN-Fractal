@@ -12,6 +12,10 @@ import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests for the AI can be found here and in the Manual Testing document
+ */
+//TODO add link
 public class AIPlayerTest extends TesterFile {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
@@ -161,14 +165,4 @@ public class AIPlayerTest extends TesterFile {
     }
 
 
-    /**
-     * First of the True AI tests
-     * <p>
-     * This test ensures that the AI executes correctly at each phase.
-     * </p>
-     */
-    @Test
-    public void testTakeTurn() {
-
-    }
 }
