@@ -177,13 +177,13 @@ public class AIPlayer extends Player {
      */
     private void phase5() {
         if (game.getTurnNumber() % 2 == 0) {
-            if (this.getEnergy() > 0) {
+            if (this.getEnergy() > 1) {
                 sellResources(ResourceType.ENERGY, this.getEnergy() / 2);
             }
-            if (this.getFood() > 0) {
+            if (this.getFood() > 1) {
                 sellResources(ResourceType.FOOD, this.getFood() / 2);
             }
-            if (this.getOre() > 0) {
+            if (this.getOre() > 1) {
                 sellResources(ResourceType.ORE, this.getOre() / 2);
             }
         } else {
