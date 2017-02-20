@@ -299,8 +299,11 @@ public class RoboticonQuest extends Game {
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
 
-				clearEffects();
-				setEffects();
+				if (turnNumber > 2) {
+					clearEffects();
+					setEffects();
+				}
+				//Only consider imposing effects once each player has claimed at least 1 tile
 
 				phase5description.stop();
 				if (!(getPlayer() instanceof AIPlayer)) {
@@ -401,7 +404,7 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Changes the current player
 	 */
-	public void nextPlayer() {
+	private void nextPlayer() {
 		this.currentPlayerIndex = 1 - this.currentPlayerIndex;
 
 		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));

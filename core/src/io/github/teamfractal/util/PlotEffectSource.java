@@ -22,15 +22,15 @@ public class PlotEffectSource extends Array<PlotEffect> {
      */
     private RoboticonQuest game;
 
-    private PlotEffect duckRelatedDisaster;
+    public PlotEffect duckRelatedDisaster;
 
-    private PlotEffect spicy;
+    public PlotEffect spicy;
     
-    private PlotEffect earthquakeDisaster;
+    public PlotEffect earthquakeDisaster;
 
-    private PlotEffect tornado;
+    public PlotEffect tornado;
 
-    private PlotEffect strike;
+    public PlotEffect strike;
 
     /**
      * Constructor that prepares a variety of PlotEffects and adds them all to the internal array structure for

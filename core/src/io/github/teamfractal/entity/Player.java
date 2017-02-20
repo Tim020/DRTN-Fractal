@@ -111,7 +111,7 @@ public class Player {
 	 * @param resource  The {@link ResourceType}
 	 * @param amount    The new amount.
 	 */
-	void setResource(ResourceType resource, int amount) {
+	public void setResource(ResourceType resource, int amount) {
 		switch (resource) {
 			case ENERGY:
 				setEnergy(amount);

@@ -17,15 +17,15 @@ public class PlayerEffectSource extends Array<PlayerEffect> {
      */
     private RoboticonQuest game;
 
-    private PlayerEffect partyHard;
+    public PlayerEffect partyHard;
 
-    private PlayerEffect uhOh;
+    public PlayerEffect uhOh;
     
-    private PlayerEffect vikingRaid;
+    public PlayerEffect vikingRaid;
 
-    private PlayerEffect freshersFair;
+    public PlayerEffect freshersFair;
 
-    private PlayerEffect brexit;
+    public PlayerEffect brexit;
 
     /**
      * Constructor that prepares a variety of PlayerEffects and adds them all to the internal array structure for
