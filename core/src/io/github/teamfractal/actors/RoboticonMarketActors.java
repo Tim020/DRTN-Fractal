@@ -63,11 +63,11 @@ public class RoboticonMarketActors extends Table {
      * Import the roboticon textures to be drawn in the interface
      */
     static {
-        no_cust_texture = new Texture(Gdx.files.internal("roboticon_images/Robot.png"));
-        energy_texture = new Texture(Gdx.files.internal("roboticon_images/Robot_energy.png"));
-        ore_texture = new Texture(Gdx.files.internal("roboticon_images/Robot_ore.png"));
+        no_cust_texture = new Texture(Gdx.files.internal("roboticon_images/robot.png"));
+        energy_texture = new Texture(Gdx.files.internal("roboticon_images/robot_energy.png"));
+        ore_texture = new Texture(Gdx.files.internal("roboticon_images/robot_ore.png"));
         food_texture = new Texture(Gdx.files.internal("roboticon_images/Robot_Food.png"));
-        no_robotic_texture = new Texture(Gdx.files.internal("roboticon_images/No_Roboticons.png"));
+        no_robotic_texture = new Texture(Gdx.files.internal("roboticon_images/no_roboticons.png"));
     }
 
     /**
