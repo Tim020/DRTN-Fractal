@@ -68,7 +68,7 @@ public class Player {
 	/**
 	 * Set the amount of ore player has
 	 * <p>
-	 *     if amount < 0 then the amount is set to 0.
+	 *     if amount less than 0 then the amount is set to 0.
 	 * </p>
 	 * @param amount The new amount for ore.
 	 */
@@ -87,7 +87,7 @@ public class Player {
 	/**
 	 * Set the amount of energy player has
 	 * <p>
-	 *     if amount < 0 then the amount is set to 0.
+	 *     if amount less than 0 then the amount is set to 0.
 	 * </p>
 	 * @param amount The new amount for energy.
 	 */
@@ -107,7 +107,7 @@ public class Player {
 	/**
 	 * Set the amount of food player has
 	 * <p>
-	 *     if amount < 0 then the amount is set to 0.
+	 *     if amount less than 0 then the amount is set to 0.
 	 * </p>
 	 * @param amount The new amount for food.
 	 */
@@ -393,7 +393,7 @@ public class Player {
 
 	/**
 	 * Returns the array of plots owned by this player
-	 * @return ArrayList<LandPlot> The array of plots owned by this player
+	 * @return ArrayList of LandPlot The array of plots owned by this player
 	 */
 	public ArrayList<LandPlot> getLandList() {
 		return landList;

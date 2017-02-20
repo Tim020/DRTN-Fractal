@@ -14,10 +14,6 @@ public interface IAnimation {
 	 */
 	boolean tick(float delta, AbstractAnimationScreen screen, Batch batch);
 
-	/**
-	 *
-	 * @param callback
-	 */
 	void setAnimationFinish(IAnimationFinish callback);
 	void callAnimationFinish();
 	void cancelAnimation();

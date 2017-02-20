@@ -111,7 +111,7 @@ public class AnimationAddResources implements IAnimation {
 
 	/**
 	 * Set animation finish callback.
-	 * @param callback
+	 * @param callback callback value to update with
 	 */
 	@Override
 	public void setAnimationFinish(IAnimationFinish callback) {
