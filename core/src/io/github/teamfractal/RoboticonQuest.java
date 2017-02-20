@@ -1,3 +1,16 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 3
+ *
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ *
+ * And a more concise report can be found in our Change3 document.
+ **/
+
 package io.github.teamfractal;
 
 import com.badlogic.gdx.Game;
@@ -191,21 +204,15 @@ public class RoboticonQuest extends Game {
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 
-		playerHeader.stop();
-		if (phase == 4) {
-			playerHeader.setLength(3);
-		} else {
-			playerHeader.setLength(5);
-		}
-		playerHeader.play();
-
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
                 Gdx.input.setInputProcessor(roboticonMarket);
 
-				phase1description.stop();
-				phase2description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase1description.stop();
+					phase2description.play();
+				}
 
                 AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -221,8 +228,10 @@ public class RoboticonQuest extends Game {
 			case 3:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
 
-				phase2description.stop();
-				phase3description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase2description.stop();
+					phase3description.play();
+				}
 
 				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -243,8 +252,10 @@ public class RoboticonQuest extends Game {
 			case 4:
                 Gdx.input.setInputProcessor(genOverlay);
 
-				phase3description.stop();
-				phase4description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase3description.stop();
+					phase4description.play();
+				}
 
                 this.getPlayer().generateResources();
 				this.market.generateRoboticon();
@@ -267,8 +278,10 @@ public class RoboticonQuest extends Game {
 			case 5:
 			    Gdx.input.setInputProcessor(resourceMarket);
 
-			    phase4description.stop();
-			    phase5description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase4description.stop();
+					phase5description.play();
+				}
 
 			    resourceMarket.actors().widgetUpdate();
 			    resourceMarket.gambleStatisticsReset();
@@ -281,13 +294,13 @@ public class RoboticonQuest extends Game {
 			case 6:
 				phase = 1;
 
-                if (checkGameEnded()) {
+                //if (checkGameEnded()) {
 					setScreen(new EndGameScreen(this));
 					break;
-				}
+				//}
 
-                this.turnNumber += 1;
-                this.nextPlayer();
+                //this.turnNumber += 1;
+                //this.nextPlayer();
 
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
@@ -299,11 +312,16 @@ public class RoboticonQuest extends Game {
 				setScreen(gameScreen);
 				landBoughtThisTurn = 0;
 
-				clearEffects();
-				setEffects();
+				if (turnNumber > 2) {
+					clearEffects();
+					setEffects();
+				}
+				//Only consider imposing effects once each player has claimed at least 1 tile
 
-				phase4description.stop();
-				phase1description.play();
+				phase5description.stop();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase1description.play();
+				}
 
                 System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + this.getTurnNumber());
 
@@ -316,6 +334,15 @@ public class RoboticonQuest extends Game {
 				break;
 		}
 
+		playerHeader.stop();
+		if (!(getPlayer() instanceof AIPlayer)) {
+			if (phase == 4) {
+				playerHeader.setLength(3);
+			} else {
+				playerHeader.setLength(5);
+			}
+			playerHeader.play();
+		}
 
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();
@@ -390,7 +417,7 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Changes the current player
 	 */
-	public void nextPlayer() {
+	private void nextPlayer() {
 		this.currentPlayerIndex = 1 - this.currentPlayerIndex;
 
 		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
@@ -401,7 +428,7 @@ public class RoboticonQuest extends Game {
 	 */
 	private void setupEffects() {
 		//Initialise the fractional chance of any given effect being applied at the start of a round
-		effectChance = (float) 1;
+		effectChance = (float) 0.02;
 
 		plotEffectSource = new PlotEffectSource(this);
 		playerEffectSource = new PlayerEffectSource(this);
@@ -424,7 +451,9 @@ public class RoboticonQuest extends Game {
 			if (RNGesus.nextFloat() <= effectChance) {
 				PTE.executeRunnable();
 
-				gameScreen.addOverlay(PTE.overlay());
+				if (!(getPlayer() instanceof AIPlayer)) {
+					gameScreen.addOverlay(PTE.overlay());
+				}
 			}
 		}
 
@@ -432,12 +461,16 @@ public class RoboticonQuest extends Game {
 			if (RNGesus.nextFloat() <= effectChance) {
 				PLE.executeRunnable();
 
-				gameScreen.addOverlay(PLE.overlay());
+				if (!(getPlayer() instanceof AIPlayer)) {
+					gameScreen.addOverlay(PLE.overlay());
+				}
 			}
 		}
+
+		gameScreen.getActors().textUpdate();
 	}
 	/**
-	 * Clears the effects of all the effects
+	 * Clears all imposed PlotEffects
 	 */
 	private void clearEffects() {
 		for (PlotEffect PE : plotEffectSource) {
@@ -489,11 +522,15 @@ public class RoboticonQuest extends Game {
 	public String getWinner(){
         String winner;
         if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
-			winner = "Player 1";
+			winner = "Player 1 wins! You are now the Vice-Chancellor of the Colony!";
 		}
-		else{
-				winner = "Player 2";
+		else {
+			if (playerList.get(1).calculateScore() > playerList.get(0).calculateScore()) {
+				winner = "Player 2 wins! You are now the Vice-Chancellor of the Colony!";
+			} else {
+				winner = "It's a draw. I'm afraid neither of you will become Vice-Chancellor of the Colony.";
 			}
+		}
 		return winner;
 	}
 

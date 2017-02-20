@@ -1,3 +1,16 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 3
+ *
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ *
+ * And a more concise report can be found in our Change3 document.
+ **/
+
 package io.github.teamfractal.entity;
 
 import com.badlogic.gdx.utils.Array;
@@ -111,7 +124,7 @@ public class Player {
 	 * @param resource  The {@link ResourceType}
 	 * @param amount    The new amount.
 	 */
-	void setResource(ResourceType resource, int amount) {
+	public void setResource(ResourceType resource, int amount) {
 		switch (resource) {
 			case ENERGY:
 				setEnergy(amount);

@@ -1,3 +1,16 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 3
+ *
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ *
+ * And a more concise report can be found in our Change3 document.
+ **/
+
 package io.github.teamfractal.entity;
 
 import io.github.teamfractal.RoboticonQuest;
@@ -14,6 +27,10 @@ public class AIPlayer extends Player {
 
     public AIPlayer(RoboticonQuest game) {
         super(game);
+        /*
+        Money set to a value higher than ever necessary to allow the AI to make visible progress every turn.
+        Also accounts for the AI's bold market moves and allows it to keep the market changing.
+         */
         this.setMoney(20000);
     }
 
@@ -173,13 +190,13 @@ public class AIPlayer extends Player {
      */
     private void phase5() {
         if (game.getTurnNumber() % 2 == 0) {
-            if (this.getEnergy() > 0) {
+            if (this.getEnergy() > 1) {
                 sellResources(ResourceType.ENERGY, this.getEnergy() / 2);
             }
-            if (this.getFood() > 0) {
+            if (this.getFood() > 1) {
                 sellResources(ResourceType.FOOD, this.getFood() / 2);
             }
-            if (this.getOre() > 0) {
+            if (this.getOre() > 1) {
                 sellResources(ResourceType.ORE, this.getOre() / 2);
             }
         } else {

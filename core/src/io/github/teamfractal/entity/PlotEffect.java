@@ -1,6 +1,18 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 3
+ *
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ *
+ * And a more concise report can be found in our Change3 document.
+ **/
+
 package io.github.teamfractal.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,11 +22,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.screens.GameScreen;
 import io.github.teamfractal.screens.Overlay;
-import io.github.teamfractal.util.TTFont;
 
-/**
- * Created by Joseph on 31/01/2017.
- */
 public class PlotEffect extends Array<Float[]> {
 
     /**
@@ -43,12 +51,12 @@ public class PlotEffect extends Array<Float[]> {
     private Overlay overlay;
 
     /**
-     * Constructor that assigns a name, a description, variably-applicable modifiers and a custom method to the effect
+     * Constructor that imports the parameters of the effect along with a custom block of code in which it can be used
      *
      * @param name The name of the effect
      * @param description A description of the effect
      * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
-     *
+     * @param runnable The code to be executed when the effect is imposed through natural means
      */
     public PlotEffect(String name, String description, Float[] modifiers, Runnable runnable) {
         this.name = name;
@@ -69,19 +77,30 @@ public class PlotEffect extends Array<Float[]> {
     }
 
     /**
-     * Overloaded constructor that assigns a name, a description and variably-applicable modifiers to the effect
+     * Overloaded constructor that imports the parameters of the effect and sets it up to be applied to a specific
+     * plot in a specific way upon usage
      *
-     * @param name        The name of the effect
+     * @param name The name of the effect
      * @param description A description of the effect
-     * @param modifiers   The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
+     * @param modifiers The production modifiers that the effect can impose {0: ORE | 1: ENERGY | 2: FOOD}
+     * @param plot The plot which the effect is to be applied to
      */
-    public PlotEffect(String name, String description, Float[] modifiers) {
+    public PlotEffect(String name, String description, Float[] modifiers, final LandPlot plot, final int mode) {
         this(name, description, modifiers, new Runnable() {
             @Override
             public void run() {
-                //This is meant to be empty
+                /*
+                Intentionally empty.
+                */
             }
         });
+
+        this.runnable = new Runnable() {
+            @Override
+            public void run() {
+                impose(plot, mode);
+            }
+        };
     }
 
     /**
@@ -93,19 +112,23 @@ public class PlotEffect extends Array<Float[]> {
         overlayButtonStyle.pressedOffsetX = -1;
         overlayButtonStyle.pressedOffsetY = -1;
         overlayButtonStyle.fontColor = Color.WHITE;
+        //Set the visual parameters for the [CLOSE] button on the overlay
 
         Label headerLabel = new Label("PLOT EFFECT IMPOSED", new Label.LabelStyle(gameScreen.getGame().headerFontRegular.font(), Color.YELLOW));
         Label titleLabel = new Label(name, new Label.LabelStyle(gameScreen.getGame().headerFontLight.font(), Color.WHITE));
         Label descriptionLabel = new Label(description, new Label.LabelStyle(gameScreen.getGame().smallFontLight.font(), Color.WHITE));
+        //Construct labels to state the type, name and description of this effect
 
         headerLabel.setAlignment(Align.left);
         titleLabel.setAlignment(Align.right);
         descriptionLabel.setAlignment(Align.left);
+        //Align the aforementioned labels against the edges of the overlay's internal table...
 
         overlay.table().add(headerLabel).width(300).left();
         overlay.table().add(titleLabel).width(descriptionLabel.getWidth() - 300).right();
         overlay.table().row();
         overlay.table().add(descriptionLabel).left().colspan(2).padTop(5).padBottom(20);
+        //...and then add them to it
 
         overlay.table().row().colspan(2);
         TextButton closeButton = new TextButton("CLOSE", overlayButtonStyle);
@@ -117,8 +140,10 @@ public class PlotEffect extends Array<Float[]> {
         });
 
         overlay.table().add(closeButton);
+        //Set up and add a [CLOSE] button to the overlay
 
         overlay.resize(descriptionLabel.getWidth() + 20, headerLabel.getHeight() + descriptionLabel.getHeight() + closeButton.getHeight() + 35);
+        //Resize the overlay to fit around the sizes of the labels that were added to it
     }
 
     /**
@@ -163,29 +188,33 @@ public class PlotEffect extends Array<Float[]> {
         //...and return the imposed modifiers to the top of the stack
 
         plotRegister.add(plot);
-        //Push the plot that's about to be modified on to the appropriate registration stack
+        //Push the plot that was modified on to the appropriate registration stack
     }
 
     /**
-     * Reverts the modifiers of the land plot to their values before the effect was applied
+     * Reverts the changes made by the effect to the last plot that it was assigned to
      */
-    public void revert() {
+    private void revert() {
         if (plotRegister.size > 0) {
             Float[] originalModifiers;
             LandPlot lastPlot;
 
             swapTop();
             originalModifiers = super.pop();
+            //Swap the first two modifier arrays at the head of the stack to access the array that was originally
+            //bound to the last affected plot
 
             lastPlot = plotRegister.pop();
+            //Retrieve the last plot that this effect was imposed upon
 
             for (int i = 0; i < 3; i++) {
                 lastPlot.productionModifiers[i] = originalModifiers[i];
             }
+            //Restore the original production modifiers of the aforementioned plot
         }
     }
     /**
-     * Reverts all tiles that have been affected back to their original state
+     * Reverts all affected tiles back to their original states
      */
     public void revertAll() {
         while (plotRegister.size > 0) {
@@ -193,7 +222,7 @@ public class PlotEffect extends Array<Float[]> {
         }
     }
     /**
-     * Swaps the postions of the top two values within the internal stack
+     * Swaps the positions of the first two values within the internal stack
      */
     private void swapTop() {
         if (super.size > 1) {
@@ -210,39 +239,6 @@ public class PlotEffect extends Array<Float[]> {
      */
     public void executeRunnable() {
         runnable.run();
-    }
-
-    /**
-     * Getter for the runnable
-     * @return The runnable
-     */
-    public Runnable getRunnable() {
-        return runnable;
-    }
-
-    /**
-     * Sets the method that the effect will run when it's imposed on a given tile
-     *
-     * @param runnable The method to be executed when this effect is invoked
-     */
-    public void setRunnable(Runnable runnable) {
-        this.runnable = runnable;
-    }
-
-    /**
-     * Getter for the name of the effect
-     * @return The name of the effect
-     */
-    public String name() {
-        return name;
-    }
-
-    /**
-     * Getter for the description if the effect
-     * @return The description of the effect
-     */
-    public String description() {
-        return description;
     }
 
     /**
