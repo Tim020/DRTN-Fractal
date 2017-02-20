@@ -16,8 +16,8 @@ package io.github.teamfractal;
 /**
  * This class has been emptied and is now tested manually in the "Manual Testing"
  * document.
+ * https://github.com/NotKieran/DRTN-Fractal/blob/Assessment3_Docs/Test3.pdf
  */
-//TODO add link
 public class RoboticonQuestTest extends TesterFile {
 	private RoboticonQuest game;
 

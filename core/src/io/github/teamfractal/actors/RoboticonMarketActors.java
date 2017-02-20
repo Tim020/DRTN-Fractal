@@ -27,7 +27,6 @@ import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Roboticon;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.ArrayList;
 
@@ -72,15 +71,13 @@ public class RoboticonMarketActors extends Table {
     }
 
     /**
-     * The game's engine
-     */
-    private RoboticonQuest game;
-
-    /**
      * An array containing the unplaced roboticons held by the current player
      */
     public ArrayList<Roboticon> roboticons = new ArrayList<Roboticon>();
-
+    /**
+     * The game's engine
+     */
+    private RoboticonQuest game;
     /**
      * Texture corresponding to the selected roboticon
      */
@@ -214,7 +211,7 @@ public class RoboticonMarketActors extends Table {
         row();
 
         customisationDropDown = new SelectBox<String>(game.skin);
-        customisationDropDown.setItems(new String[]{"Energy Generation", "Ore Mining", "Food Farming"});
+        customisationDropDown.setItems("Energy Generation", "Ore Mining", "Food Farming");
         upgradeTable.add(customisationDropDown).expandX().padRight(14);
         upgradeTable.add(customisationPurchaseButton).width(196);
         //Prepare and add drop-down list to differentiate and select potential roboticon customisations
@@ -430,7 +427,7 @@ public class RoboticonMarketActors extends Table {
 
         if (roboticons.size() == 0) {
             selectedRoboticonIndex = -1;
-        } else if (selectedRoboticonIndex == -1) {
+        } else {
             selectedRoboticonIndex = 0;
         }
         //Select the player's first uninstalled roboticon if they own one

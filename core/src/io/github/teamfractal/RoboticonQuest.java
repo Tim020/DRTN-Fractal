@@ -1,15 +1,4 @@
-/**
- * @author DRTN
- * Team Website with download:
- * https://misterseph.github.io/DuckRelatedFractalProject/
- *
- * This Class contains either modifications or is entirely new in Assessment 3
- *
- * If you are in any doubt a complete changelog can be found here:
- * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
- *
- * And a more concise report can be found in our Change3 document.
- **/
+
 
 package io.github.teamfractal;
 
@@ -30,6 +19,18 @@ import io.github.teamfractal.util.*;
 
 import java.util.ArrayList;
 import java.util.Random;
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ * <p>
+ * This Class contains either modifications or is entirely new in Assessment 3
+ * <p>
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ * <p>
+ * And a more concise report can be found in our Change3 document.
+ **/
 
 /**
  * This is the main game start up class.
@@ -241,7 +242,6 @@ public class RoboticonQuest extends Game {
 						gameScreen.getActors().hideInstallRoboticon();
 					}
 				});
-				gameScreen.getActors().updateRoboticonSelection();
 
 				gameScreen.getActors().switchNextButton();
 				this.getPlayer().takeTurn(3);
@@ -292,15 +292,15 @@ public class RoboticonQuest extends Game {
 
 			// End phase - CLean up and move to next player.
 			case 6:
-				phase = 1;
+                phase = 1;
 
-                //if (checkGameEnded()) {
-					setScreen(new EndGameScreen(this));
-					break;
-				//}
+                if (checkGameEnded()) {
+                    setScreen(new EndGameScreen(this));
+                    break;
+                }
 
-                //this.turnNumber += 1;
-                //this.nextPlayer();
+                this.turnNumber += 1;
+                this.nextPlayer();
 
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.

@@ -241,6 +241,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 			
 	/**
 	 * Reset to new game status.
+	 *
+	 * @param AI boolean value where True requests an AI game, and False two human players
 	 */
 	public void newGame(boolean AI) {
 		// Setup the game board.
