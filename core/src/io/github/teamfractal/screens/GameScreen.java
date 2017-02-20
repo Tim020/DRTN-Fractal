@@ -1,3 +1,16 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 3
+ *
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ *
+ * And a more concise report can be found in our Change3 document.
+ **/
+
 package io.github.teamfractal.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -15,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.actors.GameScreenActors;
+import io.github.teamfractal.entity.AIPlayer;
 import io.github.teamfractal.entity.LandPlot;
 import io.github.teamfractal.entity.Player;
 import io.github.teamfractal.entity.enums.ResourceType;
@@ -58,7 +72,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		this.game = game;
 
-		// TODO: Add some HUD gui stuff (buttons, mini-map etc...)
 		this.stage = new Stage(new ScreenViewport());
 		this.actors = new GameScreenActors(game, this);
 		actors.constructElements();
@@ -170,8 +183,6 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 				int tileIndexX = MathUtils.floor((tx + ty)/2);
 				int tileIndexY = -(int)(ty - tx);
 
-
-				// TODO: Remove those magic numbers and fix it properly
 				// Those magic numbers based on observation of number patterns
 				tileIndexX -= 1;
 				if (tileIndexY % 2 == 0) {

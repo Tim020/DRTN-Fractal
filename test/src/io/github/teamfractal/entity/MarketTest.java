@@ -1,3 +1,16 @@
+/**
+ * @author DRTN
+ * Team Website with download:
+ * https://misterseph.github.io/DuckRelatedFractalProject/
+ *
+ * This Class contains either modifications or is entirely new in Assessment 3
+ *
+ * If you are in any doubt a complete changelog can be found here:
+ * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
+ *
+ * And a more concise report can be found in our Change3 document.
+ **/
+
 package io.github.teamfractal.entity;
 
 import io.github.teamfractal.TesterFile;
@@ -67,7 +80,6 @@ public class MarketTest extends TesterFile {
 	 */
 	@Test
 	public void marketShouldHaveCorrectPricesForResources() throws Exception {
-		//TODO Should these numbers be so low?
 		assertEquals(30, market.getBuyPrice(ResourceType.ORE));
 		assertEquals(6, market.getBuyPrice(ResourceType.ENERGY));
 		assertEquals(6, market.getBuyPrice(ResourceType.FOOD));
@@ -128,5 +140,14 @@ public class MarketTest extends TesterFile {
 		assertEquals(5, market.getRoboticon() );
 
 	}
+	@Test
+	public void marketShouldUseOreToCreateRoboticons(){
+		market.setRoboticon(10);
+		market.setOre(10);
+		market.generateRoboticon();
 
+		int roboticons = market.getRoboticon();
+
+		assertEquals(10 - ((roboticons - 10)* 2),market.getOre());
+	}
 }
