@@ -191,21 +191,15 @@ public class RoboticonQuest extends Game {
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 
-		playerHeader.stop();
-		if (phase == 4) {
-			playerHeader.setLength(3);
-		} else {
-			playerHeader.setLength(5);
-		}
-		playerHeader.play();
-
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
 			case 2:
                 Gdx.input.setInputProcessor(roboticonMarket);
 
-				phase1description.stop();
-				phase2description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase1description.stop();
+					phase2description.play();
+				}
 
                 AnimationPhaseTimeout timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -221,8 +215,10 @@ public class RoboticonQuest extends Game {
 			case 3:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
 
-				phase2description.stop();
-				phase3description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase2description.stop();
+					phase3description.play();
+				}
 
 				timeoutAnimation = new AnimationPhaseTimeout(getPlayer(), this, phase, 30);
 				gameScreen.addAnimation(timeoutAnimation);
@@ -243,8 +239,10 @@ public class RoboticonQuest extends Game {
 			case 4:
                 Gdx.input.setInputProcessor(genOverlay);
 
-				phase3description.stop();
-				phase4description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase3description.stop();
+					phase4description.play();
+				}
 
                 this.getPlayer().generateResources();
 				this.market.generateRoboticon();
@@ -267,8 +265,10 @@ public class RoboticonQuest extends Game {
 			case 5:
 			    Gdx.input.setInputProcessor(resourceMarket);
 
-			    phase4description.stop();
-			    phase5description.play();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase4description.stop();
+					phase5description.play();
+				}
 
 			    resourceMarket.actors().widgetUpdate();
 			    resourceMarket.gambleStatisticsReset();
@@ -302,8 +302,10 @@ public class RoboticonQuest extends Game {
 				clearEffects();
 				setEffects();
 
-				phase4description.stop();
-				phase1description.play();
+				phase5description.stop();
+				if (!(getPlayer() instanceof AIPlayer)) {
+					phase1description.play();
+				}
 
                 System.out.println("Player: " + this.currentPlayerIndex + " Turn: " + this.getTurnNumber());
 
@@ -316,6 +318,15 @@ public class RoboticonQuest extends Game {
 				break;
 		}
 
+		playerHeader.stop();
+		if (!(getPlayer() instanceof AIPlayer)) {
+			if (phase == 4) {
+				playerHeader.setLength(3);
+			} else {
+				playerHeader.setLength(5);
+			}
+			playerHeader.play();
+		}
 
 		if (gameScreen != null)
 			gameScreen.getActors().textUpdate();
@@ -424,7 +435,9 @@ public class RoboticonQuest extends Game {
 			if (RNGesus.nextFloat() <= effectChance) {
 				PTE.executeRunnable();
 
-				gameScreen.addOverlay(PTE.overlay());
+				if (!(getPlayer() instanceof AIPlayer)) {
+					gameScreen.addOverlay(PTE.overlay());
+				}
 			}
 		}
 
@@ -432,7 +445,9 @@ public class RoboticonQuest extends Game {
 			if (RNGesus.nextFloat() <= effectChance) {
 				PLE.executeRunnable();
 
-				gameScreen.addOverlay(PLE.overlay());
+				if (!(getPlayer() instanceof AIPlayer)) {
+					gameScreen.addOverlay(PLE.overlay());
+				}
 			}
 		}
 
