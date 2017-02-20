@@ -2,6 +2,7 @@ package io.github.teamfractal.actors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.screens.EndGameScreen;
 
@@ -17,7 +18,7 @@ public class EndGameActors extends Table {
     private Label winner;
     private Label title;
     private Label space;
-
+    
     /**
      -     * Creates the labels that are to appear in the end game screen
      -     * @param game The current game
@@ -28,10 +29,11 @@ public class EndGameActors extends Table {
         this.screen = screen;
         this.player1Score = new Label("Player 1 Score = " + String.valueOf(game.getPlayerList().get(0).calculateScore()),game.skin);
         this.player2Score = new Label("Player 2 Score = " + String.valueOf(game.getPlayerList().get(1).calculateScore()),game.skin);
-        this.winner = new Label("The winner is " + game.getWinner(), game.skin);
+        this.winner = new Label("The winner is " + game.getWinner() + "\n\nYou are now the Vice-Chancellor of the Colony", game.skin);
+        winner.setAlignment(Align.center);
         this.title = new Label("End of Game", game.skin);
         this.space = new Label("      ", game.skin);
-        add(title).padRight(-90).padTop(-300);
+        add(title).padRight(-175).padTop(-300);
         row();
         row();
         add(player1Score).padLeft(-50);
@@ -39,7 +41,7 @@ public class EndGameActors extends Table {
         add(player2Score);
         row();
         row();
-        add(winner).padRight(-90).padBottom(-300);
+        add(winner).padRight(-170).padBottom(-300);
 
 
     }
