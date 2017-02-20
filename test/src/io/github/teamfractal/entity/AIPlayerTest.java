@@ -13,9 +13,10 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for the AI can be found here and in the Manual Testing document
+ * Tests for the AI can be found here and in the Manual Testing part of the Test3 document
+ * https://github.com/NotKieran/DRTN-Fractal/blob/Assessment3_Docs/Test3.pdf
  */
-//TODO add link
+
 public class AIPlayerTest extends TesterFile {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
