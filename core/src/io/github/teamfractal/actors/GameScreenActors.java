@@ -60,7 +60,7 @@ public class GameScreenActors {
 	}
 
 	/**
-	 * Setup buttons.
+	 * Setup buttons
 	 */
 	public void constructElements() {
 
