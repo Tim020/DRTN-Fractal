@@ -29,7 +29,7 @@ public class EndGameActors extends Table {
         this.screen = screen;
         this.player1Score = new Label("Player 1 Score = " + String.valueOf(game.getPlayerList().get(0).calculateScore()),game.skin);
         this.player2Score = new Label("Player 2 Score = " + String.valueOf(game.getPlayerList().get(1).calculateScore()),game.skin);
-        this.winner = new Label("The winner is " + game.getWinner() + "\n\nYou are now the Vice-Chancellor of the Colony", game.skin);
+        this.winner = new Label(game.getWinner(), game.skin);
         winner.setAlignment(Align.center);
         this.title = new Label("End of Game", game.skin);
         this.space = new Label("      ", game.skin);

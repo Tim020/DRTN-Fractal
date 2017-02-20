@@ -281,13 +281,13 @@ public class RoboticonQuest extends Game {
 			case 6:
 				phase = 1;
 
-                if (checkGameEnded()) {
+                //if (checkGameEnded()) {
 					setScreen(new EndGameScreen(this));
 					break;
-				}
+				//}
 
-                this.turnNumber += 1;
-                this.nextPlayer();
+                //this.turnNumber += 1;
+                //this.nextPlayer();
 
 				// No "break;" here!
 				// Let the game to do phase 1 preparation.
@@ -509,11 +509,15 @@ public class RoboticonQuest extends Game {
 	public String getWinner(){
         String winner;
         if(playerList.get(0).calculateScore() > playerList.get(1).calculateScore()) {
-			winner = "Player 1";
+			winner = "Player 1 wins! You are now the Vice-Chancellor of the Colony!";
 		}
-		else{
-				winner = "Player 2";
+		else {
+			if (playerList.get(1).calculateScore() > playerList.get(0).calculateScore()) {
+				winner = "Player 2 wins! You are now the Vice-Chancellor of the Colony!";
+			} else {
+				winner = "It's a draw. I'm afraid neither of you will become Vice-Chancellor of the Colony.";
 			}
+		}
 		return winner;
 	}
 
