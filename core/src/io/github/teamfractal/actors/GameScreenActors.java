@@ -60,6 +60,7 @@ public class GameScreenActors {
 	private SelectBox<String> installRoboticonSelect;
 	private TextButton nextButton;
 	private boolean listUpdated;
+    private Table installRoboticonTable;
 
 	/**
 	 * Initialise the main game screen components.
@@ -158,8 +159,6 @@ public class GameScreenActors {
 		phaseInfo.setPosition(Gdx.graphics.getWidth() - 8, Gdx.graphics.getHeight() - 39);
 		nextButton.setPosition(size.Width - nextButton.getWidth() - 10, 10);
 	}
-
-	private Table installRoboticonTable;
 
 	/**
 	 * Create the roboticon installation menu.
@@ -310,23 +309,6 @@ public class GameScreenActors {
 		playerMoneyLabel.setText(String.valueOf(game.getPlayer().getMoney()));
 	}
 
-	/**
-	 * Callback event on window updates,
-	 * to adjust the UI components position relative to the screen.
-	 *
-	 * @param width    The new Width.
-	 * @param height   The new Height.
-	 */
-	/*
-	public void resizeScreen(float width, float height) {
-		float topBarY = height - 20;
-		phaseInfo.setWidth(width - 10);
-		phaseInfo.setPosition(0, topBarY);
-
-		playerStats.setPosition(10, height - playerStats.getHeight());
-		nextButton.setPosition(width - nextButton.getWidth() - 10, 10);
-	}
-	*/
 
 	/**
 	 * Show plot information about current selected stats.
@@ -343,9 +325,6 @@ public class GameScreenActors {
 		plotStatsTable.setVisible(true);
 	}
 
-	public void updateRoboticonSelection() {
-		// TODO: Implement this method
-	}
 
 	/**
 	 * Hide "Buy Land" button and plot information.
@@ -400,15 +379,16 @@ public class GameScreenActors {
 		if (nextButton.isDisabled()) {
 			return ;
 		}
-		if(game.canPurchaseLandThisTurn() == false){
-			buyLandPlotBtn.setVisible(false);
-			plotStatsTable.setVisible(false);
-			hideInstallRoboticon();
-			game.nextPhase();
-			installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
-			textUpdate();
-		}
-	}
+        if (game.canPurchaseLandThisTurn() != false) {
+            return;
+        }
+        buyLandPlotBtn.setVisible(false);
+        plotStatsTable.setVisible(false);
+        hideInstallRoboticon();
+        game.nextPhase();
+        installRoboticonSelect.setItems(game.getPlayer().getRoboticonAmountList());
+        textUpdate();
+    }
 	/**
 	 * Presents the user with a list of roboticons that they can install on the land plot that they have clicked on. Once they have selected
 	 * a roboticon to install, a function is called that will install the roboticon.
@@ -421,8 +401,9 @@ public class GameScreenActors {
 			LandPlot selectedPlot = screen.getSelectedPlot();
 			if (selectedPlot.getOwner() == game.getPlayer() && !selectedPlot.hasRoboticon()) {
 				Roboticon roboticon = null;
-				ResourceType type = ResourceType.Unknown;
-				int selection = installRoboticonSelect.getSelectedIndex();
+                ResourceType type;
+                type = ResourceType.Unknown;
+                int selection = installRoboticonSelect.getSelectedIndex();
 
 				Array<Roboticon> roboticons = game.getPlayer().getRoboticons();
 				switch (selection) {

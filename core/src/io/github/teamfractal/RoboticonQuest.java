@@ -242,7 +242,6 @@ public class RoboticonQuest extends Game {
 						gameScreen.getActors().hideInstallRoboticon();
 					}
 				});
-				gameScreen.getActors().updateRoboticonSelection();
 
 				gameScreen.getActors().switchNextButton();
 				this.getPlayer().takeTurn(3);
