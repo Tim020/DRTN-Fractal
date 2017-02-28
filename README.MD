@@ -1,10 +1,12 @@
-#DRTN & Fractal
-Team: [Kieran Hall](https://github.com/NotKieran), [Jack Mountain](https://github.com/jm179796), [Nico Pinedo](https://github.com/NicoPinedo), [Martynas Minskis](https://github.com/mm1544), [Joseph Leakey](https://github.com/MisterSeph).
+#Sep-r-ated DRTN & Fractal
+Team: [Tim Bradgate](https://github.com/Tim020), [Theo Barber-Bany](https://github.com/theobarberbany), [Mikolaj Bernaciak](https://github.com/mikfromb7), [Matthew Dunn](https://github.com/MIDunn), [Matthew Turton-Pary](https://github.com/mtpsgame), [Julia Fellows](https://github.com/jcf518).
 
 
 Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=master)](https://travis-ci.org/NotKieran/DRTN-Fractal)
 
 Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+
+[Sep-r-ated Website](https://seprated.github.io/)
 
 
 ## Using our project
