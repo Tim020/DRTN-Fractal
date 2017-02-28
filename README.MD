@@ -8,6 +8,7 @@ Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-
 
 Website: [Sep-r-ated Website](https://seprated.github.io/)
 
+---
 
 ## Using our project
 - Our project utilises Gradle, we highly recommend using IntelliJ IDEA as your IDE as we've already set up all the Run Configrations you'll need for it
