@@ -6,7 +6,7 @@ Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-
 
 Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NotKieran/DRTN-Fractal)
 
-[Sep-r-ated Website](https://seprated.github.io/)
+Website: [Sep-r-ated Website](https://seprated.github.io/)
 
 
 ## Using our project
