@@ -2,9 +2,9 @@
 Team: [Tim Bradgate](https://github.com/Tim020), [Theo Barber-Bany](https://github.com/theobarberbany), [Mikolaj Bernaciak](https://github.com/mikfromb7), [Matthew Dunn](https://github.com/MIDunn), [Matthew Turton-Pary](https://github.com/mtpsgame), [Julia Fellows](https://github.com/jcf518).
 
 
-Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=master)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+Master Build Status:      [![Build Status](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal.svg?branch=master)](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal)
 
-Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+Development Build Status: [![Build Status](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal.svg?branch=development)](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal)
 
 Website: [Sep-r-ated Website](https://seprated.github.io/)
 
