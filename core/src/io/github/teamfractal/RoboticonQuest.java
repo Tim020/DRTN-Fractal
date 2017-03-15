@@ -77,7 +77,7 @@ public class RoboticonQuest extends Game {
 
 	public RoboticonQuest() {
 		_instance = this;
-		reset(4);
+		reset(1);
 	}
 
 	public static RoboticonQuest getInstance() {
@@ -180,6 +180,7 @@ public class RoboticonQuest extends Game {
 	}
 	/**
 	 * Resets the statistics of all the game's entities
+	 * UPDATED: changed to allow any number of players. One human player, the rest AI.
 	 * UPDATED: USE ENUM
 	 */
 	public void reset(int numberOfPlayers) {

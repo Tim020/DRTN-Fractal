@@ -242,7 +242,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 			
 	/**
 	 * Reset to new game status.
-	 *
+	 * UPDATED: Takes the number of players as an argument.
 	 */
 	public void newGame(int numberOfPlayers) {
 		// Setup the game board.

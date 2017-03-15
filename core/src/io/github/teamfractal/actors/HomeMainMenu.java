@@ -28,13 +28,15 @@ import io.github.teamfractal.RoboticonQuest;
 public class HomeMainMenu extends Table {
     private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Duck-Related Roboticon Quest (Small).png"));
     private RoboticonQuest game;
-	private TextButton btnTwoPlayer;
+    // UPDATED: New buttons for the new number of players requirement.
+    private TextButton btnTwoPlayer;
 	private TextButton btnThreePayer;
 	private TextButton btnFourPlayer;
 	private TextButton btnExit;
 
 	/**
 	 * Initialise the Home Menu.
+     * UPDATED: Changed buttons for the new amount of players requirement.
 	 * @param game    The game object.
 	 */
 	public HomeMainMenu(RoboticonQuest game) {
@@ -74,6 +76,7 @@ public class HomeMainMenu extends Table {
 
 	/**
 	 * Bind button events.
+     * UPDATED: Changed buttons for the new amount of players requirement.
 	 */
 	private void bindEvents() {
 		btnTwoPlayer.addListener(new ClickListener() {
