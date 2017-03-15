@@ -242,9 +242,8 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	/**
 	 * Reset to new game status.
 	 *
-	 * @param AI boolean value where True requests an AI game, and False two human players
 	 */
-	public void newGame(boolean AI) {
+	public void newGame(int numberOfPlayers) {
 		// Setup the game board.
 		if (tmx != null) tmx.dispose();
 		if (renderer != null) renderer.dispose();
@@ -252,7 +251,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		tiles = tmx.getTileSets();
 		TileConverter.setup(tiles, game);
 		renderer = new IsometricStaggeredTiledMapRenderer(tmx);
-		game.reset(AI);
+		game.reset(numberOfPlayers);
 
 		mapLayer = (TiledMapTileLayer)tmx.getLayers().get("MapData");
 		playerOverlay = (TiledMapTileLayer)tmx.getLayers().get("PlayerOverlay");

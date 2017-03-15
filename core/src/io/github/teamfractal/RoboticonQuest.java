@@ -76,7 +76,7 @@ public class RoboticonQuest extends Game {
 
 	public RoboticonQuest() {
 		_instance = this;
-		reset(false);
+		reset(4);
 	}
 
 	public static RoboticonQuest getInstance() {
@@ -177,24 +177,15 @@ public class RoboticonQuest extends Game {
 	}
 	/**
 	 * Resets the statistics of all the game's entities
-	 * @param AI A boolean describing whether an AI player is playing or not
 	 */
-	public void reset(boolean AI) {
+	public void reset(int numberOfPlayers) {
         this.phase = 0;
         plotManager = new PlotManager();
-        Player player1;
-        Player player2;
-        if (AI) {
-            player1 = new AIPlayer(this);
-            player2 = new Player(this);
-        } else{
-            player1 = new Player(this);
-            player2 = new Player(this);
-        }
-
-        this.playerList = new ArrayList<Player>();
-        this.playerList.add(player1);
-		this.playerList.add(player2);
+		this.playerList = new ArrayList<Player>();
+		playerList.add(new HumanPlayer(this));
+		for (int i = 0; i < numberOfPlayers - 1; i++) {
+        	playerList.add(new AIPlayer(this));
+		}
         this.currentPlayerIndex = 0;
         this.market = new Market();
 
@@ -418,7 +409,7 @@ public class RoboticonQuest extends Game {
 	 * Changes the current player
 	 */
 	private void nextPlayer() {
-		this.currentPlayerIndex = 1 - this.currentPlayerIndex;
+		this.currentPlayerIndex = (++this.currentPlayerIndex) % playerList.size();
 
 		playerHeader.setText("PLAYER " + (currentPlayerIndex + 1));
     }

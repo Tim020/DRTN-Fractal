@@ -28,8 +28,9 @@ import io.github.teamfractal.RoboticonQuest;
 public class HomeMainMenu extends Table {
     private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Duck-Related Roboticon Quest (Small).png"));
     private RoboticonQuest game;
-	private TextButton btnNewGame;
-	private TextButton btnNewAIGame;
+	private TextButton btnTwoPlayer;
+	private TextButton btnThreePayer;
+	private TextButton btnFourPlayer;
 	private TextButton btnExit;
 
 	/**
@@ -44,15 +45,17 @@ public class HomeMainMenu extends Table {
 		imgTitle.setDrawable(new TextureRegionDrawable(new TextureRegion(titleTexture)));
 		
 
-		btnNewGame = new TextButton("Begin Two-Player Game", game.skin);
-		btnNewAIGame = new TextButton("Begin Game Against AI", game.skin);
+		btnTwoPlayer = new TextButton("Two Player Game", game.skin);
+		btnThreePayer = new TextButton("Three Player Game", game.skin);
+		btnFourPlayer = new TextButton("Four Player Game", game.skin);
 
 		btnExit = new TextButton("Exit", game.skin);
 
 		// Adjust properties.
-		btnNewGame.pad(10);
+		btnTwoPlayer.pad(10);
+		btnThreePayer.pad(10);
+		btnFourPlayer.pad(10);
 
-		btnNewAIGame.pad(10);
 		btnExit.pad(10);
 
 		// Bind events.
@@ -62,8 +65,9 @@ public class HomeMainMenu extends Table {
 		add(imgTitle).pad(5).colspan(3);
 		row();
 
-		add(btnNewGame);
-		add(btnNewAIGame);
+		add(btnTwoPlayer);
+		add(btnThreePayer);
+		add(btnFourPlayer);
 		add(btnExit);
 
 	}
@@ -72,20 +76,28 @@ public class HomeMainMenu extends Table {
 	 * Bind button events.
 	 */
 	private void bindEvents() {
-		btnNewGame.addListener(new ClickListener() {
+		btnTwoPlayer.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				game.setScreen(game.gameScreen);
-				game.gameScreen.newGame(false);
+				game.gameScreen.newGame(2);
 			}
 		});
 
 
-		btnNewAIGame.addListener(new ClickListener() {
+		btnThreePayer.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				game.setScreen(game.gameScreen);
-				game.gameScreen.newGame(true);
+				game.gameScreen.newGame(3);
+			}
+		});
+
+		btnFourPlayer.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				game.setScreen(game.gameScreen);
+				game.gameScreen.newGame(4);
 			}
 		});
 
