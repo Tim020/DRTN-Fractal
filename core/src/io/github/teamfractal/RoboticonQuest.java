@@ -14,6 +14,7 @@ import io.github.teamfractal.animation.AnimationCustomHeader;
 import io.github.teamfractal.animation.AnimationPhaseTimeout;
 import io.github.teamfractal.animation.IAnimationFinish;
 import io.github.teamfractal.entity.*;
+import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.screens.*;
 import io.github.teamfractal.util.*;
 
@@ -59,7 +60,7 @@ public class RoboticonQuest extends Game {
 	private MainMenuScreen mainMenuScreen;
 
     private ArrayList<Player> playerList;
-    private int phase;
+    private GamePhase phase;
 	private int landBoughtThisTurn;
 	private float effectChance;
 	private int currentPlayerIndex;
@@ -163,23 +164,26 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Getter for the current phase
 	 * @return The current phase of the game
+	 * UPDATED: USE ENUM
 	 */
-	public int getPhase(){
+	public GamePhase getPhase(){
 		return this.phase;
 	}
 	/**
 	 * Setter for the current phase
 	 * @param phase The phase that the current phase is to be set to
+	 * UPDATED: USE ENUM
 	 */
-	public void setPhase(int phase) {
+	public void setPhase(GamePhase phase) {
 		this.phase = phase;
 		implementPhase();
 	}
 	/**
 	 * Resets the statistics of all the game's entities
+	 * UPDATED: USE ENUM
 	 */
 	public void reset(int numberOfPlayers) {
-        this.phase = 0;
+        this.phase = GamePhase.TILE_ACQUISITION;
         plotManager = new PlotManager();
 		this.playerList = new ArrayList<Player>();
 		playerList.add(new HumanPlayer(this));
@@ -192,13 +196,14 @@ public class RoboticonQuest extends Game {
     }
 	/**
 	 * Implements the functionality of the current phase
+	 * UPDATED: TO USE ENUM
 	 */
     private void implementPhase() {
         System.out.println("RoboticonQuest::nextPhase -> newPhaseState: " + phase);
 
 		switch (phase) {
 			// Phase 2: Purchase Roboticon
-			case 2:
+			case ROBOTICON_PURCHASE:
                 Gdx.input.setInputProcessor(roboticonMarket);
 
 				if (!(getPlayer() instanceof AIPlayer)) {
@@ -212,12 +217,12 @@ public class RoboticonQuest extends Game {
 				roboticonMarket.actors().widgetUpdate();
 
 				gameScreen.getActors().setNextButtonVisibility(false);
-				this.getPlayer().takeTurn(2);
+				this.getPlayer().takeTurn(GamePhase.ROBOTICON_PURCHASE);
                 break;
 
 
 			// Phase 3: Roboticon Customisation
-			case 3:
+			case ROBOTICON_CUSTOMISATION:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
 
 				if (!(getPlayer() instanceof AIPlayer)) {
@@ -235,12 +240,12 @@ public class RoboticonQuest extends Game {
 				});
 
 				gameScreen.getActors().switchNextButton();
-				this.getPlayer().takeTurn(3);
+				this.getPlayer().takeTurn(GamePhase.ROBOTICON_CUSTOMISATION);
                 break;
 
 
 			// Phase 4: Generate resources for player
-			case 4:
+			case RESOURCE_GENERATION:
                 Gdx.input.setInputProcessor(genOverlay);
 
 				if (!(getPlayer() instanceof AIPlayer)) {
@@ -266,7 +271,7 @@ public class RoboticonQuest extends Game {
 
 			// Phase 5: Open the market
 
-			case 5:
+			case MARKET:
 			    Gdx.input.setInputProcessor(resourceMarket);
 
 				if (!(getPlayer() instanceof AIPlayer)) {
@@ -278,12 +283,12 @@ public class RoboticonQuest extends Game {
 			    resourceMarket.gambleStatisticsReset();
 
 				gameScreen.getActors().setNextButtonVisibility(false);
-				this.getPlayer().takeTurn(5);
+				this.getPlayer().takeTurn(GamePhase.MARKET);
 				break;
 
 			// End phase - CLean up and move to next player.
-			case 6:
-                phase = 1;
+			case NEXT_PLAYER:
+                phase = GamePhase.TILE_ACQUISITION;
 
                 if (checkGameEnded()) {
                     setScreen(new EndGameScreen(this));
@@ -297,7 +302,7 @@ public class RoboticonQuest extends Game {
 				// Let the game to do phase 1 preparation.
 
 			// Phase 1: Enable of purchase LandPlot
-			case 1:
+			case TILE_ACQUISITION:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
 
 				setScreen(gameScreen);
@@ -321,13 +326,13 @@ public class RoboticonQuest extends Game {
 				} else {
 					gameScreen.getActors().setNextButtonVisibility(false);
 				}
-        		this.getPlayer().takeTurn(1);
+        		this.getPlayer().takeTurn(GamePhase.TILE_ACQUISITION);
 				break;
 		}
 
 		playerHeader.stop();
 		if (!(getPlayer() instanceof AIPlayer)) {
-			if (phase == 4) {
+			if (phase == GamePhase.RESOURCE_GENERATION) {
 				playerHeader.setLength(3);
 			} else {
 				playerHeader.setLength(5);
@@ -342,10 +347,11 @@ public class RoboticonQuest extends Game {
 	 * Advances the current phase
 	 */
 	public void nextPhase() {
-        if ((phase == 1) && (landBoughtThisTurn == 0) && (this.getPlayer().getMoney() >= 10)) {
+        if ((phase == GamePhase.TILE_ACQUISITION) && (landBoughtThisTurn == 0) && (this.getPlayer().getMoney() >= 10)) {
+        	System.out.println("here");
             return;
         }
-        phase += 1;
+        phase = phase.next();
         implementPhase();
 	}
 
@@ -365,24 +371,25 @@ public class RoboticonQuest extends Game {
 	/**
 	 * Returns a string describing the current phase
 	 * @return A string with the description of the current phase
+	 * UPDATED: USE ENUM
 	 */
 	public String getPhaseString () {
-		int phase = getPhase();
+		GamePhase phase = getPhase();
 
 		switch(phase){
-			case 1:
+			case TILE_ACQUISITION:
 				return "Buy Land Plot";
 
-			case 2:
+			case ROBOTICON_PURCHASE:
 				return "Purchase Roboticons";
 
-			case 3:
+			case ROBOTICON_CUSTOMISATION:
 				return "Install Roboticons";
 
-			case 4:
+			case RESOURCE_GENERATION:
 				return "Resource Generation";
 
-			case 5:
+			case MARKET:
 				return "Resource Auction";
 
 			default:

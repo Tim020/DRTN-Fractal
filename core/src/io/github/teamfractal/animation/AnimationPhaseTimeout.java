@@ -13,18 +13,20 @@
 
 package io.github.teamfractal.animation;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.Player;
+import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.screens.AbstractAnimationScreen;
 
 public class AnimationPhaseTimeout implements IAnimation {
 	private final Player player;
 	private final RoboticonQuest game;
-	private final int currentPhase;
+	private final GamePhase currentPhase;
 	private final float timeout;
 	private float time;
 	private IAnimationFinish callback;
@@ -43,8 +45,9 @@ public class AnimationPhaseTimeout implements IAnimation {
 	 * @param game           The game object.
 	 * @param currentPhase   Current phase number.
 	 * @param timeout        Timeout length, in seconds.
+	 * UPDATE: USE ENUM
 	 */
-	public AnimationPhaseTimeout(Player player, RoboticonQuest game, int currentPhase, float timeout) {
+	public AnimationPhaseTimeout(Player player, RoboticonQuest game, GamePhase currentPhase, float timeout) {
 		this.player = player;
 		this.game = game;
 		this.currentPhase = currentPhase;

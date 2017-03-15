@@ -15,6 +15,7 @@ package io.github.teamfractal.entity;
 
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
+import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.NotCommonResourceException;
@@ -409,8 +410,9 @@ public class Player {
 
     /**
      * Method to be overloaded by AI inheritance
+	 * UPDATE: USE ENUM
      */
-    public void takeTurn(int phase) {
+    public void takeTurn(GamePhase phase) {
         //Overload in AIPlayer
         System.out.println("Human turn");
     }
