@@ -49,11 +49,11 @@ public class MarketTest extends TesterFile {
 		assertEquals(16, market.getFood());
 		assertEquals(16, market.getEnergy());
 		assertEquals(0, market.getOre());
-		assertEquals(12, market.getRoboticon());
+		assertEquals(12, market.getRoboticons());
 	}
 
 	/**
-	 * test setEnergy(), setOre(), setFood(), setRoboticon()
+	 * test setEnergy(), setOre(), setFood(), setRoboticons()
 	 * The market should be able to set and get resources.
 	 */
 	@Test
@@ -63,13 +63,13 @@ public class MarketTest extends TesterFile {
 		market.setEnergy(valueToTest);
 		market.setOre(valueToTest);
 		market.setFood(valueToTest);
-		market.setRoboticon(valueToTest);
+		market.setRoboticons(valueToTest);
 
 
 		assertEquals(valueToTest, market.getEnergy());
 		assertEquals(valueToTest, market.getOre());
 		assertEquals(valueToTest, market.getFood());
-		assertEquals(valueToTest, market.getRoboticon());
+		assertEquals(valueToTest, market.getRoboticons());
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class MarketTest extends TesterFile {
 		market.setEnergy(valueToTest1);
 		market.setOre(valueToTest1);
 		market.setFood(valueToTest1);
-		market.setRoboticon(valueToTest1);
+		market.setRoboticons(valueToTest1);
 
 		assertEquals(10,market.getSellPrice(ResourceType.FOOD));
 		assertEquals(10,market.getSellPrice(ResourceType.ORE));
@@ -127,7 +127,7 @@ public class MarketTest extends TesterFile {
 		market.setEnergy(10);
 		market.setOre(10);
 		market.setFood(10);
-		market.setRoboticon(10);
+		market.setRoboticons(10);
 
 		market.sellResource(ResourceType.FOOD, 5);
 		market.sellResource(ResourceType.ORE, 5);
@@ -137,16 +137,16 @@ public class MarketTest extends TesterFile {
 		assertEquals(5, market.getFood() );
 		assertEquals(5, market.getOre() );
 		assertEquals(5, market.getEnergy() );
-		assertEquals(5, market.getRoboticon() );
+		assertEquals(5, market.getRoboticons() );
 
 	}
 	@Test
 	public void marketShouldUseOreToCreateRoboticons(){
-		market.setRoboticon(10);
+		market.setRoboticons(10);
 		market.setOre(10);
 		market.generateRoboticon();
 
-		int roboticons = market.getRoboticon();
+		int roboticons = market.getRoboticons();
 
 		assertEquals(10 - ((roboticons - 10)* 2),market.getOre());
 	}
