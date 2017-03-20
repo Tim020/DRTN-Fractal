@@ -5,11 +5,11 @@ import io.github.teamfractal.entity.enums.ResourceType;
 /**
  * Created by Tim on 20/03/2017.
  */
-public class ResourceGroup {
+public class ResourceGroup implements Cloneable {
 
-    public int food;
-    public int energy;
-    public int ore;
+    public float food;
+    public float energy;
+    public float ore;
 
     public ResourceGroup() {
         this.food = 0;
@@ -17,7 +17,7 @@ public class ResourceGroup {
         this.ore = 0;
     }
 
-    public ResourceGroup(int food, int energy, int ore) {
+    public ResourceGroup(float food, float energy, float ore) {
         this.food = food;
         this.energy = energy;
         this.ore = ore;
@@ -27,70 +27,70 @@ public class ResourceGroup {
         if (r1 == null || r2 == null) {
             throw new NullPointerException("Arguments cannot be null");
         }
-        return new ResourceGroup(r1.GetFood() + r2.GetFood(), r1.GetEnergy() + r2.GetEnergy(), r1.GetOre() + r2.GetOre());
+        return new ResourceGroup(r1.getFood() + r2.getFood(), r1.getEnergy() + r2.getEnergy(), r1.getOre() + r2.getOre());
     }
 
     public static ResourceGroup sub(ResourceGroup r1, ResourceGroup r2) {
         if (r1 == null || r2 == null) {
             throw new NullPointerException("Arguments cannot be null");
         }
-        return new ResourceGroup(r1.GetFood() - r2.GetFood(), r1.GetEnergy() - r2.GetEnergy(), r1.GetOre() - r2.GetOre());
+        return new ResourceGroup(r1.getFood() - r2.getFood(), r1.getEnergy() - r2.getEnergy(), r1.getOre() - r2.getOre());
     }
 
     public static ResourceGroup mult(ResourceGroup r1, ResourceGroup r2) {
         if (r1 == null || r2 == null) {
             throw new NullPointerException("Arguments cannot be null");
         }
-        return new ResourceGroup(r1.GetFood() * r2.GetFood(), r1.GetEnergy() * r2.GetEnergy(), r1.GetOre() * r2.GetOre());
+        return new ResourceGroup(r1.getFood() * r2.getFood(), r1.getEnergy() * r2.getEnergy(), r1.getOre() * r2.getOre());
     }
 
     public static ResourceGroup div(ResourceGroup r1, ResourceGroup r2) {
         if (r1 == null || r2 == null) {
             throw new NullPointerException("Arguments cannot be null");
         }
-        return new ResourceGroup(r1.GetFood() / r2.GetFood(), r1.GetEnergy() / r2.GetEnergy(), r1.GetOre() / r2.GetOre());
+        return new ResourceGroup(r1.getFood() / r2.getFood(), r1.getEnergy() / r2.getEnergy(), r1.getOre() / r2.getOre());
     }
 
     public static ResourceGroup sub(ResourceGroup r, int c) {
         if (r == null) {
             throw new NullPointerException("ResourceGroup argument cannot be null");
         }
-        return new ResourceGroup(r.GetFood() - c, r.GetEnergy() - c, r.GetOre() - c);
+        return new ResourceGroup(r.getFood() - c, r.getEnergy() - c, r.getOre() - c);
     }
 
     public static ResourceGroup mult(ResourceGroup r, int c) {
         if (r == null) {
             throw new NullPointerException("ResourceGroup argument cannot be null");
         }
-        return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
+        return new ResourceGroup(r.getFood() * c, r.getEnergy() * c, r.getOre() * c);
     }
 
     public static ResourceGroup mult(int c, ResourceGroup r) {
         if (r == null) {
             throw new NullPointerException("ResourceGroup argument cannot be null");
         }
-        return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
+        return new ResourceGroup(r.getFood() * c, r.getEnergy() * c, r.getOre() * c);
     }
 
     public static ResourceGroup mult(ResourceGroup r, float c) {
         if (r == null) {
             throw new NullPointerException("ResourceGroup argument cannot be null");
         }
-        return new ResourceGroup((int) (r.GetFood() * c), (int) (r.GetEnergy() * c), (int) (r.GetOre() * c));
+        return new ResourceGroup((int) (r.getFood() * c), (int) (r.getEnergy() * c), (int) (r.getOre() * c));
     }
 
     public static ResourceGroup mult(float c, ResourceGroup r) {
         if (r == null) {
             throw new NullPointerException("ResourceGroup argument cannot be null");
         }
-        return new ResourceGroup((int) (r.GetFood() * c), (int) (r.GetEnergy() * c), (int) (r.GetOre() * c));
+        return new ResourceGroup((int) (r.getFood() * c), (int) (r.getEnergy() * c), (int) (r.getOre() * c));
     }
 
     public static ResourceGroup div(ResourceGroup r, int c) {
         if (r == null) {
             throw new NullPointerException("ResourceGroup argument cannot be null");
         }
-        return new ResourceGroup(r.GetFood() / c, r.GetEnergy() / c, r.GetOre() / c);
+        return new ResourceGroup(r.getFood() / c, r.getEnergy() / c, r.getOre() / c);
     }
 
     public String toString() {
@@ -105,11 +105,12 @@ public class ResourceGroup {
         return food == resourcesToCompare.food && energy == resourcesToCompare.energy && ore == resourcesToCompare.ore;
     }
 
+    @Override
     public int hashCode() {
-        return food ^ energy << 2 ^ ore >> 2;
+        return new Float(ore + energy + food).hashCode();
     }
 
-    public int GetResource(ResourceType resource) {
+    public float getResource(ResourceType resource) {
         switch (resource) {
             case ENERGY:
                 return energy;
@@ -118,11 +119,11 @@ public class ResourceGroup {
             case ORE:
                 return ore;
             default:
-                throw new IllegalArgumentException("Illeagal resource type");
+                throw new IllegalArgumentException("Illegal resource type");
         }
     }
 
-    public void SetResource(ResourceType resource, int value) {
+    public void setResource(ResourceType resource, float value) {
         switch (resource) {
             case ENERGY:
                 energy = value;
@@ -134,27 +135,27 @@ public class ResourceGroup {
                 ore = value;
                 break;
             default:
-                throw new IllegalArgumentException("Illeagal resource type");
+                throw new IllegalArgumentException("Illegal resource type");
         }
     }
 
-    public int Sum() {
+    public float sum() {
         return food + energy + ore;
     }
 
-    public int GetFood() {
+    public float getFood() {
         return food;
     }
 
-    public int GetEnergy() {
+    public float getEnergy() {
         return energy;
     }
 
-    public int GetOre() {
+    public float getOre() {
         return ore;
     }
 
-    public ResourceGroup Clone() {
+    public ResourceGroup clone() {
         return new ResourceGroup(this.food, this.energy, this.ore);
     }
 

@@ -16,7 +16,10 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;
 import io.github.teamfractal.exception.NotCommonResourceException;
+import io.github.teamfractal.util.ResourceGroup;
+import io.github.teamfractal.util.Tuple;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class Market {
@@ -25,6 +28,12 @@ public class Market {
     private int energy;
     private int ore;
     private int roboticons;
+
+    private ResourceGroup resourceSellingPrices = new ResourceGroup();
+    private ResourceGroup resourceBuyingPrices = new ResourceGroup();
+    private ResourceGroup resourceProductionTotals = new ResourceGroup();
+    private HashMap<Integer, Tuple<ResourceGroup>> resourcePriceHistory = new HashMap<Integer, Tuple<ResourceGroup>>();
+    private ResourceGroup runningTotals = new ResourceGroup();
 
     /**
      * Initialise the market

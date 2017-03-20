@@ -113,8 +113,8 @@ public class AIPlayer extends Player {
         try {
             for (LandPlot aLandList : this.landList) {
                 if (!aLandList.hasRoboticon()) {
-                    int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
-                    int max = 0;
+                    float[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
+                    float max = 0;
                     int max_index = -1; //Initialise to index not used to not return false positives
                     for (int j = 0; j < resources.length; j++) {
                         if (resources[j] > max) {

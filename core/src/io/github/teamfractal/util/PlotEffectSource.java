@@ -2,12 +2,12 @@
  * @author DRTN
  * Team Website with download:
  * https://misterseph.github.io/DuckRelatedFractalProject/
- *
+ * <p>
  * This Class contains either modifications or is entirely new in Assessment 3
- *
+ * <p>
  * If you are in any doubt a complete changelog can be found here:
  * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
- *
+ * <p>
  * And a more concise report can be found in our Change3 document.
  **/
 
@@ -38,7 +38,7 @@ public class PlotEffectSource extends Array<PlotEffect> {
     public PlotEffect duckRelatedDisaster;
 
     public PlotEffect spicy;
-    
+
     public PlotEffect earthquakeDisaster;
 
     public PlotEffect tornado;
@@ -61,11 +61,12 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
     /**
      * Subroutine that instantiates each effect declared above
+     * ORE, ENERGY, FOOD
      */
     public void configureEffects() {
         duckRelatedDisaster = new PlotEffect("Duck-Related Disaster", "A horde of ducks pillage your most " +
                 "food-producing tile, ruining many of the crops on it. Food\nproduction on that tile is reduced by " +
-                "80% for this turn.", new Float[]{(float) 1, (float) 1, (float) 0.2}, new Runnable() {
+                "80% for this turn.", new ResourceGroup(0.2f, 1f, 1f), new Runnable() {
             @Override
             public void run() {
                 if (game.getPlayer().getLandList().size() == 0) {
@@ -86,9 +87,9 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
         spicy = new PlotEffect("It's getting spicy", "Some students got hold of some hot pepper seeds and all of your food " +
                 "production \nhas been turned over to peppers. Increasing Food output by 200% However this spicy craze " +
-                "\nhas caused all other production values to drop to 0.", new Float[]{(float) 0, (float) 0, (float) 2}, new Runnable() {
+                "\nhas caused all other production values to drop to 0.", new ResourceGroup(2, 0, 0), new Runnable() {
             @Override
-            public void  run() {
+            public void run() {
                 if (game.getPlayer().getLandList().size() == 0) {
                     return;
                 }
@@ -100,11 +101,11 @@ public class PlotEffectSource extends Array<PlotEffect> {
 
             }
         });
-        
+
         earthquakeDisaster = new PlotEffect("Earthquake disaster", "Due to experiments committed in" +
                 "University's of York secret laboratory, a massive\n earthquake hit the surroundings of York." +
-        "Ore mines were severely damaged therefore\n ore production has dropped by 90% for this turn.",
-                new Float[]{(float) 0.1, (float) 1, (float) 1}, new Runnable() {
+                "Ore mines were severely damaged therefore\n ore production has dropped by 90% for this turn.",
+                new ResourceGroup(1, 1, 0.1f), new Runnable() {
             @Override
             public void run() {
                 if (game.getPlayer().getLandList().size() == 0) {
@@ -119,10 +120,10 @@ public class PlotEffectSource extends Array<PlotEffect> {
             }
         });
 
-        tornado = new PlotEffect("Tornado","Looks like a tornado has struck the campus!" +
-        "\nThe gale force winds have blown some of your crops away, reducing food production by 50%. "+
-        "\nHowever the winds have increased the output of your wind farms, increasing energy production by 60%",
-         new Float[]{(float) 1, (float) 0.5, (float) 1.6}, new Runnable(){
+        tornado = new PlotEffect("Tornado", "Looks like a tornado has struck the campus!" +
+                "\nThe gale force winds have blown some of your crops away, reducing food production by 50%. " +
+                "\nHowever the winds have increased the output of your wind farms, increasing energy production by 60%",
+                new ResourceGroup(1.6f, 0.5f, 1), new Runnable() {
             @Override
             public void run() {
                 if (game.getPlayer().getLandList().size() == 0) {
@@ -137,10 +138,10 @@ public class PlotEffectSource extends Array<PlotEffect> {
             }
         });
 
-        strike = new PlotEffect("Roboticon Strike","Some of your roboticons have decided to go on strike." +
-                "\nThey are bored of standing in the same place doing the same thing all the time."+
+        strike = new PlotEffect("Roboticon Strike", "Some of your roboticons have decided to go on strike." +
+                "\nThey are bored of standing in the same place doing the same thing all the time." +
                 "\nAll resource production has depleted by 30%",
-                new Float[]{(float) 0.7, (float) 0.7, (float) 0.7}, new Runnable(){
+                new ResourceGroup(0.7f, 0.7f, 0.7f), new Runnable() {
             @Override
             public void run() {
                 if (game.getPlayer().getLandList().size() == 0) {
