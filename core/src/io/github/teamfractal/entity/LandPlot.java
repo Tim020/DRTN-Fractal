@@ -210,6 +210,8 @@ public class LandPlot {
         return productionAmounts.getResource(resource);
     }
 
+    public ResourceGroupInteger getAllResources() { return productionAmounts; }
+
     /**
      * Checks if the tile contains a roboticon
      *

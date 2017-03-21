@@ -16,7 +16,6 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.util.ResourceGroupInteger;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -51,7 +50,7 @@ public class AIPlayer extends Player {
             case ROBOTICON_PURCHASE:
                 //"Purchase Roboticons
                 System.out.println("AI: Phase 2 in progress");
-                phase2();
+                roboticonPurchase();
                 break;
             case ROBOTICON_CUSTOMISATION:
                 //Install Roboticons
@@ -91,8 +90,7 @@ public class AIPlayer extends Player {
     private void tileAcquisition() {
 
         ArrayList<LandPlot> plots = getAvailableLandPlots();
-        if (plots.size() != 0) {
-
+        if (plots.size() != 0 && getMoney() > 10) {
 
             ResourceType focus = game.market.getResourceBuyingPrices().getMaxResource();
             LandPlot best = plots.get(0);
@@ -107,7 +105,7 @@ public class AIPlayer extends Player {
             game.gameScreen.getActors().tileClicked(best, (float) best.x, (float) best.y);
             game.gameScreen.getActors().buyLandPlotFunction();
         }
-        game.gameScreen.getActors().nextButtonFunction();
+        game.nextPhase();
     }
 
     /**
@@ -131,65 +129,29 @@ public class AIPlayer extends Player {
     /**
      * Function simulating the Player interaction during Phase 2.
      */
-    private void phase2() {
-        boolean purchased = false;
-        int robotIndex = 0;
+    private void roboticonPurchase() {
 
-        try {
-            for (LandPlot aLandList : this.landList) {
-                if (!aLandList.hasRoboticon()) {
-                    float[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
-                    float max = 0;
-                    int max_index = -1; //Initialise to index not used to not return false positives
-                    for (int j = 0; j < resources.length; j++) {
-                        if (resources[j] > max) {
-                            max = resources[j];
-                            max_index = j;
-                        }
+        for (LandPlot plot : this.landList) {
+            ResourceType focus = plot.getAllResources().getMaxResource();
+
+            if (!plot.hasRoboticon()) {
+
+                //enough money to buy a roboticon and needing to buy one
+                if (this.getMoney() > 10 && game.roboticonMarket.actors().roboticons.size() == 0) {
+                    game.roboticonMarket.actors().purchaseRoboticonFunction();
+
+                    //enough money to customise
+                    if (this.getMoney() > game.market.getSellPrice(focus)) {
+                        game.roboticonMarket.actors().purchaseCustomisationFunction(focus, 0);
                     }
-                    System.out.println(max_index);
-                    switch (max_index) {
-
-                        case 0:
-                            //ORE
-                            game.roboticonMarket.actors().purchaseRoboticonFunction();
-                            try {
-                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ORE, robotIndex);
-                            } catch (IndexOutOfBoundsException e) {
-                                break;
-                            }
-                            break;
-                        case 1:
-                            //FOOD
-                            game.roboticonMarket.actors().purchaseRoboticonFunction();
-                            try {
-                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.FOOD, robotIndex);
-                            } catch (IndexOutOfBoundsException e) {
-                                break;
-                            }
-                            break;
-                        case 2:
-                            //ENERGY
-                            game.roboticonMarket.actors().purchaseRoboticonFunction();
-                            try {
-                                game.roboticonMarket.actors().purchaseCustomisationFunction(ResourceType.ENERGY, robotIndex);
-                            } catch (IndexOutOfBoundsException e) {
-                                break;
-                            }
-                            break;
-                        default:
-
-                    }
-
+                //got a roboticon and enough to customise
+                } else if (game.roboticonMarket.actors().roboticons.size() > 0 &&
+                        this.getMoney() > game.market.getSellPrice(focus)) {
+                    game.roboticonMarket.actors().purchaseCustomisationFunction(focus, 0);
                 }
             }
-            game.nextPhase();
-
-        } finally {
-            game.nextPhase();
         }
-
-
+        game.nextPhase();
     }
 
     /**
