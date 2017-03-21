@@ -524,13 +524,14 @@ public class RoboticonQuest extends Game {
      * Checks whether the game has ended based on whether all of the tiles have been claimed
      *
      * @return Returns true if ended, false if not
+     * UPDATED: REFACTORED
      */
     private boolean checkGameEnded() {
         boolean ended = true;
         LandPlot[][] plots = plotManager.getLandPlots();
         for (LandPlot[] plot : plots) {
             for (LandPlot aPlot : plot) {
-                if (aPlot == null) {
+                if (aPlot != null && !aPlot.hasOwner() || aPlot == null) {
                     ended = false;
                 }
             }

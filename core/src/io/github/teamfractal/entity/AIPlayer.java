@@ -16,7 +16,9 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.ResourceType;
+import io.github.teamfractal.util.ResourceGroupInteger;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -44,7 +46,7 @@ public class AIPlayer extends Player {
             case TILE_ACQUISITION:
                 //"Buy Land Plot
                 System.out.println("AI: Phase 1 in progress");
-                phase1();
+                tileAcquisition();
                 break;
             case ROBOTICON_PURCHASE:
                 //"Purchase Roboticons
@@ -83,24 +85,47 @@ public class AIPlayer extends Player {
      * Plots cost 10 money.
      * Only one plot can be purchased.
      * </p>
+     * UPDATE: REFACTORED "phase1"
      */
-    private void phase1() {
+    //buing from the market use market sell
+    private void tileAcquisition() {
 
-        boolean selected = false;
-        int x = game.plotManager.x;
-        int y = game.plotManager.y;
-        if (this.getMoney() >= 10) while (!selected) {
-            int i = random(x);
-            int j = random(y);
-            if (!game.plotManager.getPlot(i, j).hasOwner()) {
-                selected = true;
-                game.gameScreen.setSelectedPlot(game.plotManager.getPlot(i, j));
-                game.gameScreen.getActors().tileClicked(game.plotManager.getPlot(i, j), (float) i, (float) j);
-                game.gameScreen.getActors().buyLandPlotFunction();
+        ArrayList<LandPlot> plots = getAvailableLandPlots();
+        if (plots.size() != 0) {
+
+
+            ResourceType focus = game.market.getResourceBuyingPrices().getMaxResource();
+            LandPlot best = plots.get(0);
+
+            for (int i = 0; i < plots.size(); i++) {
+                if (best.getResource(focus) < plots.get(i).getResource(focus)) {
+                    best = plots.get(i);
+                }
             }
 
-            game.gameScreen.getActors().nextButtonFunction();
+            game.gameScreen.setSelectedPlot(best);
+            game.gameScreen.getActors().tileClicked(best, (float) best.x, (float) best.y);
+            game.gameScreen.getActors().buyLandPlotFunction();
         }
+        game.gameScreen.getActors().nextButtonFunction();
+    }
+
+    /**
+     * NEW
+     * Gets all available land plots i.e. those with no owner
+     * @return available land plots
+     */
+    private ArrayList<LandPlot> getAvailableLandPlots() {
+        ArrayList<LandPlot> available = new ArrayList<LandPlot>();
+
+        for (int i = 0; i < game.plotManager.x; i++) {
+            for (int j = 0; j < game.plotManager.y; j++) {
+                if (game.plotManager.getPlot(i, j).getOwner()==null) {
+                    available.add(game.plotManager.getPlot(i, j));
+                }
+            }
+        }
+        return available;
     }
 
     /**
