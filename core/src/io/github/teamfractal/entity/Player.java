@@ -19,7 +19,6 @@ import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.PurchaseStatus;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.NotCommonResourceException;
-import io.github.teamfractal.exception.NotEnoughResourceException;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -193,7 +192,7 @@ public class Player {
             return PurchaseStatus.FailPlayerNotEnoughMoney;
         }
 
-        market.sellResource(ResourceType.ROBOTICON, amount);
+        market.buyResourceFromMarket(ResourceType.ROBOTICON, amount);
         setMoney(money - cost);
         for (int roboticon = 0; roboticon < amount; roboticon++) {
             roboticonList.add(new Roboticon(random.nextInt(10000)));
@@ -222,7 +221,7 @@ public class Player {
             return PurchaseStatus.FailPlayerNotEnoughMoney;
         }
 
-        market.sellResource(ResourceType.CUSTOMISATION, 1);
+        market.buyResourceFromMarket(ResourceType.CUSTOMISATION, 1);
         setMoney(money - cost);
         customiseRoboticon(roboticon, resource);
 
@@ -250,7 +249,7 @@ public class Player {
             return PurchaseStatus.FailPlayerNotEnoughMoney;
         }
 
-        market.sellResource(resource, amount);
+        market.buyResourceFromMarket(resource, amount);
         setMoney(money - cost);
         setResource(resource, getResource(resource) + amount);
         return PurchaseStatus.Success;
@@ -267,7 +266,7 @@ public class Player {
         int resourcePrice = market.getBuyPrice(resource);
 
         if (getResource(resource) >= amount) {
-            market.buyResource(resource, amount);
+            market.sellResourceToMarket(resource, amount);
             setResource(resource, getResource(resource) - amount);
             setMoney(getMoney() + amount * resourcePrice);
         }

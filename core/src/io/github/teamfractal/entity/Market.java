@@ -13,6 +13,7 @@
 
 package io.github.teamfractal.entity;
 
+import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;
 import io.github.teamfractal.exception.NotCommonResourceException;
@@ -25,22 +26,98 @@ import java.util.Random;
 public class Market {
 
     private int roboticons;
+    private int cacheID = -1;
 
     private ResourceGroupInteger resources;
-    private ResourceGroupInteger resourceSellingPrices = new ResourceGroupInteger();
-    private ResourceGroupInteger resourceBuyingPrices = new ResourceGroupInteger();
+    private ResourceGroupInteger resourceSellingPrices;
+    private ResourceGroupInteger resourceBuyingPrices;
     private ResourceGroupInteger resourceProductionTotals = new ResourceGroupInteger();
     private HashMap<Integer, Tuple<ResourceGroupInteger>> resourcePriceHistory = new HashMap<Integer, Tuple<ResourceGroupInteger>>();
-    private ResourceGroupInteger runningTotals = new ResourceGroupInteger();
+    private ResourceGroupInteger runningTotal = new ResourceGroupInteger();
+
+    private final int STARTING_FOOD_SELL_PRICE = 10;
+    private final int STARTING_ENERGY_SELL_PRICE = 10;
+    private final int STARTING_ORE_SELL_PRICE = 10;
+
+    private final int STARTING_FOOD_BUY_PRICE = 10;
+    private final int STARTING_ENERGY_BUY_PRICE = 10;
+    private final int STARTING_ORE_BUY_PRICE = 10;
 
     /**
      * Initialise the market
      */
     public Market() {
         resources = new ResourceGroupInteger(16, 16, 0);
+        resourceSellingPrices = new ResourceGroupInteger(STARTING_FOOD_SELL_PRICE, STARTING_ENERGY_SELL_PRICE, STARTING_ORE_SELL_PRICE);
+        resourceBuyingPrices = new ResourceGroupInteger(STARTING_FOOD_BUY_PRICE, STARTING_ENERGY_BUY_PRICE, STARTING_ORE_BUY_PRICE);
+        cachePrices();
         setRoboticons(12);
     }
 
+    public void cachePrices() {
+        resourcePriceHistory.put(cacheID, new Tuple<ResourceGroupInteger>(resourceBuyingPrices.clone(), resourceSellingPrices.clone()));
+        cacheID++;
+    }
+
+    public void updateResourceSellPrices() {
+        float elasticity = 0.7f;
+        float upgradeTotalSum = (float) resourceProductionTotals.sum();
+        float foodTotal = (float) resourceProductionTotals.getFood();
+        float energyTotal = (float) resourceProductionTotals.getEnergy();
+        float oreTotal = (float) resourceProductionTotals.getOre();
+
+        if (upgradeTotalSum > 0) {
+            float newFood = (((1 - (foodTotal / upgradeTotalSum)) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
+            float newEnergy = (((1 - (energyTotal / upgradeTotalSum) / elasticity)) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+            float newOre = (((1 - (oreTotal / upgradeTotalSum) / elasticity)) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
+            ResourceGroupInteger newPrices = new ResourceGroupInteger((int) newFood, (int) newEnergy, (int) newOre);
+            resourceSellingPrices = newPrices;
+        }
+    }
+
+    public void updateResourceBuyPrices() {
+        Random random = new Random();
+        ResourceGroupInteger.sub(resourceSellingPrices.clone(), ResourceGroupInteger.mult(resourceSellingPrices, ((float) 1 / (2 + random.nextInt(4)))));
+    }
+
+    public void updateMarketSupplyOnBuy(ResourceGroupInteger resourcesToBuy) {
+        runningTotal = ResourceGroupInteger.sub(runningTotal, resourcesToBuy);
+    }
+
+    public void updateMarketSupplyOnSell(ResourceGroupInteger resourcesToSell) {
+        runningTotal = ResourceGroupInteger.add(runningTotal, resourcesToSell);
+    }
+
+    public void updateMarketSupply(ResourceGroupInteger r) {
+        runningTotal = ResourceGroupInteger.add(runningTotal, r);
+    }
+
+    public void calculatePlayerResourceUpgrades() {
+        resourceProductionTotals = new ResourceGroupInteger();
+        for (Player player : RoboticonQuest.getInstance().getPlayerList()) {
+            for (Roboticon r : player.getRoboticons()) {
+                ResourceGroupInteger t = new ResourceGroupInteger();
+                t.setResource(r.getCustomisation(), 1);
+                resourceProductionTotals = ResourceGroupInteger.add(resourceProductionTotals, t);
+            }
+            for (LandPlot p : player.getLandList()) {
+                resourceProductionTotals = ResourceGroupInteger.add(resourceProductionTotals, p.produceResources());
+            }
+        }
+    }
+
+    public ResourceGroupInteger getResourceBuyingPrices() {
+        return resourceBuyingPrices;
+    }
+
+    public ResourceGroupInteger getResourceSellingPrices() {
+        return resourceSellingPrices;
+    }
+
+    public HashMap<Integer, Tuple<ResourceGroupInteger>> getHistoricTradingData() {
+        return resourcePriceHistory;
+    }
+    
     /**
      * Get the amount of food in the market
      *
@@ -211,30 +288,15 @@ public class Market {
      * @return The buy in price.
      */
     public int getBuyPrice(ResourceType resource) {
-        int buyPrice = (int) (getSellPrice(resource) * 0.6f);
-        if (buyPrice < 5) {
-            buyPrice = 5;
-            return buyPrice;
-        } else {
-            return buyPrice;
-        }
-    }
-
-    /**
-     * Calculates Sell price.
-     *
-     * @param resource The {@link ResourceType}.
-     * @return Returns new calculated Sell price value.
-     */
-    private int calcSellPrice(ResourceType resource) {
-        if (getResource(resource) == 0) {
-            return 50;
-        } else {
-            int sellPrice = (50 / (getResource(resource) + 1));
-            if (sellPrice < 10) {
-                sellPrice = 10;
-            }
-            return sellPrice;
+        switch (resource) {
+            case ORE:
+                return resourceBuyingPrices.getOre();
+            case ENERGY:
+                return resourceBuyingPrices.getEnergy();
+            case FOOD:
+                return resourceBuyingPrices.getFood();
+            default:
+                throw new IllegalArgumentException("Error: Resource type is incorrect.");
         }
     }
 
@@ -246,47 +308,53 @@ public class Market {
      */
 
     public int getSellPrice(ResourceType resource) {
-        int price;
         switch (resource) {
             case ORE:
-                return calcSellPrice(ResourceType.ORE);
+                return resourceSellingPrices.getOre();
             case ENERGY:
-                return calcSellPrice(ResourceType.ENERGY);
+                return resourceSellingPrices.getEnergy();
             case FOOD:
-                return calcSellPrice(ResourceType.FOOD);
+                return resourceSellingPrices.getFood();
             case ROBOTICON:
-                return calcSellPrice(ResourceType.ROBOTICON);
+                return 15;
             case CUSTOMISATION:
-                price = 10;
-                return price;
+                return 10;
             default:
                 throw new IllegalArgumentException("Error: Resource type is incorrect.");
         }
     }
 
     /**
-     * Buy Resource from the market, caller <i>must</i> be doing all the checks.
-     * For example, take money away from the player.
+     * Sell Resource to the market, caller <i>must</i> be doing all the checks.
      * <p>
      * This method will only increase the amount of specified resource.
      *
      * @param resource The {@link ResourceType}
      * @param amount   The amount of resource to buy in.
      */
-    public synchronized void buyResource(ResourceType resource, int amount) {
+    public synchronized void sellResourceToMarket(ResourceType resource, int amount) {
+        if (resource == ResourceType.ORE || resource == ResourceType.ENERGY || resource == ResourceType.FOOD) {
+            ResourceGroupInteger t = new ResourceGroupInteger();
+            t.setResource(resource, amount);
+            updateMarketSupplyOnSell(t);
+        }
         setResource(resource, getResource(resource) + amount);
     }
 
     /**
-     * Sell Resource from the market, caller <i>must</i> be doing all the checks.
-     * For example, add money in to the player.
+     * Buy Resource from the market, caller <i>must</i> be doing all the checks.
      * <p>
      * This method will only decrease the amount of specified resource.
      *
      * @param resource The {@link ResourceType}
      * @param amount   The amount of resource to sell out.
      */
-    public synchronized void sellResource(ResourceType resource, int amount) {
+    public synchronized void buyResourceFromMarket(ResourceType resource, int amount) {
+        if (resource == ResourceType.ORE || resource == ResourceType.ENERGY || resource == ResourceType.FOOD) {
+            ResourceGroupInteger t = new ResourceGroupInteger();
+            t.setResource(resource, amount);
+            updateMarketSupplyOnBuy(t);
+        }
         setResource(resource, getResource(resource) - amount);
     }
 

@@ -129,10 +129,10 @@ public class MarketTest extends TesterFile {
 		market.setFood(10);
 		market.setRoboticons(10);
 
-		market.sellResource(ResourceType.FOOD, 5);
-		market.sellResource(ResourceType.ORE, 5);
-		market.sellResource(ResourceType.ENERGY, 5);
-		market.sellResource(ResourceType.ROBOTICON, 5);
+		market.buyResourceFromMarket(ResourceType.FOOD, 5);
+		market.buyResourceFromMarket(ResourceType.ORE, 5);
+		market.buyResourceFromMarket(ResourceType.ENERGY, 5);
+		market.buyResourceFromMarket(ResourceType.ROBOTICON, 5);
 
 		assertEquals(5, market.getFood() );
 		assertEquals(5, market.getOre() );
