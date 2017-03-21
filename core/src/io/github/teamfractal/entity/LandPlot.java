@@ -18,9 +18,7 @@ import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;
 import io.github.teamfractal.exception.NotCommonResourceException;
 import io.github.teamfractal.util.PlotManager;
-import io.github.teamfractal.util.ResourceGroup;
-
-import javax.annotation.Resource;
+import io.github.teamfractal.util.ResourceGroupInteger;
 
 public class LandPlot {
 
@@ -36,8 +34,8 @@ public class LandPlot {
     private TiledMapTileLayer.Cell playerTile;
     private TiledMapTileLayer.Cell roboticonTile;
     private Player owner;
-    private ResourceGroup productionAmounts;
-    public ResourceGroup productionModifiers;
+    private ResourceGroupInteger productionAmounts;
+    public ResourceGroupInteger productionModifiers;
     private boolean owned;
     private Roboticon installedRoboticon;
     private boolean hasRoboticon;
@@ -50,8 +48,8 @@ public class LandPlot {
      * @param food   Amount of food
      */
     public LandPlot(int ore, int energy, int food) {
-        this.productionAmounts = new ResourceGroup(food, energy, ore);
-        this.productionModifiers = new ResourceGroup();
+        this.productionAmounts = new ResourceGroupInteger(food, energy, ore);
+        this.productionModifiers = new ResourceGroupInteger();
         this.owned = false;
     }
 
@@ -179,10 +177,10 @@ public class LandPlot {
     /**
      * Calculate the amount of resources to be produced.
      *
-     * @return The amount of resources to be produced in a ResourceGroup.
+     * @return The amount of resources to be produced in a ResourceGroupInteger.
      */
-    public ResourceGroup produceResources() {
-        ResourceGroup produced = new ResourceGroup();
+    public ResourceGroupInteger produceResources() {
+        ResourceGroupInteger produced = new ResourceGroupInteger();
         produced.setResource(ResourceType.FOOD, productionAmounts.getResource(ResourceType.FOOD) * productionModifiers.getResource(ResourceType.FOOD));
         produced.setResource(ResourceType.ENERGY, productionAmounts.getResource(ResourceType.ENERGY) * productionModifiers.getResource(ResourceType.ENERGY));
         produced.setResource(ResourceType.ORE, productionAmounts.getResource(ResourceType.ORE) * productionModifiers.getResource(ResourceType.ORE));

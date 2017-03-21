@@ -16,7 +16,7 @@ package io.github.teamfractal.entity;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;
 import io.github.teamfractal.exception.NotCommonResourceException;
-import io.github.teamfractal.util.ResourceGroup;
+import io.github.teamfractal.util.ResourceGroupInteger;
 import io.github.teamfractal.util.Tuple;
 
 import java.util.HashMap;
@@ -24,24 +24,20 @@ import java.util.Random;
 
 public class Market {
 
-    private int food;
-    private int energy;
-    private int ore;
     private int roboticons;
 
-    private ResourceGroup resourceSellingPrices = new ResourceGroup();
-    private ResourceGroup resourceBuyingPrices = new ResourceGroup();
-    private ResourceGroup resourceProductionTotals = new ResourceGroup();
-    private HashMap<Integer, Tuple<ResourceGroup>> resourcePriceHistory = new HashMap<Integer, Tuple<ResourceGroup>>();
-    private ResourceGroup runningTotals = new ResourceGroup();
+    private ResourceGroupInteger resources;
+    private ResourceGroupInteger resourceSellingPrices = new ResourceGroupInteger();
+    private ResourceGroupInteger resourceBuyingPrices = new ResourceGroupInteger();
+    private ResourceGroupInteger resourceProductionTotals = new ResourceGroupInteger();
+    private HashMap<Integer, Tuple<ResourceGroupInteger>> resourcePriceHistory = new HashMap<Integer, Tuple<ResourceGroupInteger>>();
+    private ResourceGroupInteger runningTotals = new ResourceGroupInteger();
 
     /**
      * Initialise the market
      */
     public Market() {
-        setFood(16);
-        setEnergy(16);
-        setOre(0);
+        resources = new ResourceGroupInteger(16, 16, 0);
         setRoboticons(12);
     }
 
@@ -51,7 +47,7 @@ public class Market {
      * @return The amount of food in the market.
      */
     int getFood() {
-        return food;
+        return resources.getFood();
     }
 
     /**
@@ -64,8 +60,7 @@ public class Market {
         if (amount < 0) {
             throw new IllegalArgumentException("Error: Food can't be negative.");
         }
-
-        this.food = amount;
+        this.resources.setResource(ResourceType.FOOD, amount);
     }
 
     /**
@@ -74,7 +69,7 @@ public class Market {
      * @return The amount of energy in the market.
      */
     int getEnergy() {
-        return energy;
+        return resources.getEnergy();
     }
 
     /**
@@ -87,8 +82,7 @@ public class Market {
         if (amount < 0) {
             throw new IllegalArgumentException("Error: Energy can't be negative.");
         }
-
-        this.energy = amount;
+        this.resources.setResource(ResourceType.ENERGY, amount);
     }
 
     /**
@@ -97,7 +91,7 @@ public class Market {
      * @return The amount of ore in the market.
      */
     int getOre() {
-        return ore;
+        return resources.getOre();
     }
 
     /**
@@ -110,8 +104,7 @@ public class Market {
         if (amount < 0) {
             throw new IllegalArgumentException("Error: Ore can't be negative.");
         }
-
-        this.ore = amount;
+        this.resources.setResource(ResourceType.ORE, amount);
     }
 
     /**
@@ -142,9 +135,8 @@ public class Market {
      * @return The total amount.
      */
     private synchronized int getTotalResourceCount() {
-        return food + energy + ore + roboticons;
+        return getFood() + getEnergy() + getOre() + roboticons;
     }
-    //</editor-fold>
 
     /**
      * Get the amount of specific resource.
@@ -207,8 +199,7 @@ public class Market {
      * @return If there are enough resources.
      * @throws InvalidResourceTypeException Will be thrown if the resource specified is invalid.
      */
-    boolean hasEnoughResources(ResourceType type, int amount)
-            throws InvalidResourceTypeException {
+    boolean hasEnoughResources(ResourceType type, int amount) throws InvalidResourceTypeException {
         int resource = getResource(type);
         return amount <= resource;
     }
@@ -236,12 +227,10 @@ public class Market {
      * @return Returns new calculated Sell price value.
      */
     private int calcSellPrice(ResourceType resource) {
-        int sellPrice;
         if (getResource(resource) == 0) {
-            sellPrice = 50;
-            return sellPrice;
+            return 50;
         } else {
-            sellPrice = (50 / (getResource(resource) + 1));
+            int sellPrice = (50 / (getResource(resource) + 1));
             if (sellPrice < 10) {
                 sellPrice = 10;
             }
@@ -256,21 +245,17 @@ public class Market {
      * @return The sell price.
      */
 
-    public int getSellPrice(ResourceType resource) { // some changes was made
+    public int getSellPrice(ResourceType resource) {
         int price;
         switch (resource) {
             case ORE:
-                price = calcSellPrice(ResourceType.ORE);
-                return price;
+                return calcSellPrice(ResourceType.ORE);
             case ENERGY:
-                price = calcSellPrice(ResourceType.ENERGY);
-                return price;
+                return calcSellPrice(ResourceType.ENERGY);
             case FOOD:
-                price = calcSellPrice(ResourceType.FOOD);
-                return price;
+                return calcSellPrice(ResourceType.FOOD);
             case ROBOTICON:
-                price = calcSellPrice(ResourceType.ROBOTICON);
-                return price;
+                return calcSellPrice(ResourceType.ROBOTICON);
             case CUSTOMISATION:
                 price = 10;
                 return price;
@@ -311,8 +296,8 @@ public class Market {
     public void generateRoboticon() {
         Random rand = new Random();
         int roboticonsToGenerate = rand.nextInt(3) + 0;
-        while (this.ore >= 2 && roboticonsToGenerate > 0) {
-            this.ore -= 2;
+        while (this.getOre() >= 2 && roboticonsToGenerate > 0) {
+            this.setResource(ResourceType.ORE, getOre() - 2);
             this.roboticons += 1;
             roboticonsToGenerate -= 1;
         }
