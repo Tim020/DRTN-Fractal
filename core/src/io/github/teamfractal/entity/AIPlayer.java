@@ -17,6 +17,7 @@ import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.ResourceType;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -55,7 +56,7 @@ public class AIPlayer extends Player {
             case ROBOTICON_CUSTOMISATION:
                 //Install Roboticons
                 System.out.println("AI: Phase 3 in progress");
-                phase3();
+                roboticonCustomisation();
                 break;
             //Phase 4 not included, no interaction required
             case MARKET:
@@ -128,6 +129,7 @@ public class AIPlayer extends Player {
 
     /**
      * Function simulating the Player interaction during Phase 2.
+     * UPDATED: REFACTORED "phase2"
      */
     private void roboticonPurchase() {
 
@@ -156,20 +158,68 @@ public class AIPlayer extends Player {
 
     /**
      * Function simulating the Player interaction during Phase 3.
+     * UPDATE: REFACTORED "phase3"
      */
-    private void phase3() {
-        for (LandPlot aLandPlot : this.landList) {
-            if (!aLandPlot.hasRoboticon()) {
-                for (Roboticon aRoboticon: this.roboticonList
-                     ) { if (!aRoboticon.isInstalled()){
-                        game.gameScreen.getActors().installRoboticonFunction(aLandPlot,aRoboticon);
-                }
+    private void roboticonCustomisation() {
+        ArrayList<LandPlot> plots = getUnmannedPlots();
+        ArrayList<Roboticon> roboticons = getUnplacedRoboticons();
 
+        if (roboticons.size() == 0 || plots.size() == 0) {
+            game.nextPhase();
+        }
+
+        LandPlot best = plots.get(0);
+        for (Roboticon roboticon : roboticons) {
+            ResourceType focus = roboticon.getCustomisation();
+
+            for (LandPlot plot : plots) {
+                if (plot.getResource(focus) > best.getResource(focus)) {
+                    best = plot;
                 }
             }
+            game.gameScreen.getActors().installRoboticonFunction(best, roboticon);
+            plots.remove(best);
 
+            if (plots.size() != 0) {
+                best = plots.get(0);
+            } else {
+                break;
             }
-        game.gameScreen.getActors().nextButtonFunction();
+        }
+
+        game.nextPhase();
+    }
+
+    /**
+     * NEW
+     * Gets all the unplaced roboticons
+     * @return an array list of unplaced roboticons
+     */
+    private ArrayList<Roboticon> getUnplacedRoboticons() {
+        ArrayList<Roboticon> unplacedRoboticons = new ArrayList<Roboticon>();
+        for (Roboticon roboticon : this.roboticonList) {
+            if (!roboticon.isInstalled()) {
+                unplacedRoboticons.add(roboticon);
+            }
+        }
+        return unplacedRoboticons;
+    }
+
+    /**
+     * NEW
+     * Gets all the unmanned plots
+     * @return an array list of unmanned tiles
+     */
+    private ArrayList<LandPlot> getUnmannedPlots() {
+        ArrayList<LandPlot> unmannedPlots = new ArrayList<LandPlot>();
+
+        for (LandPlot plot : this.landList) {
+            if (!plot.hasRoboticon()) {
+                unmannedPlots.add(plot);
+            }
+        }
+
+        return unmannedPlots;
     }
     
 
