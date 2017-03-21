@@ -15,6 +15,7 @@ package io.github.teamfractal.entity;
 
 import io.github.teamfractal.TesterFile;
 import io.github.teamfractal.entity.enums.ResourceType;
+import io.github.teamfractal.util.ResourceGroupInteger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -75,15 +76,15 @@ public class MarketTest extends TesterFile {
 	/**
 	 * test: getBuyPrice()
 	 * The market should start with correct price for player to buy.
-	 * The price is 90% of the sell price.
-	 * This could change in later development.
+	 * The price is defined by the starting sell price.
+	 * But is constant for the roboticon.
 	 */
 	@Test
 	public void marketShouldHaveCorrectPricesForResources() throws Exception {
-		assertEquals(30, market.getBuyPrice(ResourceType.ORE));
-		assertEquals(6, market.getBuyPrice(ResourceType.ENERGY));
-		assertEquals(6, market.getBuyPrice(ResourceType.FOOD));
-		assertEquals(6, market.getBuyPrice(ResourceType.ROBOTICON));
+		assertEquals(10, market.getBuyPrice(ResourceType.ORE));
+		assertEquals(10, market.getBuyPrice(ResourceType.ENERGY));
+		assertEquals(10, market.getBuyPrice(ResourceType.FOOD));
+		assertEquals(9, market.getBuyPrice(ResourceType.ROBOTICON));
 	}
 
 

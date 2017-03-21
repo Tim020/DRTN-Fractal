@@ -295,6 +295,8 @@ public class Market {
                 return resourceBuyingPrices.getEnergy();
             case FOOD:
                 return resourceBuyingPrices.getFood();
+            case ROBOTICON:
+                return 9;
             default:
                 throw new IllegalArgumentException("Error: Resource type is incorrect.");
         }
@@ -316,7 +318,7 @@ public class Market {
             case FOOD:
                 return resourceSellingPrices.getFood();
             case ROBOTICON:
-                return 15;
+                return 10;
             case CUSTOMISATION:
                 return 10;
             default:
