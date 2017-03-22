@@ -225,7 +225,6 @@ public class AIPlayer extends Player {
      * UPDATE: REFACTOR "phase5"
      */
     private void tradeWithMarket() {
-
         ArrayList<Tuple<ResourceGroupInteger>> marketHistory = getMarketHistory();
 
         if (marketHistory.size() > 2) {
@@ -241,7 +240,7 @@ public class AIPlayer extends Player {
 
             Random rand = new Random();
 
-            //sell
+            boolean sold = false;
             for (ResourceType focus : new ResourceType[] {ResourceType.ENERGY, ResourceType.FOOD, ResourceType.ORE}) {
 
                 ResourceGroupInteger[] sellingChanges = getSellingPriceChanges();
@@ -252,8 +251,10 @@ public class AIPlayer extends Player {
                 float prob = getProbStreakEnd(sellingStreak, focus, sellingChanges);
                 if (prob >= 0.75) {
                     sellResources(focus, this.getResource(focus) / 3);
+                    sold = true;
                 } else if (rand.nextFloat() >= prob) {
                     sellResources(focus, this.getResource(focus) / 3);
+                    sold = true;
                 }
             }
 
@@ -272,6 +273,14 @@ public class AIPlayer extends Player {
                     buyResources(focus);
                 }
             }
+
+            if (!sold) {
+                if (this.getMoney() > 100 && rand.nextFloat() > 0.5f) {
+                    game.resourceMarket.actors().setGambleField("100");
+                    game.resourceMarket.gamble();
+                    System.out.println("Gambling");
+                }
+            }
         }
         game.nextPhase();
     }
@@ -285,8 +294,8 @@ public class AIPlayer extends Player {
      */
     private int getStreak(ResourceGroupInteger[] priceChanges, ResourceType focus) {
         int count = 0;
-        for (int i = priceChanges.length - 1; i > -1; i++) {
-            if (priceChanges[i].getResource(focus) > 0) {
+        for (int i = priceChanges.length - 1; i > -1; i--) {
+            if (priceChanges[i].getResource(focus) >= 0) {
                 count++;
             } else {
                 break;
