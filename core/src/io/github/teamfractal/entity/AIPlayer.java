@@ -13,12 +13,16 @@
 
 package io.github.teamfractal.entity;
 
+import com.sun.org.apache.regexp.internal.RE;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.ResourceType;
+import io.github.teamfractal.util.ResourceGroup;
+import io.github.teamfractal.util.ResourceGroupInteger;
+import io.github.teamfractal.util.Tuple;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -28,6 +32,8 @@ import java.util.Random;
  */
 public class AIPlayer extends Player {
 
+    private ArrayList<Tuple<ResourceGroupInteger>> priceChanges;
+
     public AIPlayer(RoboticonQuest game) {
         super(game);
         /*
@@ -35,6 +41,7 @@ public class AIPlayer extends Player {
         Also accounts for the AI's bold market moves and allows it to keep the market changing.
          */
         this.setMoney(20000);
+        priceChanges = new ArrayList<Tuple<ResourceGroupInteger>>();
     }
 
     /**
@@ -62,21 +69,11 @@ public class AIPlayer extends Player {
             case MARKET:
                 //Resource Auction
                 System.out.println("AI: Phase 5 in progress");
-                phase5();
+                tradeWithMarket();
                 break;
             default:
                 // Unknown phase
         }
-    }
-
-    /**
-     * Utility function to return a random number between 0 and max.
-     * @param max an integer value representing the largest number requested
-     * @return integer random value between 0 and max.
-     */
-    private int random(int max) {
-        Random rand = new Random();
-        return rand.nextInt(max);
     }
 
     /**
@@ -225,32 +222,166 @@ public class AIPlayer extends Player {
 
     /**
      * Function simulating the Player interaction during Phase 5.
+     * UPDATE: REFACTOR "phase5"
      */
-    private void phase5() {
-        if (game.getTurnNumber() % 2 == 0) {
-            if (this.getEnergy() > 1) {
-                sellResources(ResourceType.ENERGY, this.getEnergy() / 2);
+    private void tradeWithMarket() {
+
+        ArrayList<Tuple<ResourceGroupInteger>> marketHistory = getMarketHistory();
+
+        if (marketHistory.size() > 2) {
+
+            //update priceChanges
+            for (int i = priceChanges.size() + 1; i < marketHistory.size() - 1; i++) {
+                Tuple<ResourceGroupInteger> entry;
+                entry = new Tuple<ResourceGroupInteger>(ResourceGroupInteger.sub(marketHistory.get(i).getHead(),
+                        marketHistory.get(i - 1).getHead()), ResourceGroupInteger.sub(marketHistory.get(i - 1).getTail(),
+                        marketHistory.get(i).getTail()));
+                priceChanges.add(entry);
             }
-            if (this.getFood() > 1) {
-                sellResources(ResourceType.FOOD, this.getFood() / 2);
+
+            Random rand = new Random();
+
+            //sell
+            for (ResourceType focus : new ResourceType[] {ResourceType.ENERGY, ResourceType.FOOD, ResourceType.ORE}) {
+
+                ResourceGroupInteger[] sellingChanges = getSellingPriceChanges();
+                int sellingStreak = getStreak(sellingChanges, focus);
+
+                if (sellingStreak == 0) continue;
+
+                float prob = getProbStreakEnd(sellingStreak, focus, sellingChanges);
+                if (prob >= 0.75) {
+                    sellResources(focus, this.getResource(focus) / 3);
+                } else if (rand.nextFloat() >= prob) {
+                    sellResources(focus, this.getResource(focus) / 3);
+                }
             }
-            if (this.getOre() > 1) {
-                sellResources(ResourceType.ORE, this.getOre() / 2);
+
+            //buy
+            for (ResourceType focus : new ResourceType[] {ResourceType.ENERGY, ResourceType.FOOD, ResourceType.ORE}) {
+
+                ResourceGroupInteger[] buyingChanges = getBuyingPriceChanges();
+                int buyingStreak = getStreak(buyingChanges, focus);
+
+                if (buyingStreak == 0) continue;
+
+                float prob = getProbStreakEnd(buyingStreak, focus, buyingChanges);
+                if (prob >= 0.75) {
+                    buyResources(focus);
+                } else if (rand.nextFloat() >= prob) {
+                    buyResources(focus);
+                }
             }
-        } else {
-            if (game.market.getEnergy() > 5) {
-                buyResources(ResourceType.ENERGY);
+        }
+        game.nextPhase();
+    }
+
+    /**
+     * NEW
+     * Gets the current positive streak of price changes.
+     * @param priceChanges the changes in price
+     * @param focus the resource type of interest
+     * @return the streak
+     */
+    private int getStreak(ResourceGroupInteger[] priceChanges, ResourceType focus) {
+        int count = 0;
+        for (int i = priceChanges.length - 1; i > -1; i++) {
+            if (priceChanges[i].getResource(focus) > 0) {
+                count++;
+            } else {
+                break;
             }
-            if (game.market.getOre() > 5) {
-                buyResources(ResourceType.ORE);
-            }
-            if (game.market.getFood() > 5) {
-                buyResources(ResourceType.FOOD);
+        }
+        return count;
+    }
+
+    /**
+     * NEW
+     * Gets the change in selling prices (players perspective, meaning market buying price).
+     * @return an array of selling price changes
+     */
+    private ResourceGroupInteger[] getSellingPriceChanges() {
+        //market buying, player selling history...
+        ResourceGroupInteger[] changes = new ResourceGroupInteger[priceChanges.size()];
+        for (int i = 0; i < priceChanges.size(); i++) {
+            changes[i] = priceChanges.get(i).getHead();
+        }
+        return changes;
+    }
+
+    /**
+     * NEW
+     * Gets the change in buying prices (players perspective, meaning market selling price).
+     * @return an array of buying prices
+     */
+    private ResourceGroupInteger[] getBuyingPriceChanges() {
+        //market buying, player selling history...
+        ResourceGroupInteger[] changes = new ResourceGroupInteger[priceChanges.size()];
+        for (int i = 0; i < priceChanges.size(); i++) {
+            changes[i] = priceChanges.get(i).getTail();
+        }
+        return changes;
+    }
+
+    /**
+     * NEW
+     * Gets the ordered market price history
+     * @return the market history
+     */
+    private ArrayList<Tuple<ResourceGroupInteger>> getMarketHistory() {
+        HashMap<Integer, Tuple<ResourceGroupInteger>> history = game.market.getHistoricTradingData();
+        ArrayList<Tuple<ResourceGroupInteger>> marketPrices = new ArrayList<Tuple<ResourceGroupInteger>>();
+
+        for (int i = 0; i < history.size(); i++) {
+            marketPrices.add(history.get(i));
+        }
+
+        return marketPrices;
+    }
+
+    /**
+     * NEW
+     * Gives the probability of a streak ending.
+     * NOTE: This is not the actual probability, but an attempt to mimic a players perception of it
+     * @param streak an int representing the current positive streak
+     * @param focus the resource type of interest
+     * @param history the selling/buying history
+     * @return probability of ending the current positive streak
+     */
+    private float getProbStreakEnd(int streak, ResourceType focus, ResourceGroupInteger[] history) {
+        ResourceGroupInteger[] current = new ResourceGroupInteger[streak];
+        float total = 0;
+        float count = 0;
+
+        for (int i = 0; i < history.length - streak; i++) {
+            System.arraycopy(history, i, current, 0, streak);
+            if (isStreak(current, focus)) {
+                if (i + 1 < history.length && history[i+1].getResource(focus) < 0) count++;
+                total++;
             }
         }
 
+        if (count == 0f && total == 0f) {
+            return 0.5f;
+        } else {
+            return count/total;
+        }
+    }
 
-        game.nextPhase();
+    /**
+     * NEW
+     * Returns whether the provided history is a streak for a specific type
+     * @param history selling/buying history
+     * @param focus resource type of interest
+     * @return true : history is of a positive streak, false : otherwise
+     */
+    private boolean isStreak(ResourceGroupInteger[] history, ResourceType focus) {
+        for (ResourceGroupInteger entry : history) {
+            if (entry.getResource(focus) < 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /***
