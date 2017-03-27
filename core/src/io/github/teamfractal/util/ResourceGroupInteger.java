@@ -1,5 +1,7 @@
 package io.github.teamfractal.util;
 
+import io.github.teamfractal.entity.enums.ResourceType;
+
 /**
  * Created by Tim on 20/03/2017.
  */
@@ -85,6 +87,20 @@ public class ResourceGroupInteger extends ResourceGroup<Integer> implements Clon
             throw new NullPointerException("ResourceGroupInteger argument cannot be null");
         }
         return new ResourceGroupInteger(r.getFood() / c, r.getEnergy() / c, r.getOre() / c);
+    }
+
+    /**
+     * Returns the resource type with the highest integer amount
+     * @return The resource type of the max value
+     */
+    public ResourceType getMaxResource() {
+        if (food >= energy && food >= ore) {
+            return ResourceType.FOOD;
+        } else if (energy >= food && energy >= ore) {
+            return ResourceType.ENERGY;
+        } else {
+            return ResourceType.ORE;
+        }
     }
 
     @Override

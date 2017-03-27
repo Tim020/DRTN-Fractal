@@ -428,6 +428,15 @@ public class ResourceMarketActors extends Table {
     }
 
     /**
+     * NEW
+     * Sets the gameField textbox
+     * @param text the text for the textbox
+     */
+    public void setGambleField(String text) {
+        gambleField.setText(text);
+    }
+
+    /**
      * Sets the status text displayed in the market's gambling region (and the colour of that text)
      *
      * @param status The result of the last attempted gamble
