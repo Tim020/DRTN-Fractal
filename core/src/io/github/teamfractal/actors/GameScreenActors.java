@@ -228,6 +228,7 @@ public class GameScreenActors {
 	 * @param plot The landplot tileClicked.
 	 * @param x    Current mouse x position
 	 * @param y    Current mouse y position
+	 * UPDATE: USE ENUM
 	 */
 	public void tileClicked(LandPlot plot, float x, float y) {
 		Player player = game.getPlayer();
@@ -235,7 +236,7 @@ public class GameScreenActors {
 		switch (game.getPhase()) {
 			// Phase 1:
 			// Purchase LandPlot.
-			case 1:
+			case TILE_ACQUISITION:
 				buyLandPlotBtn.setPosition(x + 10, y);
 				if (game.canPurchaseLandThisTurn()
 						&& !plot.hasOwner()) {
@@ -250,7 +251,7 @@ public class GameScreenActors {
 
 			// Phase 3:
 			// Install Roboticon 
-			case 3:
+			case ROBOTICON_CUSTOMISATION:
 				if (player == plot.getOwner()) {
 					installRoboticonTable.setPosition(x, y, Align.center);
 					updateRoboticonList();
@@ -280,25 +281,26 @@ public class GameScreenActors {
 
 	/**
 	 * Updates the UI display.
+	 * UPDATE: ENUM
 	 */
 	public void textUpdate() {
 		playerLabel.setText("PLAYER " + (game.getPlayerInt() + 1));
 		phaseLabel.setText("PHASE " + String.valueOf(game.getPhase()));
 
 		switch (game.getPhase()) {
-			case (1):
+			case TILE_ACQUISITION:
 				phaseDescriptionLabel.setText("Claim a Tile");
 				break;
-			case (2):
+			case ROBOTICON_PURCHASE:
 				phaseDescriptionLabel.setText("Buy and Upgrade Roboticons");
 				break;
-			case (3):
+			case ROBOTICON_CUSTOMISATION:
 				phaseDescriptionLabel.setText("Deploy Roboticons");
 				break;
-			case (4):
+			case RESOURCE_GENERATION:
 				phaseDescriptionLabel.setText("Generate Resources");
 				break;
-			case (5):
+			case MARKET:
 				phaseDescriptionLabel.setText("Buy and Sell Resources");
 				break;
 		}

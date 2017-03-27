@@ -1,11 +1,14 @@
-#DRTN & Fractal
-Team: [Kieran Hall](https://github.com/NotKieran), [Jack Mountain](https://github.com/jm179796), [Nico Pinedo](https://github.com/NicoPinedo), [Martynas Minskis](https://github.com/mm1544), [Joseph Leakey](https://github.com/MisterSeph).
+#Sep-r-ated DRTN & Fractal
+Team: [Tim Bradgate](https://github.com/Tim020), [Theo Barber-Bany](https://github.com/theobarberbany), [Mikolaj Bernaciak](https://github.com/mikfromb7), [Matthew Dunn](https://github.com/MIDunn), [Matthew Turton-Pary](https://github.com/mtpsgame), [Julia Fellows](https://github.com/jcf518).
 
 
-Master Build Status:      [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=master)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+Master Build Status:      [![Build Status](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal.svg?branch=master)](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal)
 
-Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-Fractal.svg?branch=development)](https://travis-ci.org/NotKieran/DRTN-Fractal)
+Development Build Status: [![Build Status](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal.svg?branch=development)](https://travis-ci.org/Tim020/Seprated-DRTN-Fractal)
 
+Website: [Sep-r-ated Website](https://seprated.github.io/)
+
+---
 
 ## Using our project
 - Our project utilises Gradle, we highly recommend using IntelliJ IDEA as your IDE as we've already set up all the Run Configrations you'll need for it
@@ -25,7 +28,7 @@ Development Build Status: [![Build Status](https://travis-ci.org/NotKieran/DRTN-
 	* If your build passes this point, check (preferably with someone) that the tests you have written are valid and test the feature fully.
 4. If we're at this point we're really cooking with gas and if you or your sub-team are happy with the feature, submit a pull request to the development branch from your feature branch.
 	* Travis will then check if these two branches are compatible as-is. 
-	* If this passes, someone outside of your team, typically Jack or myself will confirm the merge.
+	* If this passes, someone outside of your team, typically myself will confirm the merge.
 	* If this fails return to step 2 and fix any issues raised. Or bring it up with the team at the next meeting or on the slack if you believe the conflict can be resolved.
 5. Once everything we need for the assesment has been brought into Development and is working 100%, either Jack or I will merge it into the master.
 

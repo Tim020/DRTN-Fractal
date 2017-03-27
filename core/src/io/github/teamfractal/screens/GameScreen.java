@@ -138,6 +138,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 		//<editor-fold desc="Click event handler. Check `tileClicked` for how to handle tile click.">
 		// Bind click event.
+		//UPDATE: USE ENUM
 		stage.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -147,19 +148,19 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 
 				// Hide dialog if it has focus.
 				switch(game.getPhase()){
-				case 1:
-					if (actors.getBuyLandPlotBtn().isVisible()) {
-						actors.hideBuyLand();
-						return;
-					}
-					break;
-				case 3:
-					// Only click cancel will hide the dialog,
-					// so don't do anything here.
-					if (actors.installRoboticonVisible()) {
-						return ;
-					}
-					break;
+					case TILE_ACQUISITION:
+						if (actors.getBuyLandPlotBtn().isVisible()) {
+							actors.hideBuyLand();
+							return;
+						}
+						break;
+					case ROBOTICON_CUSTOMISATION:
+						// Only click cancel will hide the dialog,
+						// so don't do anything here.
+						if (actors.installRoboticonVisible()) {
+							return ;
+						}
+						break;
 				}
 
 				// The Y from screen starts from bottom left.
@@ -241,10 +242,9 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 			
 	/**
 	 * Reset to new game status.
-	 *
-	 * @param AI boolean value where True requests an AI game, and False two human players
+	 * UPDATED: Takes the number of players as an argument.
 	 */
-	public void newGame(boolean AI) {
+	public void newGame(int numberOfPlayers) {
 		// Setup the game board.
 		if (tmx != null) tmx.dispose();
 		if (renderer != null) renderer.dispose();
@@ -252,7 +252,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		tiles = tmx.getTileSets();
 		TileConverter.setup(tiles, game);
 		renderer = new IsometricStaggeredTiledMapRenderer(tmx);
-		game.reset(AI);
+		game.reset(numberOfPlayers);
 
 		mapLayer = (TiledMapTileLayer)tmx.getLayers().get("MapData");
 		playerOverlay = (TiledMapTileLayer)tmx.getLayers().get("PlayerOverlay");
@@ -271,6 +271,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 	}
 
 	@Override
+	//UPDATE: USE ENUM
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -286,7 +287,7 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 		renderAnimation(delta);
 
 		switch (game.getPhase()) {
-			case (1):
+			case TILE_ACQUISITION:
 				if (overlayStack.isEmpty() || overlayStack == null) {
 					Gdx.input.setInputProcessor(stage);
 				} else {
@@ -296,15 +297,15 @@ public class GameScreen extends AbstractAnimationScreen implements Screen  {
 					overlayStack.get(overlayStack.size() - 1).draw();
 				}
 				break;
-			case (2):
+			case ROBOTICON_PURCHASE:
 				game.roboticonMarket.act(delta);
 				game.roboticonMarket.draw();
 				break;
-			case (4):
+			case RESOURCE_GENERATION:
 				game.genOverlay.act(delta);
 				game.genOverlay.draw();
 				break;
-			case (5):
+			case MARKET:
 				game.resourceMarket.act(delta);
 				game.resourceMarket.draw();
 		}

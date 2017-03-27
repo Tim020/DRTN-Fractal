@@ -14,6 +14,7 @@
 package io.github.teamfractal.entity;
 
 import io.github.teamfractal.RoboticonQuest;
+import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.ResourceType;
 
 import java.util.Random;
@@ -36,27 +37,27 @@ public class AIPlayer extends Player {
 
     /**
      * Function calling the AIPlayer to take action.
-     *
+     * UPDATED: Use Enum
      */
-    public void takeTurn(int phase) {
+    public void takeTurn(GamePhase phase) {
         switch (phase) {
-            case 1:
+            case TILE_ACQUISITION:
                 //"Buy Land Plot
                 System.out.println("AI: Phase 1 in progress");
                 phase1();
                 break;
-            case 2:
+            case ROBOTICON_PURCHASE:
                 //"Purchase Roboticons
                 System.out.println("AI: Phase 2 in progress");
                 phase2();
                 break;
-            case 3:
+            case ROBOTICON_CUSTOMISATION:
                 //Install Roboticons
                 System.out.println("AI: Phase 3 in progress");
                 phase3();
                 break;
             //Phase 4 not included, no interaction required
-            case 5:
+            case MARKET:
                 //Resource Auction
                 System.out.println("AI: Phase 5 in progress");
                 phase5();
@@ -112,8 +113,8 @@ public class AIPlayer extends Player {
         try {
             for (LandPlot aLandList : this.landList) {
                 if (!aLandList.hasRoboticon()) {
-                    int[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
-                    int max = 0;
+                    float[] resources = {aLandList.getResource(ResourceType.ORE), aLandList.getResource(ResourceType.FOOD), aLandList.getResource(ResourceType.ENERGY)};
+                    float max = 0;
                     int max_index = -1; //Initialise to index not used to not return false positives
                     for (int j = 0; j < resources.length; j++) {
                         if (resources[j] > max) {
