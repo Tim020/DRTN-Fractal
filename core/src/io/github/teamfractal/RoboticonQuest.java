@@ -342,6 +342,9 @@ public class RoboticonQuest extends Game {
                 }
                 this.getPlayer().takeTurn(GamePhase.TILE_ACQUISITION);
                 break;
+            case CHANCELLOR:
+                nextPhase();
+                break;
         }
 
         playerHeader.stop();
