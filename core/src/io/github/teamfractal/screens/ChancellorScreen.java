@@ -1,17 +1,18 @@
-package io.github.teamfractal.animation;
+package io.github.teamfractal.screens;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.teamfractal.RoboticonQuest;
-import io.github.teamfractal.screens.AbstractAnimationScreen;
-
+import io.github.teamfractal.actors.ChancellorActor;
 
 /**
- * Created by mtpsgame on 30/03/2017.
+ * Created by Matt TP on 06/04/2017.
  */
-public class AnimationChancellor implements IAnimation {
+public class ChancellorScreen extends Stage {
 
     private RoboticonQuest game;
+    private ChancellorActor actor;
+
     private int attempts;
     private float timeoutPerAttempt;
     private float chancellorDuration;
@@ -21,70 +22,71 @@ public class AnimationChancellor implements IAnimation {
     private boolean chancellorIsDisplayed;
     private float currentChancellorDuration;
 
-    public AnimationChancellor(RoboticonQuest game, int attempts, float timeoutPerAttempt, float chancellorDuration) {
+    public ChancellorScreen(RoboticonQuest game, int attempts, float timeoutPerAttempt, float chancellorDuration) {
         this.game = game;
+        this.actor = new ChancellorActor(this);
+        this.addActor(actor);
+        this.actor.setVisible(false);
+
         this.attempts = attempts;
         this.timeoutPerAttempt = timeoutPerAttempt;
         this.chancellorDuration = chancellorDuration;
         chancellorIsDisplayed = false;
         time = 0;
+        nextAttemptTime = 0;
         currentChancellorDuration = 0;
         generateNextShowTime();
     }
 
+    // An update method called every frame.
     @Override
-    public boolean tick(float delta, AbstractAnimationScreen screen, Batch batch) {
+    public void act(float delta) {
+        super.act(delta);
+
         time += delta;
         if (chancellorIsDisplayed) {
             currentChancellorDuration += delta;
             if (currentChancellorDuration >= chancellorDuration) {
                 hideChancellor();
-                return generateNextShowTime();
+                generateNextShowTime();
             }
-            return false;
+        } else {
+            if (time >= nextAttemptTime) {
+                showChancellor();
+            }
         }
-
-        if (time >= nextAttemptTime) {
-            showChancellor();
-        }
-
-        return false;
     }
 
-    private boolean generateNextShowTime() {
+    public void chancellorClicked() {
+        if(chancellorIsDisplayed) {
+            //TODO: Give the player some reward
+            endPhase();
+        }
+    }
+
+    private void generateNextShowTime() {
         if (attempts > 0) {
             attempts--;
             nextAttemptTime = MathUtils.random(0f, timeoutPerAttempt - 1);
             time = 0;
-            return false;
+            System.out.println("Next show time in " + nextAttemptTime);
+            return;
         }
-        return true;
+        endPhase();
+    }
+
+    private void endPhase() {
+        game.nextPhase();
     }
 
     private void showChancellor() {
         currentChancellorDuration = 0;
         chancellorIsDisplayed = true;
-        // show the chancellor actor on the game screen.
+        actor.Show();
     }
 
     private void hideChancellor() {
         chancellorIsDisplayed = false;
-        // hide the chancellor actor from the game screen.
-
-    }
-
-    @Override
-    public void setAnimationFinish(IAnimationFinish callback) {
-
-    }
-
-    @Override
-    public void callAnimationFinish() {
-
-    }
-
-    @Override
-    public void cancelAnimation() {
-
+        actor.Hide();
     }
 }

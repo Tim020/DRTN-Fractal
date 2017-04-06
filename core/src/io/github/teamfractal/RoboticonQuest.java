@@ -53,6 +53,7 @@ public class RoboticonQuest extends Game {
     public Market market;
     public RoboticonMarketScreen roboticonMarket;
     public GenerationOverlay genOverlay;
+    public ChancellorScreen chancellorPhase;
     public ResourceMarketScreen resourceMarket;
 
     private int turnNumber = 1;
@@ -125,6 +126,7 @@ public class RoboticonQuest extends Game {
         gameScreen = new GameScreen(this);
         roboticonMarket = new RoboticonMarketScreen(this);
         genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
+        chancellorPhase = new ChancellorScreen(this, 3, 5, 0.5f);
         resourceMarket = new ResourceMarketScreen(this);
 
         //Setup tile and player effects for later application
@@ -343,7 +345,9 @@ public class RoboticonQuest extends Game {
                 this.getPlayer().takeTurn(GamePhase.TILE_ACQUISITION);
                 break;
             case CHANCELLOR:
-                nextPhase();
+                Gdx.input.setInputProcessor(chancellorPhase);
+
+                //nextPhase();
                 break;
         }
 
