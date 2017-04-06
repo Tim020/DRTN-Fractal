@@ -65,7 +65,10 @@ public class AIPlayer extends Player {
                 System.out.println("AI: Phase 3 in progress");
                 roboticonCustomisation();
                 break;
-            //Phase 4 not included, no interaction required
+            case CHANCELLOR:
+                chancellorPhaseRandomChance();
+                game.nextPhase();
+                break;
             case MARKET:
                 //Resource Auction
                 System.out.println("AI: Phase 5 in progress");
@@ -413,4 +416,7 @@ public class AIPlayer extends Player {
         System.out.println("Buying: 5 " + type);
     }
 
+    private void chancellorPhaseRandomChance() {
+        //TODO: Give the player some reward by a random chance.
+    }
 }

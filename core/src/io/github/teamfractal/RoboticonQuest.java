@@ -346,7 +346,10 @@ public class RoboticonQuest extends Game {
                 break;
             case CHANCELLOR:
                 Gdx.input.setInputProcessor(chancellorPhase);
-                chancellorPhase.startPhase();
+                if (!(getPlayer() instanceof AIPlayer)) {
+                    chancellorPhase.startPhase();
+                }
+                getPlayer().takeTurn(GamePhase.CHANCELLOR);
                 break;
         }
 
