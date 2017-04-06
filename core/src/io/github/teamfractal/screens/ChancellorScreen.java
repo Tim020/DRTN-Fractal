@@ -13,12 +13,13 @@ public class ChancellorScreen extends Stage {
     private RoboticonQuest game;
     private ChancellorActor actor;
 
-    private int attempts;
+    private int initialAttempts;
     private float timeoutPerAttempt;
     private float chancellorDuration;
 
     private float time;
     private float nextAttemptTime;
+    private int attempts;
     private boolean chancellorIsDisplayed;
     private float currentChancellorDuration;
 
@@ -28,12 +29,16 @@ public class ChancellorScreen extends Stage {
         this.addActor(actor);
         this.actor.setVisible(false);
 
-        this.attempts = attempts;
+        this.initialAttempts = attempts;
         this.timeoutPerAttempt = timeoutPerAttempt;
         this.chancellorDuration = chancellorDuration;
-        chancellorIsDisplayed = false;
+    }
+
+    public void startPhase() {
         time = 0;
         nextAttemptTime = 0;
+        attempts = initialAttempts;
+        chancellorIsDisplayed = false;
         currentChancellorDuration = 0;
         generateNextShowTime();
     }

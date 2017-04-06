@@ -346,8 +346,7 @@ public class RoboticonQuest extends Game {
                 break;
             case CHANCELLOR:
                 Gdx.input.setInputProcessor(chancellorPhase);
-
-                //nextPhase();
+                chancellorPhase.startPhase();
                 break;
         }
 
