@@ -66,7 +66,7 @@ public class AIPlayer extends Player {
                 roboticonCustomisation();
                 break;
             case CHANCELLOR:
-                chancellorPhaseRandomChance();
+                chancellorPhase();
                 game.nextPhase();
                 break;
             case MARKET:
@@ -416,7 +416,10 @@ public class AIPlayer extends Player {
         System.out.println("Buying: 5 " + type);
     }
 
-    private void chancellorPhaseRandomChance() {
+    /**
+     * NEW: A random chance that the AI player is given a reward in the chancellor phase
+     */
+    private void chancellorPhase() {
         //TODO: Give the player some reward by a random chance.
     }
 }

@@ -5,12 +5,12 @@ package io.github.teamfractal.entity.enums;
  * Created by md995 on 15/03/17.
  */
 public enum GamePhase {
-    TILE_ACQUISITION,
-    ROBOTICON_PURCHASE,
-    ROBOTICON_CUSTOMISATION,
-    RESOURCE_GENERATION,
-    CHANCELLOR,
-    MARKET,
+    TILE_ACQUISITION, //phase 1
+    ROBOTICON_PURCHASE, //phase 2
+    ROBOTICON_CUSTOMISATION, //phase 3
+    RESOURCE_GENERATION, //phase 4
+    CHANCELLOR, //phase 5
+    MARKET, //phase 6
     NEXT_PLAYER;
 
     public GamePhase next() {

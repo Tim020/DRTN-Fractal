@@ -72,6 +72,7 @@ public class RoboticonQuest extends Game {
     private AnimationCustomHeader phase3description;
     private AnimationCustomHeader phase4description;
     private AnimationCustomHeader phase5description;
+    private AnimationCustomHeader phase6description;
 
     private PlotEffectSource plotEffectSource;
     private PlayerEffectSource playerEffectSource;
@@ -126,7 +127,7 @@ public class RoboticonQuest extends Game {
         gameScreen = new GameScreen(this);
         roboticonMarket = new RoboticonMarketScreen(this);
         genOverlay = new GenerationOverlay(Color.GRAY, Color.WHITE, 3);
-        chancellorPhase = new ChancellorScreen(this, 3, 5, 0.5f);
+        chancellorPhase = new ChancellorScreen(this, 3, 5, 1);
         resourceMarket = new ResourceMarketScreen(this);
 
         //Setup tile and player effects for later application
@@ -232,7 +233,6 @@ public class RoboticonQuest extends Game {
                 this.getPlayer().takeTurn(GamePhase.ROBOTICON_PURCHASE);
                 break;
 
-
             // Phase 3: Roboticon Customisation
             case ROBOTICON_CUSTOMISATION:
                 Gdx.input.setInputProcessor(gameScreen.getStage());
@@ -254,7 +254,6 @@ public class RoboticonQuest extends Game {
                 gameScreen.getActors().switchNextButton();
                 this.getPlayer().takeTurn(GamePhase.ROBOTICON_CUSTOMISATION);
                 break;
-
 
             // Phase 4: Generate resources for player
             case RESOURCE_GENERATION:
@@ -281,14 +280,24 @@ public class RoboticonQuest extends Game {
                 gameScreen.getActors().switchNextButton();
                 break;
 
-            // Phase 5: Open the market
+            // Phase 5: Chancellor phase
+            case CHANCELLOR:
+                Gdx.input.setInputProcessor(chancellorPhase);
+                if (!(getPlayer() instanceof AIPlayer)) {
+                    phase4description.stop();
+                    phase5description.play();
+                    chancellorPhase.startPhase();
+                }
+                getPlayer().takeTurn(GamePhase.CHANCELLOR);
+                break;
 
+            // Phase 6: Open the market
             case MARKET:
                 Gdx.input.setInputProcessor(resourceMarket);
 
                 if (!(getPlayer() instanceof AIPlayer)) {
-                    phase4description.stop();
-                    phase5description.play();
+                    phase5description.stop();
+                    phase6description.play();
                 }
 
                 resourceMarket.actors().widgetUpdate();
@@ -343,13 +352,6 @@ public class RoboticonQuest extends Game {
                     gameScreen.getActors().setNextButtonVisibility(false);
                 }
                 this.getPlayer().takeTurn(GamePhase.TILE_ACQUISITION);
-                break;
-            case CHANCELLOR:
-                Gdx.input.setInputProcessor(chancellorPhase);
-                if (!(getPlayer() instanceof AIPlayer)) {
-                    chancellorPhase.startPhase();
-                }
-                getPlayer().takeTurn(GamePhase.CHANCELLOR);
                 break;
         }
 
@@ -519,7 +521,8 @@ public class RoboticonQuest extends Game {
         phase2description = new AnimationCustomHeader("\nPHASE 2: Buy and Upgrade Roboticons", headerFontLight.font(), 5);
         phase3description = new AnimationCustomHeader("\nPHASE 3: Deploy Roboticons", headerFontLight.font(), 5);
         phase4description = new AnimationCustomHeader("\nPHASE 4: Generate Resources", headerFontLight.font(), 3);
-        phase5description = new AnimationCustomHeader("\nPHASE 5: Buy and Sell Resources", headerFontLight.font(), 5);
+        phase5description = new AnimationCustomHeader("\nPHASE 5: Catch the Chancellor", headerFontLight.font(), 5);
+        phase6description = new AnimationCustomHeader("\nPHASE 6: Buy and Sell Resources", headerFontLight.font(), 5);
 
         gameScreen.addAnimation(playerHeader);
         gameScreen.addAnimation(phase1description);
@@ -527,6 +530,7 @@ public class RoboticonQuest extends Game {
         gameScreen.addAnimation(phase3description);
         gameScreen.addAnimation(phase4description);
         gameScreen.addAnimation(phase5description);
+        gameScreen.addAnimation(phase6description);
     }
 
     /**
