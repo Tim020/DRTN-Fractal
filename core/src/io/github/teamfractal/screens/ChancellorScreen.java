@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.actors.ChancellorActor;
+import io.github.teamfractal.entity.Player;
 
 /**
  * Created by Matt TP on 06/04/2017.
@@ -25,9 +26,10 @@ public class ChancellorScreen extends Stage {
 
     /**
      * NEW: The constructor for the cancellor phase
-     * @param game The RoboticonQuest object used to interact with the rest of the game
-     * @param attempts The number of times the chancellor image will be displayed before moving onto the next game phase
-     * @param timeoutPerAttempt The maximum amount of time the player has to wait until the chancellor is displayed
+     *
+     * @param game               The RoboticonQuest object used to interact with the rest of the game
+     * @param attempts           The number of times the chancellor image will be displayed before moving onto the next game phase
+     * @param timeoutPerAttempt  The maximum amount of time the player has to wait until the chancellor is displayed
      * @param chancellorDuration The amount of time the chancellor is displayed for before hiding
      */
     public ChancellorScreen(RoboticonQuest game, int attempts, float timeoutPerAttempt, float chancellorDuration) {
@@ -55,6 +57,7 @@ public class ChancellorScreen extends Stage {
 
     /**
      * NEW: Called every frame to update timings
+     *
      * @param delta The amount of time passed between the current and previous frames
      */
     @Override
@@ -79,10 +82,11 @@ public class ChancellorScreen extends Stage {
      * NEW: Called by the chancellor actor when the image is clicked used for rewarding the player
      * and moving on to the next round
      */
-    //TODO: Add reward for playerq
     public void chancellorClicked() {
-        if(chancellorIsDisplayed) {
+        if (chancellorIsDisplayed) {
             System.out.println("Chancellor Clicked!");
+            Player p = RoboticonQuest.getInstance().getPlayer();
+            p.setMoney(p.getMoney() + 15);
             hideChancellor();
             endPhase();
         }

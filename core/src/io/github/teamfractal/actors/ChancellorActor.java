@@ -3,12 +3,9 @@ package io.github.teamfractal.actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.screens.ChancellorScreen;
 
 /**
@@ -19,7 +16,7 @@ import io.github.teamfractal.screens.ChancellorScreen;
 public class ChancellorActor extends Image {
 
     private ChancellorScreen screen;
-    private static Texture chancellorTexture = new Texture(Gdx.files.internal("roboticon_images/robot.png"));
+    private static Texture chancellorTexture = new Texture(Gdx.files.internal("chancellor.png"));
 
     /**
      * Constructor for the chancellor image, setting the size and click listener
@@ -28,8 +25,8 @@ public class ChancellorActor extends Image {
     public ChancellorActor(ChancellorScreen scrn) {
         super(chancellorTexture);
         screen = scrn;
-        setWidth(200);
-        setHeight(200);
+        setWidth(150);
+        setHeight(150);
         addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y)  {
