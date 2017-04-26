@@ -13,11 +13,9 @@
 
 package io.github.teamfractal.entity;
 
-import com.sun.org.apache.regexp.internal.RE;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.GamePhase;
 import io.github.teamfractal.entity.enums.ResourceType;
-import io.github.teamfractal.util.ResourceGroup;
 import io.github.teamfractal.util.ResourceGroupInteger;
 import io.github.teamfractal.util.Tuple;
 
@@ -420,6 +418,18 @@ public class AIPlayer extends Player {
      * NEW: A random chance that the AI player is given a reward in the chancellor phase
      */
     private void chancellorPhase() {
-        //TODO: Give the player some reward by a random chance.
+        Random rand = new Random();
+        if (rand.nextInt(55) == rand.nextInt(55)) {
+            this.setMoney(this.getMoney() + 15);
+            return;
+        }
+        if (rand.nextInt(55) == rand.nextInt(55)) {
+            this.setMoney(this.getMoney() + 15);
+            return;
+        }
+        if (rand.nextInt(55) == rand.nextInt(55)) {
+            this.setMoney(this.getMoney() + 15);
+            return;
+        }
     }
 }
