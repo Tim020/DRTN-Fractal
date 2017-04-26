@@ -8,12 +8,14 @@ import io.github.teamfractal.entity.enums.ResourceType;
 public class ResourceGroupInteger extends ResourceGroup<Integer> implements Cloneable {
 
     public ResourceGroupInteger() {
+        super(Integer.class);
         this.food = 0;
         this.energy = 0;
         this.ore = 0;
     }
 
     public ResourceGroupInteger(int food, int energy, int ore) {
+        super(Integer.class);
         this.food = food;
         this.energy = energy;
         this.ore = ore;

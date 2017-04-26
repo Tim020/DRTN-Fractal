@@ -1,5 +1,3 @@
-
-
 package io.github.teamfractal;
 
 import com.badlogic.gdx.Game;

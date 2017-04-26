@@ -7,6 +7,10 @@ import io.github.teamfractal.entity.enums.ResourceType;
  */
 public abstract class ResourceGroup<V extends Number> {
 
+    protected ResourceGroup(Class<V> typeClass) {
+        this.type = typeClass;
+    }
+
     protected V food, ore, energy;
 
     public abstract V sum();
@@ -52,15 +56,21 @@ public abstract class ResourceGroup<V extends Number> {
         return ore;
     }
 
+    private final Class<V> type;
+
+    public Class<V> getTypeOfResourceGroup() {
+        return this.type;
+    }
+
     public String toString() {
-        return "ResourceGroupInteger(" + food + ", " + energy + ", " + ore + ")";
+        return "ResourceGroup<" + getTypeOfResourceGroup().getSimpleName() + ">(" + food + ", " + energy + ", " + ore + ")";
     }
 
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof ResourceGroup)) {
             return false;
         }
-        ResourceGroup resourcesToCompare = (ResourceGroupInteger) obj;
+        ResourceGroup resourcesToCompare = (ResourceGroup) obj;
         return food == resourcesToCompare.food && energy == resourcesToCompare.energy && ore == resourcesToCompare.ore;
     }
 

@@ -6,12 +6,14 @@ package io.github.teamfractal.util;
 public class ResourceGroupFloat extends ResourceGroup<Float> implements Cloneable {
 
     public ResourceGroupFloat() {
+        super(Float.class);
         this.food = 0f;
         this.energy = 0f;
         this.ore = 0f;
     }
 
     public ResourceGroupFloat(float food, float energy, float ore) {
+        super(Float.class);
         this.food = food;
         this.energy = energy;
         this.ore = ore;
