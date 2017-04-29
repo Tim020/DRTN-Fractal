@@ -19,6 +19,7 @@ import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.util.ResourceGroupInteger;
 import io.github.teamfractal.util.Tuple;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -64,12 +65,13 @@ public class AIPlayer extends Player {
                 roboticonCustomisation();
                 break;
             case CHANCELLOR:
+                System.out.println("AI: Phase 5 in progress");
                 chancellorPhase();
                 game.nextPhase();
                 break;
             case MARKET:
                 //Resource Auction
-                System.out.println("AI: Phase 5 in progress");
+                System.out.println("AI: Phase 6 in progress");
                 tradeWithMarket();
                 break;
             default:
@@ -419,15 +421,8 @@ public class AIPlayer extends Player {
      */
     private void chancellorPhase() {
         Random rand = new Random();
-        if (rand.nextInt(55) == rand.nextInt(55)) {
-            this.setMoney(this.getMoney() + 15);
-            return;
-        }
-        if (rand.nextInt(55) == rand.nextInt(55)) {
-            this.setMoney(this.getMoney() + 15);
-            return;
-        }
-        if (rand.nextInt(55) == rand.nextInt(55)) {
+        if (rand.nextInt(100) <= 11) {
+            System.out.println("AI Chancellor: Successfully caught! +15 money");
             this.setMoney(this.getMoney() + 15);
             return;
         }
