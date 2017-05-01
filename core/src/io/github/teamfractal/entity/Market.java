@@ -1,18 +1,9 @@
 /**
- * @author DRTN
- * Team Website with download:
- * https://misterseph.github.io/DuckRelatedFractalProject/
- * <p>
- * This Class contains either modifications or is entirely new in Assessment 3
- * <p>
- * If you are in any doubt a complete changelog can be found here:
- * https://github.com/NotKieran/DRTN-Fractal/compare/Fractal_Initial...development
- * <p>
- * And a more concise report can be found in our Change3 document.
- **/
-
-package io.github.teamfractal.entity;
-
+ * SEPR project inherited from DRTN.
+ * Any changes are marked by preceding comments.
+ * 
+ * Executables availabe at: https://seprated.github.io/Assessment4/Executables.zip
+**/
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.entity.enums.ResourceType;
 import io.github.teamfractal.exception.InvalidResourceTypeException;

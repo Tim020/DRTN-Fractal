@@ -1,5 +1,9 @@
-package io.github.teamfractal.util;
-
+/**
+ * SEPR project inherited from DRTN.
+ * Any changes are marked by preceding comments.
+ * 
+ * Executables availabe at: https://seprated.github.io/Assessment4/Executables.zip
+**/
 import io.github.teamfractal.TesterFile;
 import org.junit.Before;
 import org.junit.Test;
