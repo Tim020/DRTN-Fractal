@@ -1,9 +1,5 @@
-/**
- * SEPR project inherited from DRTN.
- * Any changes are marked by preceding comments.
- * 
- * Executables availabe at: https://seprated.github.io/Assessment4/Executables.zip
-**/
+package io.github.teamfractal.entity;
+
 import com.badlogic.gdx.utils.Array;
 import io.github.teamfractal.RoboticonQuest;
 import io.github.teamfractal.TesterFile;

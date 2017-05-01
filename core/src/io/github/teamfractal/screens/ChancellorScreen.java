@@ -1,9 +1,5 @@
-/**
- * SEPR project inherited from DRTN.
- * Any changes are marked by preceding comments.
- * 
- * Executables availabe at: https://seprated.github.io/Assessment4/Executables.zip
-**/
+package io.github.teamfractal.screens;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.teamfractal.RoboticonQuest;

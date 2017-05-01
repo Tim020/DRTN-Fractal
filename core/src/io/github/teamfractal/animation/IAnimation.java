@@ -1,9 +1,5 @@
-/**
- * SEPR project inherited from DRTN.
- * Any changes are marked by preceding comments.
- * 
- * Executables availabe at: https://seprated.github.io/Assessment4/Executables.zip
-**/
+package io.github.teamfractal.animation;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import io.github.teamfractal.screens.AbstractAnimationScreen;
 
