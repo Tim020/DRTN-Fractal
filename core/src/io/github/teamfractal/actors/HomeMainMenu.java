@@ -19,7 +19,7 @@ import io.github.teamfractal.RoboticonQuest;
 
 
 public class HomeMainMenu extends Table {
-    private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/Duck-Related Roboticon Quest (Small).png"));
+    private static Texture titleTexture = new Texture(Gdx.files.internal("roboticon_images/SEP-R-ated.png"));
     private RoboticonQuest game;
     // UPDATED: New buttons for the new number of players requirement.
     private TextButton btnTwoPlayer;

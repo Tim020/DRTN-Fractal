@@ -16,7 +16,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title = "Duck-Related Roboticon Quest";
+		config.title = "SEP-R-ated";
 		config.addIcon("icon.png", Files.FileType.Internal);
 		config.backgroundFPS = 1;
 		config.vSyncEnabled = true;
